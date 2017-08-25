@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 @IonicPage({
@@ -8,9 +8,15 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   selector: 'page-event-list',
   templateUrl: 'event-list.html',
 })
-export class EventListPage {
+export class EventListPage implements OnInit {
+  ngOnInit(): void {
+  }
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
+  }
+
+  onNewEvent(){
+    this.navCtrl.push('event-create', {"parentPage": this});
   }
 
   ionViewDidLoad() {
