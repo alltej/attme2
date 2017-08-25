@@ -24,3 +24,44 @@ $ ionic cordova run ios
 
 Substitute ios for android if not on a Mac.
 
+Building this project:
+
+1. Ensure that you have Ionic, and Cordova installed, you will do that
+   by opening your terminal and typing:
+   
+    ```bash
+    npm install -g ionic cordova
+    ```
+    
+2.  Create app using ionic cli
+
+    ```bash
+    ionic start attme2 blank
+    cd attme2
+    ```
+   
+3. Install Firebase
+
+    ```bash
+    npm install firebase --save
+    ```
+
+4. Generate the pages
+
+    ```bash
+    ionic g page Login
+    ionic g page Profile
+    ionic g page ResetPassword
+    ionic g page Signup
+    ionic g page EventDetail
+    ionic g page EventCreate
+    ionic g page EventList
+    ```
+
+5. Generate the providers
+
+    ```bash
+    ionic g provider Auth
+    ionic g provider Event
+    ionic g provider Profile
+    ```
