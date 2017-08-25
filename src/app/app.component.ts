@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Platform } from 'ionic-angular';
+import {Component, ViewChild} from '@angular/core';
+import {MenuController, NavController, Platform} from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -10,8 +10,13 @@ import firebase from 'firebase';
 })
 export class MyApp {
   rootPage: any = 'tabs';
+  isAuthenticated = false;
+  @ViewChild('nav') nav: NavController;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
+  constructor(platform: Platform,
+              statusBar: StatusBar,
+              splashScreen: SplashScreen,
+              private menuCtrl: MenuController) {
 
     firebase.initializeApp({
       apiKey: "AIzaSyBrsOXUmXDkcJycH0m3ujhhzZfk6WviUH0",
@@ -24,9 +29,11 @@ export class MyApp {
 
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
+        this.isAuthenticated = false;
         this.rootPage = 'login';
         unsubscribe();
       } else {
+        this.isAuthenticated = true;
         this.rootPage = 'tabs';
         unsubscribe();
       }
@@ -38,6 +45,18 @@ export class MyApp {
       statusBar.styleDefault();
       splashScreen.hide();
     });
+  }
+
+  onLoad(page: any) {
+    console.log('zzzz');
+    this.nav.setRoot(page);
+    this.menuCtrl.close();
+  }
+
+  onLogout() {
+    //this.authService.logout();
+    this.menuCtrl.close();
+    this.nav.setRoot('login');
   }
 }
 

@@ -1,1 +1,61 @@
-<ion-nav [root]="rootPage"></ion-nav>
+<ion-menu [content]="nav">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <button
+        ion-item
+        icon-left
+        (click)="onLoad(rootPage)"
+        *ngIf="isAuthenticated">
+        <ion-icon name="book"></ion-icon>
+        HOME - AttME
+      </button>
+      <button
+        ion-item
+        icon-left
+        (click)="onLoad('member-list')"
+        *ngIf="isAuthenticated">
+        <ion-icon name="people"></ion-icon>
+        Members
+      </button>
+      <button
+        ion-item
+        icon-left
+        (click)="onLoad('profile')"
+        *ngIf="isAuthenticated">
+        <ion-icon name="person"></ion-icon>
+        My Profile
+      </button>
+      <button
+        ion-item
+        icon-left
+        (click)="onLoad('login')"
+        *ngIf="!isAuthenticated">
+        <ion-icon name="log-in"></ion-icon>
+        Signin
+      </button>
+      <button
+        ion-item
+        icon-left
+        (click)="onLoad('signup')"
+        *ngIf="!isAuthenticated">
+        <ion-icon name="person"></ion-icon>
+        Signup
+      </button>
+      <button
+        ion-item
+        icon-left
+        (click)="onLogout()"
+        *ngIf="isAuthenticated">
+        <ion-icon name="log-out"></ion-icon>
+        Logout
+      </button>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<ion-nav [root]="rootPage" #nav></ion-nav>
