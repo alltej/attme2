@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {EventProvider} from "../../providers/event/event";
-//import {Observable} from "rxjs/Observable";
-import {Observable} from 'rxjs/Rx';
+
 @IonicPage({
   name: 'event-list'
 })
