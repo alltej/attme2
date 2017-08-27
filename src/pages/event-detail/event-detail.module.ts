@@ -9,5 +9,8 @@ import { EventDetailPage } from './event-detail';
   imports: [
     IonicPageModule.forChild(EventDetailPage),
   ],
+  exports: [
+    EventDetailPage
+  ]
 })
 export class EventDetailPageModule {}

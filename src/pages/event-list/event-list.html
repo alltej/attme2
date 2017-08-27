@@ -16,17 +16,62 @@
 </ion-header>
 
 
+<!--<ion-content padding>-->
+  <!--<ion-list>-->
+    <!--<ion-item *ngFor="let event of eventList" (click)="goToEventDetail(event.id)">-->
+      <!--<h2>{{event?.name}}</h2>-->
+      <!--<p><strong>{{event?.where}}</strong></p>-->
+      <!--<p><strong>{{event?.when}}</strong></p>-->
+      <!--<button ion-button outline item-end>Edit</button>-->
+      <!--<button ion-button outline item-end>View</button>-->
+      <!--<button ion-button outline item-end>Attendees</button>-->
+    <!--</ion-item>-->
+
+  <!--</ion-list>-->
+<!--</ion-content>-->
+
+
 <ion-content padding>
   <ion-list>
-    <ion-item *ngFor="let event of eventList" (click)="goToEventDetail(event.id)">
-      <h2>{{event?.name}}</h2>
-      <p>Where: <strong>{{event?.where}}</strong></p>
-      <p>Date: <strong>{{event?.when}}</strong></p>
-      <button ion-button outline item-end>Edit</button>
-      <button ion-button outline item-end>View</button>
-      <button ion-button outline item-end>Attendees</button>
-    </ion-item>
+    <ion-card *ngFor="let event of eventList" >
 
+      <ion-item (click)="goToEventDetail(event.id)">
+        <h2>{{event?.name}}</h2>
+        <p><strong>{{event?.where}}</strong></p>
+        <p><strong>{{event?.when}}</strong></p>
+      </ion-item>
+
+
+      <ion-card-content>
+        <p>{{event?.description}}</p>
+      </ion-card-content>
+
+      <ion-row>
+        <ion-col>
+          <button ion-button icon-left clear small >
+            <ion-icon name="thumbs-up"></ion-icon>
+            <div>12 </div>
+          </button>
+        </ion-col>
+        <ion-col>
+          <button ion-button icon-left clear small>
+            <ion-icon name="chatbubbles"></ion-icon>
+            <div>4 </div>
+          </button>
+        </ion-col>
+        <ion-col>
+          <button ion-button icon-left clear small (click)="goToEventAttendees(event.id)">
+            <ion-icon name="people"></ion-icon>
+            <div>9 </div>
+          </button>
+        </ion-col>
+        <!--<ion-col center text-center>-->
+          <!--<ion-note>-->
+            <!--11h ago-->
+          <!--</ion-note>-->
+        <!--</ion-col>-->
+      </ion-row>
+
+    </ion-card>
   </ion-list>
 </ion-content>
-

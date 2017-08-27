@@ -55,4 +55,8 @@ export class EventListPage implements OnInit {
   goToEventDetail(eventId){
     this.navCtrl.push('event-detail', { 'eventId': eventId });
   }
+
+  goToEventAttendees(eventId) {
+    this.navCtrl.push('event-attendees', { 'eventId': eventId });
+  }
 }

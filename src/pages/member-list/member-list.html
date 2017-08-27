@@ -56,7 +56,7 @@
     <!-- Item divider with a right button -->
     <ion-item-divider>
       Item Divider
-      <button ion-button item-end>Button</button>
+      <button ion-button item-end>Divider</button>
     </ion-item-divider>
 
     <!-- Disabled button item with left and right buttons -->
@@ -103,12 +103,57 @@
     <!-- Sliding item -->
     <ion-item-sliding>
       <ion-item>
-        Item
+        Slide Me!!
       </ion-item>
       <ion-item-options>
-        <button ion-button color="primary" (click)="archive()">Archive</button>
+        <button ion-button color="primary" (click)="archive()">Archive IT</button>
       </ion-item-options>
     </ion-item-sliding>
 
+
+    <ion-item>
+      <ion-label>
+        <h2>Item</h2>
+        <p>AAAAAAAAAAAAAAAA</p>
+        <p>Item Paragraph</p>
+      </ion-label>
+      <div item-content>
+        <a ion-button color="secondary">99</a>
+      </div>
+
+    </ion-item>
+
+    <ion-item detail-push>
+      Item with Detail Arrow
+    </ion-item>
+
+    <button ion-item (click)="buttonClick()">
+      Button Item
+    </button>
+
+    <ion-item-divider>
+      Item Divider
+    </ion-item-divider>
+
+    <button ion-item detail-none (click)="buttonClick()">
+      Button Item with no Detail Arrow
+    </button>
+
+    <a ion-item href="https://www.ionicframework.com">
+      Anchor Item
+    </a>
+
+    <ion-item no-lines>
+      Item with no border
+    </ion-item>
+
+    <ion-item text-wrap>
+      Multiline text that should wrap when it is too long
+      to fit on one line in the item.
+    </ion-item>
   </ion-list>
 </ion-content>
+
+
+
+

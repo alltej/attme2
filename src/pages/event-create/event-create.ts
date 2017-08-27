@@ -10,9 +10,11 @@ import {EventProvider} from "../../providers/event/event";
   templateUrl: 'event-create.html',
 })
 export class EventCreatePage {
+  private eventDate: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public eventProvider: EventProvider) {
+    this.eventDate = new Date().toISOString();
   }
 
   ionViewDidLoad() {

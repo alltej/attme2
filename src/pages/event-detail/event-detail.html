@@ -7,12 +7,33 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>EventDetail</ion-title>
+    <ion-title>Event Detail</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
+  <!--<ion-row padding>-->
+    <!--<ion-col col-8>-->
+      <!--Current Revenue-->
+    <!--</ion-col>-->
+    <!--<ion-col col-4 [class.profitable]="currentEvent?.revenue > 0"-->
+             <!--[class.no-profit]="currentEvent?.revenue < 0">-->
+      <!--{{currentEvent?.revenue}}-->
+    <!--</ion-col>-->
+  <!--</ion-row>-->
+  <ion-card>
+    <ion-card-header>
+      {{currentEvent?.name}}
+    </ion-card-header>
+    <ion-card-content>
+      <p>When: <strong>${{currentEvent?.when}}</strong></p>
+      <p>Where: <strong>{{currentEvent?.where}}</strong></p>
+      <p>{{currentEvent?.description}}</p>
+    </ion-card-content>
+  </ion-card>
+
+
 
 </ion-content>
