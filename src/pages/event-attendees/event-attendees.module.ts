@@ -9,5 +9,8 @@ import { EventAttendeesPage } from './event-attendees';
   imports: [
     IonicPageModule.forChild(EventAttendeesPage),
   ],
+  exports: [
+    EventAttendeesPage
+  ]
 })
 export class EventAttendeesPageModule {}
