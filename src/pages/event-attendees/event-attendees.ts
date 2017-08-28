@@ -24,13 +24,14 @@ export class EventAttendeesPage  implements OnInit {
   public currentEvent: any = {};
 
   members: Observable<any[]>;
-  eventGroup: {event: Event, attendees: Attendee[], icon: string};
+  //eventGroup: {event: Event, attendees: Attendee[], icon: string};
   relationship: any;
   userCircles: any[];
 
   searchControl: FormControl;
   searchTerm: string = '';
   searching: any = false;
+  private currentEventId: string;
 
   constructor(public navCtrl: NavController,
               private membersSvc: MemberProvider,
@@ -43,13 +44,13 @@ export class EventAttendeesPage  implements OnInit {
 
     console.log('EventAttendeesPage::constructor')
     this.searchControl = new FormControl();
-
+    this.currentEventId = this.navParams.get('eventId');
   }
 
   ngOnInit(): void {
     console.log('EventAttendeesPage')
-    this.eventGroup = { event: this.navParams.data, attendees : [], icon : "brush"};
-    this.eventGroup.event.id = this.navParams.data.$key;
+    //this.eventGroup = { event: this.navParams.data, attendees : [], icon : "brush"};
+    //this.eventGroup.event.id = this.navParams.data.$key;
 
     this.userCircles = this.userSvc.getMyCircles();
   }
@@ -96,15 +97,15 @@ export class EventAttendeesPage  implements OnInit {
   }
 
   onUpVote(selectedMember: any){
-    this.attendanceSvc.addAttendee(this.eventGroup.event.id, selectedMember.$key);
+    this.attendanceSvc.addAttendee(this.currentEventId, selectedMember.$key);
   }
 
   onDownVote(selectedMember: any){
-    this.attendanceSvc.removeAttendee(this.eventGroup.event.id, selectedMember.$key);
+    this.attendanceSvc.removeAttendee(this.currentEventId, selectedMember.$key);
   }
 
   isVoted(selectedMember: any){
-    return this.attendanceSvc.isVoted(this.eventGroup.event.id, selectedMember.$key);
+    return this.attendanceSvc.isVoted(this.currentEventId, selectedMember.$key);
   }
 
   selectedAll(){
@@ -137,7 +138,7 @@ export class EventAttendeesPage  implements OnInit {
   }
 
   getVoteCount(selectedMember: any){
-    let c = this.attendanceSvc.getUpVotes(this.eventGroup.event.id, selectedMember.$key);
+    let c = this.attendanceSvc.getUpVotes(this.currentEventId, selectedMember.$key);
     //console.log(c);
     return c;
   }

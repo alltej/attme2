@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {EventProvider} from "../../providers/event/event";
-
+//import {Observable} from "rxjs/Observable";
+import {Observable} from 'rxjs/Rx';
 @IonicPage({
   name: 'event-list'
 })
@@ -20,28 +21,61 @@ export class EventListPage implements OnInit {
     var newDate = Date.now() + -60*24*3600*1000; // date n days ago in milliseconds UTC
     this.startAtFilter = new Date(newDate).toISOString();
   }
+  events: Observable<any[]>;
+  // ngOnInit(): void {
+  //   this.eventProvider.getEventList().orderByChild('when').startAt(this.startAtFilter).on('value', snapshot => {
+  //     this.eventList = [];
+  //     snapshot.forEach( snap => {
+  //       this.eventList.push({
+  //         id: snap.key,
+  //         name: snap.val().name,
+  //         description: snap.val().description,
+  //         when: snap.val().when,
+  //         where: snap.val().where,
+  //       });
+  //       return false
+  //     });
+  //   });
+  // }
+
 
   ngOnInit(): void {
-    //this.events = this.eventProvider.getEventList2();
-      //.map( (arr) => { return arr.reverse(); } );
-  }
+    console.log('EventListPage::ngOnInit');
+    // this.events = this.eventProvider.getEvents2()
+    //   .map( (arr) => { return arr.reverse(); } );
 
-  ionViewDidEnter() {
-
-    this.eventProvider.getEventList().orderByChild('when').startAt(this.startAtFilter).on('value', snapshot => {
-      this.eventList = [];
-      snapshot.forEach( snap => {
-        this.eventList.push({
-          id: snap.key,
-          name: snap.val().name,
-          description: snap.val().description,
-          when: snap.val().when,
-          where: snap.val().where,
+      this.eventProvider.getEventList().orderByChild('when').startAt(this.startAtFilter).on('value', snapshot => {
+        this.eventList = [];
+        snapshot.forEach( snap => {
+          this.eventList.push({
+            id: snap.key,
+            name: snap.val().name,
+            description: snap.val().description,
+            when: snap.val().when,
+            where: snap.val().where,
+            attendeeCount: snap.val().attendeeCount
+          });
+          return false
         });
-        return false
       });
-    });
   }
+  //
+  // ionViewDidEnter() {
+  //
+  //   this.eventProvider.getEventList().orderByChild('when').startAt(this.startAtFilter).on('value', snapshot => {
+  //     this.eventList = [];
+  //     snapshot.forEach( snap => {
+  //       this.eventList.push({
+  //         id: snap.key,
+  //         name: snap.val().name,
+  //         description: snap.val().description,
+  //         when: snap.val().when,
+  //         where: snap.val().where,
+  //       });
+  //       return false
+  //     });
+  //   });
+  // }
 
   onNewEvent(){
     this.navCtrl.push('event-create', {'parentPage': this});
@@ -60,7 +94,8 @@ export class EventListPage implements OnInit {
     this.navCtrl.push('event-attendees', { 'eventId': eventId });
   }
 
-  getAttendanceCount(eventId): number{
+  getAttendanceCount(eventId: string): number{
+    console.log(`getAttendanceCount: ${eventId}`);
     return this.eventProvider.getAttendanceCount(eventId);
   }
 }

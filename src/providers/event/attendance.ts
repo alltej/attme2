@@ -4,10 +4,10 @@ import {FirebaseListObservable, AngularFireDatabase} from 'angularfire2/database
 import 'rxjs/Rx';
 import {AuthProvider} from "../auth/auth";
 
-export class vote {
-  constructor(
-    public on: Date) {}
-}
+// export class vote {
+//   constructor(
+//     public on: Date) {}
+// }
 
 @Injectable()
 export class AttendanceProvider{
@@ -37,6 +37,12 @@ export class AttendanceProvider{
           let voteUrl = `/attendees/${eventKey}/${memberKey}/voteCount`;
           let tagObs = this.af.object(voteUrl);
           tagObs.$ref.transaction(tagValue => {
+            return tagValue ? tagValue + 1 : 1;
+          });
+
+          let attendeeCountUrl = `/events/${eventKey}/attendeeCount`;
+          let attendeeCountObj = this.af.object(attendeeCountUrl);
+          attendeeCountObj.$ref.transaction(tagValue => {
             return tagValue ? tagValue + 1 : 1;
           });
         }

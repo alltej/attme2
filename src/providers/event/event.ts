@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import firebase from 'firebase';
-import {AngularFireDatabase} from "angularfire2/database";
+import {AngularFireDatabase, FirebaseListObservable} from "angularfire2/database";
 
 @Injectable()
 export class EventProvider {
@@ -87,4 +87,12 @@ export class EventProvider {
     return childCount;
   }
 
+  getEvents2() : FirebaseListObservable<any[]> {
+    return this.af.list('/events', {
+      query: {
+        limitToLast: 20,
+        orderByChild: 'when',
+        startAt: this.startAtFilter,
+      }})
+  }
 }

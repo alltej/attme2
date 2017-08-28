@@ -35,7 +35,7 @@
   <ion-list>
     <ion-card *ngFor="let event of eventList" >
 
-      <ion-item (click)="goToEventDetail(event.id)">
+      <ion-item (click)="goToEventDetail(event?.id)">
         <h2>{{event?.name}}</h2>
         <p><strong>{{event?.where}}</strong></p>
         <p><strong>{{event?.when}}</strong></p>
@@ -61,8 +61,9 @@
         </ion-col>
         <ion-col>
           <button ion-button icon-left clear small (click)="goToEventAttendees(event.id)">
-            <ion-icon name="people" *ngIf="getAttendanceCount(event.id)>0"></ion-icon>
-            <label>{{getAttendanceCount(event.id)}} attendees</label>
+            <!--<ion-icon name="people" *ngIf="getAttendanceCount(event.id)>0"></ion-icon>-->
+            <ion-icon name="people"></ion-icon>
+            <label>{{event?.attendeeCount}}</label>
           </button>
         </ion-col>
         <!--<ion-col center text-center>-->
