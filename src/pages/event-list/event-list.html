@@ -61,8 +61,8 @@
         </ion-col>
         <ion-col>
           <button ion-button icon-left clear small (click)="goToEventAttendees(event.id)">
-            <ion-icon name="people"></ion-icon>
-            <div>9 </div>
+            <ion-icon name="people" *ngIf="getAttendanceCount(event.id)>0"></ion-icon>
+            <label>{{getAttendanceCount(event.id)}} attendees</label>
           </button>
         </ion-col>
         <!--<ion-col center text-center>-->

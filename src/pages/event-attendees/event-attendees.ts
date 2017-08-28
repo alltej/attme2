@@ -1,8 +1,15 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {Component, OnInit} from '@angular/core';
+import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
 import {EventProvider} from "../../providers/event/event";
 import {FormControl} from "@angular/forms";
 import {Observable} from "rxjs/Observable";
+import {Attendee} from "../../models/attendee.interface";
+import {Event} from "../../models/event.interface";
+import {AuthProvider} from "../../providers/auth/auth";
+import {UserCircleProvider} from "../../providers/user-circle/user-circle";
+import {MemberProvider} from "../../providers/member/member";
+import "rxjs/add/operator/debounceTime";
+import {AttendanceProvider} from "../../providers/event/attendance";
 
 @IonicPage({
   name: 'event-attendees',
@@ -12,12 +19,12 @@ import {Observable} from "rxjs/Observable";
   selector: 'page-event-attendees',
   templateUrl: 'event-attendees.html',
 })
-export class EventAttendeesPage {
+export class EventAttendeesPage  implements OnInit {
 
   public currentEvent: any = {};
 
   members: Observable<any[]>;
-  //eventGroup: {event: Event, attendees: Attendee[], icon: string};
+  eventGroup: {event: Event, attendees: Attendee[], icon: string};
   relationship: any;
   userCircles: any[];
 
@@ -25,59 +32,122 @@ export class EventAttendeesPage {
   searchTerm: string = '';
   searching: any = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
-              public eventProvider: EventProvider) {
+  constructor(public navCtrl: NavController,
+              private membersSvc: MemberProvider,
+              private attendanceSvc: AttendanceProvider,
+              public navParams: NavParams,
+              public eventProvider: EventProvider,
+              private alertCtrl: AlertController,
+              private authService: AuthProvider,
+              private userSvc: UserCircleProvider) {
+
+    console.log('EventAttendeesPage::constructor')
     this.searchControl = new FormControl();
 
   }
 
-  ionViewDidEnter(){
-    this.eventProvider.getEventDetail(this.navParams.get('eventId'))
-      .on('value', eventSnapshot => {
-        this.currentEvent = eventSnapshot.val();
-        this.currentEvent.id = eventSnapshot.key;
-      });
+  ngOnInit(): void {
+    console.log('EventAttendeesPage')
+    this.eventGroup = { event: this.navParams.data, attendees : [], icon : "brush"};
+    this.eventGroup.event.id = this.navParams.data.$key;
+
+    this.userCircles = this.userSvc.getMyCircles();
+  }
+
+  ionViewDidLoad() {
+    this.setFilteredItems();
+
+    this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
+      this.searching = false;
+      this.setFilteredItems();
+    });
   }
 
 
-  ionViewDidLoad() {
-    //this.setFilteredItems();
-
-    // this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
-    //   this.searching = false;
-    //   this.setFilteredItems();
-    // });
+  onSearchInput(){
+    this.searching = true;
   }
 
   setFilteredItems(){
-
+    if (this.searchTerm == null || this.searchTerm == ''){
+      //console.log('setFilteredItems: aa');
+      this.members = this.membersSvc.getMembers()
+        .map((members) => {return members});
+    }else{
+      //return items.filter(item => item.name.toLowerCase().indexOf(args[0].toLowerCase()) !== -1);
+      this.members = this.membersSvc.getMembers()
+        .map((members) =>
+          members.filter(member => member.lastName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1));
+    }
   }
 
-  onSearchInput() {
-
+  setFilteredItems1(){
+    if (this.searchTerm == null || this.searchTerm == ''){
+      //console.log('setFilteredItems: aa');
+      this.members = this.membersSvc.getMembers()
+        .map((members) => {return members});
+    }else{
+      //return items.filter(item => item.name.toLowerCase().indexOf(args[0].toLowerCase()) !== -1);
+      this.members = this.membersSvc.getMembers()
+        .map((members) =>
+          members.filter(member => member.lastName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1)
+        );
+    }
   }
 
-  selectedAll() {
-
+  onUpVote(selectedMember: any){
+    this.attendanceSvc.addAttendee(this.eventGroup.event.id, selectedMember.$key);
   }
 
-  selectedCircles() {
-
+  onDownVote(selectedMember: any){
+    this.attendanceSvc.removeAttendee(this.eventGroup.event.id, selectedMember.$key);
   }
 
-  onDownVote(member) {
-
+  isVoted(selectedMember: any){
+    return this.attendanceSvc.isVoted(this.eventGroup.event.id, selectedMember.$key);
   }
 
-  onUpVote(member) {
-
+  selectedAll(){
+    this.members = this.membersSvc.getMembers()
+      .map((members) => {return members});
   }
 
-  isVoted(member) {
+  selectedCircles(){
+    //console.log('selectedCircles');
+    //TODO: refactor
+    //let favs = ["-Ke2CyV2BJ5S3_7qcQj5", "-Ke2CyV2BJ5S3_7qcQj6", "-Ke2CyV39UwBuq36wSM6", "-KeKL1A7J2pcCKAPMvIr"];
+    //let userCircles = this.userSvc.getMyCircles();
+    //console.log(favs);
+    this.searching = false;
+    this.members = this.membersSvc.getMembers()
+      .map((members) =>
+        members.filter(member => this.userCircles.indexOf(member.$key) !== -1)
+      );
 
+    if (this.searchTerm == null || this.searchTerm == ''){
+      //console.log('setFilteredItems: aa');
+      // this.members = this.membersSvc.getMembers()
+      //   .map((members) => {return members});
+    }else{
+      //return items.filter(item => item.name.toLowerCase().indexOf(args[0].toLowerCase()) !== -1);
+      this.members = this.members
+        .map((members) =>
+          members.filter(member => member.lastName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1));
+    }
   }
 
-  getVoteCount(member) {
+  getVoteCount(selectedMember: any){
+    let c = this.attendanceSvc.getUpVotes(this.eventGroup.event.id, selectedMember.$key);
+    //console.log(c);
+    return c;
+  }
 
+  private handleError(errorMessage: string) {
+    const alert = this.alertCtrl.create({
+      title: 'An error occurred!',
+      message: errorMessage,
+      buttons: ['Ok']
+    });
+    alert.present();
   }
 }

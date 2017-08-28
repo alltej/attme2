@@ -56,6 +56,11 @@ export class EventListPage implements OnInit {
   }
 
   goToEventAttendees(eventId) {
+    console.log('goToEventAttendees:' + eventId);
     this.navCtrl.push('event-attendees', { 'eventId': eventId });
+  }
+
+  getAttendanceCount(eventId): number{
+    return this.eventProvider.getAttendanceCount(eventId);
   }
 }
