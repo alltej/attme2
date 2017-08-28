@@ -9,5 +9,8 @@ import { EventCreatePage } from './event-create';
   imports: [
     IonicPageModule.forChild(EventCreatePage),
   ],
+  exports: [
+    EventCreatePage
+  ]
 })
 export class EventCreatePageModule {}

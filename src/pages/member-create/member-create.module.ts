@@ -9,5 +9,8 @@ import { MemberCreatePage } from './member-create';
   imports: [
     IonicPageModule.forChild(MemberCreatePage),
   ],
+  exports: [
+    MemberCreatePage
+  ]
 })
 export class MemberCreatePageModule {}

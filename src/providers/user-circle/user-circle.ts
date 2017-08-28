@@ -51,15 +51,15 @@ export class UserCircleProvider {
     let circleRef = this.af.object(url, { preserveSnapshot: true });
     //console.log(circleRef);
     //return circleRef;
-    let voted = false;
+    let isSelected = false;
     circleRef.subscribe(data => {
       if(data.val()==null) {
-        voted = false;
+        isSelected = false;
       } else {
-        voted = true;
+        isSelected = true;
       }
     });
-    return voted;
+    return isSelected;
   }
 
   removeFromMyCircle(memberKey: string) {

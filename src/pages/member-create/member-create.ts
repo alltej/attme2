@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {MemberProvider} from "../../providers/member/member";
 
 @IonicPage({
   name: 'member-create'
@@ -10,11 +11,17 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class MemberCreatePage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController,
+              public navParams: NavParams,
+              private memberSvc: MemberProvider) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad MemberCreatePage');
+    //console.log('ionViewDidLoad MemberCreatePage');
   }
 
+  createMember(firstName: String, lastName: String, memberId: String) {
+    this.memberSvc.addMember(firstName, lastName, memberId);
+    this.navCtrl.popToRoot();
+  }
 }

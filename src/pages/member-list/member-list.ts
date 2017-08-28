@@ -31,17 +31,21 @@ export class MemberListPage implements OnInit{
   }
 
   onAddToCircle(selectedMember: any){
-    console.log('onAddToCircle');
+    //console.log('onAddToCircle');
     this.userCircleSvc.addToMyCircle(selectedMember.$key);
   }
 
   onRemoveFromCircle(selectedMember: any){
-    console.log('onRemoveFromCircle');
+    //console.log('onRemoveFromCircle');
     this.userCircleSvc.removeFromMyCircle(selectedMember.$key);
   }
 
   isMyCircle(selectedMember: any){
     return this.userCircleSvc.isMyCircle(selectedMember.$key);
+  }
+
+  onCreateMember(){
+    this.navCtrl.push('member-create', {'parentPage': this});
   }
 
 }

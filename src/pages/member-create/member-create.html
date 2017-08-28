@@ -1,18 +1,31 @@
-<!--
-  Generated template for the MemberCreatePage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
 
   <ion-navbar>
-    <ion-title>MemberCreate</ion-title>
+    <ion-title>New Member</ion-title>
   </ion-navbar>
 
 </ion-header>
 
-
 <ion-content padding>
+  <ion-item>
+    <ion-label stacked>Firstname</ion-label>
+    <ion-input [(ngModel)]="firstName" type="text" placeholder="Firstname">
+    </ion-input>
+  </ion-item>
 
+  <ion-item>
+    <ion-label stacked>Lastname</ion-label>
+    <ion-input [(ngModel)]="lastName" type="text" placeholder="Lastname">
+    </ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label stacked>Member ID</ion-label>
+    <ion-input [(ngModel)]="memberId" type="text" placeholder="Member ID">
+    </ion-input>
+  </ion-item>
+
+  <button ion-button block (click)="createMember(firstName, lastName, memberId)">
+    Create Member
+  </button>
 </ion-content>
