@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import firebase from 'firebase';
+import {AngularFireDatabase} from "angularfire2/database";
 
 @Injectable()
 export class EventProvider {
   public eventRef:firebase.database.Reference;
   public eventList: Array<any>;
   private startAtFilter: string;
-  constructor() {
+  constructor(private af:AngularFireDatabase) {
     this.eventRef = firebase.database().ref(`events`);
     // firebase.auth().onAuthStateChanged( user => {
     //   if (user) {
@@ -75,5 +76,15 @@ export class EventProvider {
   //       }
   //     });
   // }
+
+  getAttendanceCount(eventId: string) : number{
+    let childCount = 0;
+    let attendeesUrl = `/attendees/${eventId}`;
+    const lists = this.af.object(attendeesUrl, { preserveSnapshot: true });
+    lists.subscribe(snapshot => {
+      childCount = snapshot.numChildren();
+    });
+    return childCount;
+  }
 
 }
