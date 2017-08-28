@@ -9,5 +9,8 @@ import { MemberListPage } from './member-list';
   imports: [
     IonicPageModule.forChild(MemberListPage),
   ],
+  exports: [
+    MemberListPage
+  ]
 })
 export class MemberListPageModule {}

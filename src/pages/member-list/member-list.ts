@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {Observable} from "rxjs/Observable";
 import {MemberProvider} from "../../providers/member/member";
+import {UserCircleProvider} from "../../providers/user-circle/user-circle";
 
 @IonicPage({
   name: 'member-list'
@@ -14,7 +15,8 @@ export class MemberListPage implements OnInit{
   members: Observable<any[]>;
   constructor(
     private navCtrl: NavController,
-    private membersSvc: MemberProvider) {
+    private membersSvc: MemberProvider,
+    private userCircleSvc: UserCircleProvider) {
   }
 
   ngOnInit() {
@@ -28,17 +30,18 @@ export class MemberListPage implements OnInit{
     this.navCtrl.push('member-detail', {member: member});
   }
 
-  addToCircle(selectedMember: any){
-    //this.attendanceSvc.addAttendee(this.currentEventId, selectedMember.$key);
+  onAddToCircle(selectedMember: any){
+    console.log('onAddToCircle');
+    this.userCircleSvc.addToMyCircle(selectedMember.$key);
   }
 
-  removeFromCircle(selectedMember: any){
-    //this.attendanceSvc.removeAttendee(this.currentEventId, selectedMember.$key);
+  onRemoveFromCircle(selectedMember: any){
+    console.log('onRemoveFromCircle');
+    this.userCircleSvc.removeFromMyCircle(selectedMember.$key);
   }
 
   isMyCircle(selectedMember: any){
-    //return this.attendanceSvc.isVoted(this.currentEventId, selectedMember.$key);
-    return false;
+    return this.userCircleSvc.isMyCircle(selectedMember.$key);
   }
 
 }

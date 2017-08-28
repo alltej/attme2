@@ -44,14 +44,16 @@ export class UserCircleProvider {
     return circleKeys;
   }
 
-  isInMyCircle(memberKey: string) {
+  isMyCircle(memberKey: string) {
     //const userId = this.authService.getActiveUser().uid;
+    //console.log('isMyCircle::' + memberKey);
     let url = `/userCircles/${this.userId}/${memberKey}`;
     let circleRef = this.af.object(url, { preserveSnapshot: true });
+    console.log(circleRef);
     return circleRef;
   }
 
-  removeToMyCircle(memberKey: string) {
+  removeFromMyCircle(memberKey: string) {
     let url = `/userCircles/${this.userId}/${memberKey}`;
     //let afRef = this.af.database.object(url);
     this.af.object(url).remove();

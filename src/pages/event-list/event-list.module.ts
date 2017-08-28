@@ -9,5 +9,8 @@ import { EventListPage } from './event-list';
   imports: [
     IonicPageModule.forChild(EventListPage),
   ],
+  exports: [
+    EventListPage
+  ]
 })
 export class EventListPageModule {}

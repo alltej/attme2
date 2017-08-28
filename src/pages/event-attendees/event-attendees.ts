@@ -48,7 +48,7 @@ export class EventAttendeesPage  implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('EventAttendeesPage')
+    //console.log('EventAttendeesPage')
     //this.eventGroup = { event: this.navParams.data, attendees : [], icon : "brush"};
     //this.eventGroup.event.id = this.navParams.data.$key;
 
