@@ -14,6 +14,9 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import {firebaseConfig} from "../config/firebase.config";
+import { MemberProvider } from '../providers/member/member';
+import { UserCircleProvider } from '../providers/user-circle/user-circle';
+import {AttendanceProvider} from "../providers/event/attendance";
 
 
 @NgModule({
@@ -39,7 +42,10 @@ import {firebaseConfig} from "../config/firebase.config";
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthProvider,
     EventProvider,
+    AttendanceProvider,
     ProfileProvider,
+    MemberProvider,
+    UserCircleProvider,
   ]
 })
 export class AppModule {}
