@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
-import {AngularFireDatabase, FirebaseListObservable} from "angularfire2/database";
+import {AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable} from "angularfire2/database";
 import {AuthProvider} from "../auth/auth";
 
 @Injectable()
@@ -58,7 +58,7 @@ export class MemberProvider {
     });
   }
 
-  getMember(memberKey: string) {
+  getMember(memberKey: string):FirebaseObjectObservable<any> {
     return this.af.object(`/members/${memberKey}`, { preserveSnapshot: true });
   }
 
