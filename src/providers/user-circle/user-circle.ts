@@ -49,8 +49,17 @@ export class UserCircleProvider {
     //console.log('isMyCircle::' + memberKey);
     let url = `/userCircles/${this.userId}/${memberKey}`;
     let circleRef = this.af.object(url, { preserveSnapshot: true });
-    console.log(circleRef);
-    return circleRef;
+    //console.log(circleRef);
+    //return circleRef;
+    let voted = false;
+    circleRef.subscribe(data => {
+      if(data.val()==null) {
+        voted = false;
+      } else {
+        voted = true;
+      }
+    });
+    return voted;
   }
 
   removeFromMyCircle(memberKey: string) {
