@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {MemberProvider} from "../../providers/member/member";
 import {FirebaseObjectObservable} from "angularfire2/database";
+import {AuthProvider} from "../../providers/auth/auth";
 
 @IonicPage({
   name: 'member-detail',
@@ -17,7 +18,8 @@ export class MemberDetailPage implements OnInit{
   public member: any;
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
-              private memberSvc: MemberProvider) {
+              private memberSvc: MemberProvider,
+              private authSvc: AuthProvider) {
     this.memberId = this.navParams.get('memberId');
   }
 
@@ -49,5 +51,11 @@ export class MemberDetailPage implements OnInit{
     //console.log('onAddToMyCircle');
     //console.log(memberKey);
     //this.memberSvc.removeToMyCircle(this.member.$key);
+  }
+
+  onCreateInvite(email:string) {
+    console.log(email);
+    this.authSvc.createUserInvite(email);
+
   }
 }

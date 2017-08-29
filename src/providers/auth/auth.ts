@@ -6,14 +6,14 @@ import {Observable} from "rxjs/Observable";
 
 @Injectable()
 export class AuthProvider {
-  //public fireAuth:firebase.auth.Auth;
+  public fireAuth:firebase.auth.Auth;
   public userProfileRef:firebase.database.Reference;
 
   private authState: Observable<firebase.User>
   private currentUser: firebase.User = null;
 
   constructor(public afAuth: AngularFireAuth) {
-    //this.fireAuth = firebase.auth();
+    this.fireAuth = firebase.auth();
     this.userProfileRef = firebase.database().ref('/userProfile');
 
     this.authState = this.afAuth.authState;
@@ -49,5 +49,54 @@ export class AuthProvider {
 
   getActiveUser() {
     return firebase.auth().currentUser;
+  }
+
+  createUserInvite(email:string) {
+    this.fireAuth.createUserWithEmailAndPassword(email, 'Welcome.1')
+      .then(
+        (success) => {
+          let user:any = firebase.auth().currentUser;
+          console.log(user);
+          user.sendEmailVerification().then(
+            (success) => {console.log("please verify your email")
+            }
+          ).catch(
+            (err) => {
+              //this.error = err;
+              console.log('errA');
+              console.log(err);
+            }
+          )
+        }
+      )
+      .catch(function(error) {
+        // Handle Errors here.
+        var errorCode = 'uth/weak-password';
+        var errorMessage = error.message;
+        if (errorCode == 'auth/weak-password') {
+          alert('The password is too weak.');
+        } else {
+          alert(errorMessage);
+        }
+        console.log(error);
+      })
+    // this.fireAuth.createUserWithEmailAndPassword({
+    //   email: email,
+    //   password: '$Testpswd.1'
+    // }).then(
+    //   (success) => {
+    //     let user:any = firebase.auth().currentUser;
+    //     user.sendEmailVerification().then(
+    //       (success) => {console.log("please verify your email")}
+    //     ).catch(
+    //       (err) => {
+    //         this.error = err;
+    //       }
+    //     )
+    //
+    //   }).catch(
+    //   (err) => {
+    //     this.error = err;
+    //   })
   }
 }

@@ -20,12 +20,18 @@
   </ion-item>
 
   <ion-item>
+    <ion-label stacked>Email</ion-label>
+    <ion-input [(ngModel)]="email" type="text" placeholder="Email">
+    </ion-input>
+  </ion-item>
+
+  <ion-item>
     <ion-label stacked>Member ID</ion-label>
     <ion-input [(ngModel)]="memberId" type="text" placeholder="Member ID">
     </ion-input>
   </ion-item>
 
-  <button ion-button block (click)="createMember(firstName, lastName, memberId)">
+  <button ion-button block (click)="createMember(firstName, lastName, memberId, email)">
     Create Member
   </button>
 </ion-content>

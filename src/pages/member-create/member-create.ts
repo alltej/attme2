@@ -20,8 +20,8 @@ export class MemberCreatePage {
     //console.log('ionViewDidLoad MemberCreatePage');
   }
 
-  createMember(firstName: String, lastName: String, memberId: String) {
-    this.memberSvc.addMember(firstName, lastName, memberId);
+  createMember(firstName: String, lastName: String, memberId: String, email: String) {
+    this.memberSvc.addMember(firstName, lastName, memberId, email);
     this.navCtrl.popToRoot();
   }
 }

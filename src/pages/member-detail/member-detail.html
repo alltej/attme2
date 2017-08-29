@@ -12,7 +12,7 @@
     <ion-row>
       <ion-col text-center>
         <h2>{{ member.firstName }} {{ member.lastName }}</h2>
-        <div class="subtitle">{{ member.emailAddress }}</div>
+        <div class="subtitle">{{ member.email }}</div>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -27,6 +27,15 @@
           outline
           block
           (click)="onEditMember()">Edit</button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <button
+          ion-button
+          outline
+          block
+          (click)="onCreateInvite(member.email)">Invite</button>
       </ion-col>
     </ion-row>
     <!--<ion-row>-->

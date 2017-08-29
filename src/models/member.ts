@@ -3,6 +3,6 @@ export class Member {
     public lastName: string,
     public firstName: string,
     public memberId: string,
-    public voteCount: number
+    public email: string
   ){}
 }

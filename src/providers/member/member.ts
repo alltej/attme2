@@ -21,28 +21,29 @@ export class MemberProvider {
     });
   }
 
-  updateMember($key: string, firstName, lastName, memberId) {
+  updateMember($key: string, firstName, lastName, memberId,email) {
     let url = `/members/${$key}`;
-    let data = this.getMemberJson(firstName, lastName, memberId);
+    let data = this.getMemberJson(firstName, lastName, memberId, email);
     let memberRef = this.af.object(url);
     memberRef.update(data)
     //.then(_ => console.log('update!'))
     ;
   }
 
-  addMember(firstName, lastName, memberId) {
-    let data = this.getMemberJson(firstName, lastName, memberId);
+  addMember(firstName, lastName, memberId, email) {
+    let data = this.getMemberJson(firstName, lastName, memberId, email);
 
     let url = `/members`;
     let membersRef = this.af.list(url);
     membersRef.push(data);
   }
 
-  private getMemberJson(firstName, lastName, memberId) {
+  private getMemberJson(firstName, lastName, memberId, email) {
     return {
       firstName: firstName,
       lastName: lastName,
-      memberId: memberId
+      memberId: memberId,
+      email: email
     };
   }
 
@@ -115,5 +116,6 @@ export class MemberProvider {
     let url = `/userMember/${userKey}`;
     return this.af.object(url, { preserveSnapshot: true });
   }
+
 
 }
