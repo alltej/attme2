@@ -13,7 +13,7 @@ import {AttendanceProvider} from "../../providers/event/attendance";
 
 @IonicPage({
   name: 'event-attendees',
-  segment: 'event-attendees/:eventId'
+  segment: ':eventId/event-attendees'
 })
 @Component({
   selector: 'page-event-attendees',

@@ -34,14 +34,14 @@ export class EventListPage implements OnInit {
     return this.eventSvc.isLiked(eventKey);
   }
 
-  getVoteCount(eventKey){
+  getLikeCount(eventKey){
     let c = this.eventSvc.getLikeCount(eventKey);
     console.log(c);
     return c;
   }
 
   ngOnInit(): void {
-    console.log('EventListPage::ngOnInit');
+    //console.log('EventListPage::ngOnInit');
     // this.events = this.eventProvider.getEvents2()
     //   .map( (arr) => { return arr.reverse(); } );
 

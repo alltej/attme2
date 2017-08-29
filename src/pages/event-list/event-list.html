@@ -15,22 +15,6 @@
 
 </ion-header>
 
-
-<!--<ion-content padding>-->
-  <!--<ion-list>-->
-    <!--<ion-item *ngFor="let event of eventList" (click)="goToEventDetail(event.id)">-->
-      <!--<h2>{{event?.name}}</h2>-->
-      <!--<p><strong>{{event?.where}}</strong></p>-->
-      <!--<p><strong>{{event?.when}}</strong></p>-->
-      <!--<button ion-button outline item-end>Edit</button>-->
-      <!--<button ion-button outline item-end>View</button>-->
-      <!--<button ion-button outline item-end>Attendees</button>-->
-    <!--</ion-item>-->
-
-  <!--</ion-list>-->
-<!--</ion-content>-->
-
-
 <ion-content padding>
   <ion-list>
     <ion-card *ngFor="let event of eventList" >
@@ -55,7 +39,7 @@
             (click)="onAddLike(event?.id)"
             *ngIf="!isLiked(event?.id)">
             <ion-icon name="thumbs-up-outline"></ion-icon>
-            <div>{{(getVoteCount(event?.id))}}</div>
+            <label>{{(getLikeCount(event?.id))}}</label>
           </button>
           <button
             ion-button
@@ -66,7 +50,7 @@
             (click)="onRemoveLike(event?.id)"
             *ngIf="isLiked(event?.id)">
             <ion-icon name="thumbs-up"></ion-icon>
-            <div>{{(getVoteCount(event?.id))}}</div>
+            <label>{{(getLikeCount(event?.id))}}</label>
           </button>
 
         </ion-col>
