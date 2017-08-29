@@ -132,8 +132,10 @@ export class MemberProvider {
     });
   }
 
-  updateMemberId($key: string, memberId: string) {
-    let url = `/members/${$key}`;
+  updateMemberId(memberKey: string, memberId: string): firebase.Promise<void> {
+    console.log(`U THERE?${memberKey}, ${memberId}`);
+    console.log(memberKey);
+    let url = `/members/${memberKey}`;
     return this.af.object(url).update({
       memberId: memberId
     });

@@ -15,7 +15,7 @@ import {AuthProvider} from "../../providers/auth/auth";
 export class MemberDetailPage implements OnInit{
   private memberKey: any;
 
-  public member: any;
+  public member: any = {};
   public isUserProfileExists: boolean = false;
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
@@ -65,7 +65,7 @@ export class MemberDetailPage implements OnInit{
         {
           text: 'Save',
           handler: data => {
-            this.memberSvc.updateName(this.member.memberKey, data.firstName, data.lastName);
+            this.memberSvc.updateName(this.memberKey, data.firstName, data.lastName);
           }
         }
       ]
@@ -94,7 +94,7 @@ export class MemberDetailPage implements OnInit{
           handler: data => {
             //let newEmail = data.newEmail;
 
-            this.memberSvc.updateEmail(this.member.memberKey, data.newEmail).then( () =>{
+            this.memberSvc.updateEmail(this.memberKey, data.newEmail).then( () =>{
               //this.userProfile.email = newEmail;
             }).catch(error => {
               console.log('ERROR: '+error.message);
@@ -114,7 +114,8 @@ export class MemberDetailPage implements OnInit{
     let alert = this.alertCtrl.create({
       inputs: [
         {
-          name: 'newEmail',
+          name: 'newMemberId',
+          value: this.member.memberId,
           placeholder: 'Your member ID if any',
         }
       ],
@@ -125,8 +126,7 @@ export class MemberDetailPage implements OnInit{
         {
           text: 'Save',
           handler: data => {
-            this.memberSvc.updateMemberId(this.member.memberKey, data.memberId).then( () =>{
-              //this.userProfile.email = newEmail;
+            this.memberSvc.updateMemberId(this.memberKey, data.newMemberId).then( () =>{
             }).catch(error => {
               console.log('ERROR: '+error.message);
             });
