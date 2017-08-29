@@ -41,17 +41,34 @@
         <p><strong>{{event?.when}}</strong></p>
       </ion-item>
 
-
       <ion-card-content>
         <p>{{event?.description}}</p>
       </ion-card-content>
 
       <ion-row>
         <ion-col>
-          <button ion-button icon-left clear small >
-            <ion-icon name="thumbs-up"></ion-icon>
-            <div>12 </div>
+          <button
+            ion-button
+            icon-left
+            clear
+            small
+            (click)="onAddLike(event?.id)"
+            *ngIf="!isLiked(event?.id)">
+            <ion-icon name="thumbs-up-outline"></ion-icon>
+            <div>{{(getVoteCount(event?.id))}}</div>
           </button>
+          <button
+            ion-button
+            icon-left
+            clear
+            small
+            color="danger"
+            (click)="onRemoveLike(event?.id)"
+            *ngIf="isLiked(event?.id)">
+            <ion-icon name="thumbs-up"></ion-icon>
+            <div>{{(getVoteCount(event?.id))}}</div>
+          </button>
+
         </ion-col>
         <ion-col>
           <button ion-button icon-left clear small>
@@ -60,7 +77,10 @@
           </button>
         </ion-col>
         <ion-col>
-          <button ion-button icon-left clear small (click)="goToEventAttendees(event.id)">
+          <button ion-button
+                  icon-left clear small
+                  color="secondary"
+                  (click)="goToEventAttendees(event.id)">
             <!--<ion-icon name="people" *ngIf="getAttendanceCount(event.id)>0"></ion-icon>-->
             <ion-icon name="people"></ion-icon>
             <label>{{event?.attendeeCount}}</label>
