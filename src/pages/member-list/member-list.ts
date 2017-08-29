@@ -27,7 +27,7 @@ export class MemberListPage implements OnInit{
 
   onLoadMember(selectedMember:any){
     //console.log(member);
-    this.navCtrl.push('member-detail', {memberId: selectedMember.$key});
+    this.navCtrl.push('member-detail', {memberKey: selectedMember.$key});
   }
 
   onAddToCircle(selectedMember: any){

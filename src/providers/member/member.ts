@@ -38,6 +38,14 @@ export class MemberProvider {
     membersRef.push(data);
   }
 
+  updateName($key: string, firstName, lastName): firebase.Promise<void> {
+    let url = `/members/${$key}`;
+    return this.af.object(url).update({
+      firstName: firstName,
+      lastName: lastName,
+    });
+  }
+
   private getMemberJson(firstName, lastName, memberId, email) {
     return {
       firstName: firstName,
@@ -49,9 +57,9 @@ export class MemberProvider {
 
   findMemberId(memberKey: string) {
     console.log('find: '+ memberKey);
-    return this.af.list(`/members/`, {
+    return this.af.list(`/userProfile/`, {
       query: {
-        orderByChild: 'memberId',
+        orderByChild: 'memberKey',
         equalTo: memberKey,
         limitToFirst: 1
       },
@@ -117,5 +125,17 @@ export class MemberProvider {
     return this.af.object(url, { preserveSnapshot: true });
   }
 
+  updateEmail($key: string, newEmail: string) {
+    let url = `/members/${$key}`;
+    return this.af.object(url).update({
+      email: newEmail
+    });
+  }
 
+  updateMemberId($key: string, memberId: string) {
+    let url = `/members/${$key}`;
+    return this.af.object(url).update({
+      memberId: memberId
+    });
+  }
 }

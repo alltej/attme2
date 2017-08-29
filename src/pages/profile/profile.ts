@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { IonicPage, NavController, AlertController } from 'ionic-angular';
 import { ProfileProvider } from '../../providers/profile/profile';
 import { AuthProvider } from '../../providers/auth/auth';
+import {MemberProvider} from "../../providers/member/member";
 
 @IonicPage({
   name: 'profile'
@@ -10,19 +11,41 @@ import { AuthProvider } from '../../providers/auth/auth';
   selector: 'page-profile',
   templateUrl: 'profile.html',
 })
-export class ProfilePage {
+export class ProfilePage implements OnInit
+{
+  ngOnInit(): void {
+    this.profileProvider.getUserProfile().on('value', userProfileSnapshot => {
+      this.userProfile = userProfileSnapshot.val();
+
+      //console.log(this.userProfile);
+      if (userProfileSnapshot.val().birthDate) {
+        this.birthDate = userProfileSnapshot.val().birthDate;
+      }
+
+      // if (this.birthDate == null) {
+      //   this.birthDate = new Date().toISOString();
+      // }
+    });
+  }
+
   public userProfile:any;
   public birthDate:string;
 
   constructor(public navCtrl: NavController, public alertCtrl: AlertController,
-              public profileProvider: ProfileProvider, public authProvider: AuthProvider) {}
+              public profileProvider: ProfileProvider,
+              public authProvider: AuthProvider,
+              public memberProvider: MemberProvider) {}
 
-  ionViewDidEnter() {
-    this.profileProvider.getUserProfile().on('value', userProfileSnapshot => {
-      this.userProfile = userProfileSnapshot.val();
-      this.birthDate = userProfileSnapshot.val().birthDate;
-    });
-  }
+  // ionViewDidEnter() {
+  //   this.profileProvider.getUserProfile().on('value', userProfileSnapshot => {
+  //     this.userProfile = userProfileSnapshot.val();
+  //     this.birthDate = userProfileSnapshot.val().birthDate;
+  //     if (this.birthDate == null) {
+  //       console.log(`$Hahahahaha:{this.birthDate}`);
+  //       this.birthDate = new Date().toISOString();
+  //     }
+  //   });
+  // }
 
   logOut(): void {
     this.authProvider.logoutUser().then(() => {
@@ -53,6 +76,7 @@ export class ProfilePage {
           text: 'Save',
           handler: data => {
             this.profileProvider.updateName(data.firstName, data.lastName);
+            this.memberProvider.updateName(this.userProfile.memberKey, data.firstName, data.lastName);
           }
         }
       ]

@@ -51,12 +51,20 @@ export class AuthProvider {
     return firebase.auth().currentUser;
   }
 
-  createUserInvite(email:string) {
+  createUserInvite(memberKey:string,lastName:string, firstName:string, email:string) {
     this.fireAuth.createUserWithEmailAndPassword(email, 'Welcome.1')
       .then(
-        (success) => {
-          let user:any = firebase.auth().currentUser;
-          console.log(user);
+        (newUser) => {
+          this.userProfileRef.child(newUser.uid).set({
+            memberKey:memberKey,
+            lastName:lastName,
+            firstName:firstName,
+            email: email
+          });
+
+          //let user:any = firebase.auth().currentUser;
+          let user:any = newUser;
+          console.log(`User Created::${user}`);
           user.sendEmailVerification().then(
             (success) => {console.log("please verify your email")
             }
