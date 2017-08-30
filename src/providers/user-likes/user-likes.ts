@@ -50,10 +50,10 @@ export class UserLikesProvider {
 
   isLiked(eventKey: string) {
     let liked:boolean = false;
-    // let url = `/userLikes/${this.authSvc.getActiveUser().uid}/${eventKey}`;
-    //
-    // //return this.af.object(url);
-    //
+    let url = `/userLikes/${this.authSvc.getActiveUser().uid}/${eventKey}`;
+
+    return this.af.object(url, { preserveSnapshot: true });
+
     // const likedRef = this.af.object(url, { preserveSnapshot: true });
     //
     // likedRef.subscribe(data => {
@@ -63,8 +63,8 @@ export class UserLikesProvider {
     //     liked = true;
     //   }
     // });
-
-    return liked;
+    //
+    // return liked;
     // let liked = false;
     // const likedRef = this.af.object(url, { preserveSnapshot: true });
     //

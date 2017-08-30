@@ -17,9 +17,9 @@
 
 <ion-content padding>
   <ion-list>
-    <ion-card *ngFor="let event of eventList" >
+    <ion-card *ngFor="let event of eventsRx | async" >
 
-      <ion-item (click)="goToEventDetail(event?.id)">
+      <ion-item (click)="goToEventDetail(event?.$key)">
         <h2>{{event?.name}}</h2>
         <p><strong>{{event?.where}}</strong></p>
         <p><strong>{{event?.when}}</strong></p>
@@ -36,10 +36,10 @@
             icon-left
             clear
             small
-            (click)="onAddLike(event?.id)"
-            *ngIf="!isLiked(event?.id)">
+            (click)="onAddLike(event?.$key)"
+            *ngIf="!event.isLiked">
             <ion-icon name="thumbs-up-outline"></ion-icon>
-            <label>{{(getLikeCount(event?.id))}}</label>
+            <label>{{event?.likes}}</label>
           </button>
           <button
             ion-button
@@ -47,17 +47,17 @@
             clear
             small
             color="danger"
-            (click)="onRemoveLike(event?.id)"
-            *ngIf="isLiked(event?.id)">
+            (click)="onRemoveLike(event?.$key)"
+            *ngIf="event.isLiked">
             <ion-icon name="thumbs-up"></ion-icon>
-            <label>{{(getLikeCount(event?.id))}}</label>
+            <label>{{event?.likes}}</label>
           </button>
 
         </ion-col>
         <ion-col>
           <button ion-button icon-left clear small>
             <ion-icon name="chatbubbles"></ion-icon>
-            <div>4 </div>
+            <div>0</div>
           </button>
         </ion-col>
         <ion-col>
@@ -67,7 +67,7 @@
                   (click)="goToEventAttendees(event.id)">
             <!--<ion-icon name="people" *ngIf="getAttendanceCount(event.id)>0"></ion-icon>-->
             <ion-icon name="people"></ion-icon>
-            <label>{{event?.attendeeCount}}</label>
+            <label>{{event?.attendees}}</label>
           </button>
         </ion-col>
         <!--<ion-col center text-center>-->

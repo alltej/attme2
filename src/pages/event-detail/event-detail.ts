@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { EventProvider } from '../../providers/event/event';
-//import { Camera } from '@ionic-native/camera';
 
 @IonicPage({
   name: 'event-detail',
@@ -11,19 +10,21 @@ import { EventProvider } from '../../providers/event/event';
   selector: 'page-event-detail',
   templateUrl: 'event-detail.html',
 })
-export class EventDetailPage {
+export class EventDetailPage implements OnInit{
   public currentEvent: any = {};
+  private eventId: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-              public eventProvider: EventProvider) {}
-
-  ionViewDidEnter(){
-    this.eventProvider.getEventDetail(this.navParams.get('eventId'))
-      .on('value', eventSnapshot => {
-        this.currentEvent = eventSnapshot.val();
-        this.currentEvent.id = eventSnapshot.key;
-      });
+              public eventSvc: EventProvider) {
+    this.eventId = this.navParams.get('eventId');
   }
 
-
+  ngOnInit(): void {
+    this.eventSvc.getEventDetail(this.eventId)
+      .subscribe((data)=>{
+        if (data.val()!=null) {
+          this.currentEvent = data.val();
+        }
+      });
+  }
 }

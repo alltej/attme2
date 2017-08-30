@@ -37,9 +37,7 @@ export class EventAttendeesPage  implements OnInit {
               private membersSvc: MemberProvider,
               private attendanceSvc: AttendanceProvider,
               public navParams: NavParams,
-              public eventProvider: EventProvider,
               private alertCtrl: AlertController,
-              private authService: AuthProvider,
               private userSvc: UserCircleProvider) {
 
     console.log('EventAttendeesPage::constructor')

@@ -13,17 +13,17 @@ export class EventCreatePage {
   private eventDate: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-              public eventProvider: EventProvider) {
+              public eventSvc: EventProvider) {
     this.eventDate = new Date().toISOString();
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad EventCreatePage');
+    //console.log('ionViewDidLoad EventCreatePage');
   }
 
 
   createEvent(eventName:string, eventDescription:string, eventDate:string, eventLocation:string) {
-    this.eventProvider.createEvent(eventName, eventDescription, eventDate, eventLocation)
+    this.eventSvc.createEvent(eventName, eventDescription, eventDate, eventLocation)
       .then( newEvent => {
         this.navCtrl.pop();
       });
