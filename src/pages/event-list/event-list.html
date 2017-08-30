@@ -37,7 +37,7 @@
             clear
             small
             (click)="onAddLike(event?.$key)"
-            *ngIf="!event.isLiked">
+            *ngIf="((event.isLiked | async)?.on==null)">
             <ion-icon name="thumbs-up-outline"></ion-icon>
             <label>{{event?.likes}}</label>
           </button>
@@ -48,7 +48,7 @@
             small
             color="danger"
             (click)="onRemoveLike(event?.$key)"
-            *ngIf="event.isLiked">
+            *ngIf="!((event.isLiked | async)?.on==null)">
             <ion-icon name="thumbs-up"></ion-icon>
             <label>{{event?.likes}}</label>
           </button>
@@ -57,7 +57,8 @@
         <ion-col>
           <button ion-button icon-left clear small>
             <ion-icon name="chatbubbles"></ion-icon>
-            <div>0</div>
+            <!--<div>{{(event.isLiked | async)?.on}}</div>-->
+            <div>{{(event.isLiked | async)?.on==null}}</div>
           </button>
         </ion-col>
         <ion-col>

@@ -24,27 +24,33 @@ export class EventListPage implements OnInit {
   }
 
   onAddLike(eventKey: string){
-
     this.userLikeSvc.addLike(eventKey);
+    //this.reloadEvents();
   }
 
   onRemoveLike(eventKey: string){
     this.userLikeSvc.removeLike(eventKey);
+    //this.reloadEvents();
   }
 
   ngOnInit(): void {
+    this.reloadEvents();
+  }
+
+  private reloadEvents() {
     this.eventsRx = this.eventSvc.getEvents().map((items) => {
       return items.map(item => {
-             this.userLikeSvc.isLiked(item.$key).subscribe(data => {
-                if(data.val()==null) {
-                  item.isLiked = false;
-                } else {
-                  item.isLiked = true;
-                }
-              });
-            return item;
-          })
+        item.isLiked = this.userLikeSvc.isLiked(item.$key);
+        // this.userLikeSvc.isLiked(item.$key).subscribe(data => {
+        //   if (data.val() == null) {
+        //     item.isLiked = false;
+        //   } else {
+        //     item.isLiked = true;
+        //   }
+        // });
+        return item;
       })
+    })
   }
 
   onNewEvent(){
