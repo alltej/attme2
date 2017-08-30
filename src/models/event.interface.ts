@@ -7,5 +7,7 @@ export class Event {
   when: string;
   where:string;
   tags: string[];
+  likes: number;
+  isLiked:boolean;
   attendees: Attendee[];
 }

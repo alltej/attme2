@@ -17,6 +17,7 @@ import {firebaseConfig} from "../config/firebase.config";
 import { MemberProvider } from '../providers/member/member';
 import { UserCircleProvider } from '../providers/user-circle/user-circle';
 import {AttendanceProvider} from "../providers/event/attendance";
+import { UserLikesProvider } from '../providers/user-likes/user-likes';
 
 
 @NgModule({
@@ -46,6 +47,7 @@ import {AttendanceProvider} from "../providers/event/attendance";
     ProfileProvider,
     MemberProvider,
     UserCircleProvider,
+    UserLikesProvider,
   ]
 })
 export class AppModule {}
