@@ -23,7 +23,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   members: Observable<any[]>;
   relationship: any;
   userCircles: any[];
-
+//userCircles: any[];
   //let circleKeys = [];
   searchControl: FormControl;
   searchTerm: string = '';
@@ -67,6 +67,15 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   setFilteredItems(){
     console.log('setFilteredItems')
 
+    let circleKeys = [];
+    this.userSvc.getMyCircles()
+      .takeUntil(this.componentDestroyed$)
+      .subscribe(itemKeys=>{
+        itemKeys.forEach(data => {
+          circleKeys.push(data.key);
+        });
+      })
+
       // .takeUntil(this.componentDestroyed$)
       // .map((members) =>
       //   members.filter(member => circleKeys.indexOf(member.$key) !== -1)
@@ -88,6 +97,11 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
         .map((members) =>
           members.filter(member => member.lastName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1));
     }
+
+    // this.members.filter(member => {
+    //   circleKeys.indexOf(member.key) !== -1
+    //   return member;
+    // });
   }
 
   setFilteredItems1(){
@@ -122,8 +136,11 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
       .map((members) => {return members});
   }
 
+
   ngOnInit(): void {
     console.log('EventAttendeesPage::ngOnInit')
+
+    this.userCircles = this.userSvc.getMyCircles1();
     // this.userSvc.getMyCircles()
     //   .takeUntil(this.componentDestroyed$)
     //   .subscribe(itemKeys=>{
@@ -137,30 +154,25 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   }
 
   selectedCircles(){
-    console.log('EventAttendeesPage::selectedCircles')
-    let circleKeys = [];
-    this.userSvc.getMyCircles()
-      .takeUntil(this.componentDestroyed$)
-      .subscribe(itemKeys=>{
-        itemKeys.forEach(data => {
-          circleKeys.push(data.key);
-        });
-      })
-
-    console.log(circleKeys);
+    console.log('xxxEventAttendeesPage::selectedCircles')
+    // let circleKeys = [];
+    // this.userSvc.getMyCircles()
+    //   .takeUntil(this.componentDestroyed$)
+    //   .subscribe(itemKeys=>{
+    //     itemKeys.forEach(data => {
+    //       circleKeys.push(data.key);
+    //     });
+    //   })
+    //
+    console.log(this.userCircles);
 
     this.searching = false;
-    this.members =  this.membersSvc.getMembers()
+    this.members = this.membersSvc.getMembers()
       .takeUntil(this.componentDestroyed$)
-      .map((members) => {
-          members.filter(member => {
-            circleKeys.indexOf(member.$key) !== -1
-            return member;
-          })
-          return members;
-        }
-      )
-    ;
+      .map((members) =>
+        members.filter(member => this.userCircles.indexOf(member.$key) !== -1)
+      );
+
     // this.members = this.membersSvc.getMembers()
     //   .takeUntil(this.componentDestroyed$)
     //   .map((members) => {return members})
@@ -173,7 +185,6 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
     }else{
       //return items.filter(item => item.name.toLowerCase().indexOf(args[0].toLowerCase()) !== -1);
       this.members = this.members
-        .takeUntil(this.componentDestroyed$)
         .map((members) =>
           members.filter(member => member.lastName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1));
     }
