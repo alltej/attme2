@@ -23,7 +23,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   members: Observable<any[]>;
   relationship: any;
   userCircles: any[];
-
+  //let circleKeys = [];
   searchControl: FormControl;
   searchTerm: string = '';
   searching: any = false;
@@ -44,13 +44,14 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
+    console.log('EventAttendeesPage::ngOnInit')
     this.userSvc.getMyCircles()
       .takeUntil(this.componentDestroyed$)
       .subscribe(itemKeys=>{
-        itemKeys.forEach(itemKey => {
-          //console.log(itemKey.key);
-          this.userCircles.push(itemKey.key);
+        itemKeys.forEach(data => {
+          if (!(data.val().isFinished == false || data.val().isFinished == null)) {
+            this.userCircles.push(data.$key);
+          }
         });
       })
     //return circleKeys;;
@@ -103,7 +104,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   }
 
   onUpVote(selectedMember: any){
-    console.log(`${this.currentEventKey}, ${selectedMember.$key}`)
+    //console.log(`${this.currentEventKey}, ${selectedMember.$key}`)
     this.attendanceSvc.addAttendee(this.currentEventKey, selectedMember.$key);
   }
 

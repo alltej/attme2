@@ -35,7 +35,7 @@ export class UserCircleProvider {
     let circleKeys = [];
     const userKey = this.authService.getActiveUser().uid;
     let url = `/userCircles/${userKey}`;
-    return this.af.list(url);
+    return this.af.list(url, { preserveSnapshot: true});
   }
 
   getMyCircles1(){
