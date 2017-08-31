@@ -46,13 +46,13 @@ export class AttendanceProvider{
               })
 
               if (result0.committed) {
-                console.log(`is new member therefore increment counter`)
+                //console.log(`is new member therefore increment counter`)
                 this.af.object(`/attendees/${eventKey}/attendeesCount`).$ref.transaction(tagValue => {
                   ac = tagValue ? tagValue + 1 : 1;
                   return ac;
                 }).then(result =>{
                   if (result.committed) {
-                    this.af.object(`/events/${eventKey}/attendeesCount`).$ref.transaction(tagValue => {
+                    this.af.object(`/events/${eventKey}/attendeesCount`).$ref.transaction(() => {
                       return ac;
                     });
                   }
@@ -88,36 +88,32 @@ export class AttendanceProvider{
     //console.log('removeAttendee')
     const userId = this.authService.getActiveUser().uid;
 
-    
-    const voteUserKeyRef = this.af.object(`/attendees/${eventKey}/members/${memberKey}/votes/${userId}`);
-    voteUserKeyRef.remove();
-
-    let voteCountRef = this.af.object(`/attendees/${eventKey}/members/${memberKey}/voteCount`);
     let voteCount = 0;
-    voteCountRef.$ref.transaction(tagValue => {
+    this.af.object(`/attendees/${eventKey}/members/${memberKey}/voteCount`).$ref.transaction(tagValue => {
       voteCount = tagValue ? tagValue - 1 : 0;
       return voteCount;
-    }).then(result => {
-        if (result.committed) {
-          if (voteCount == 0){
-            let eventMemberKeyUrl = `/attendees/${eventKey}/members/${memberKey}`;
-            this.af.object(eventMemberKeyUrl).remove();
+    }).then(result1 => {
+      if (result1.committed) {
+        //console.log('result1.committed')
+        this.af.object(`/attendees/${eventKey}/members/${memberKey}/votes/${userId}`).remove()
 
-            let ac = 0;
-            this.af.object(`/attendees/${eventKey}/attendees`).$ref.transaction(tagValue => {
-              ac = tagValue ? tagValue - 1 : 0;
-              return ac;
-            }).then(
-              result =>{
-                this.af.object(`/events/${eventKey}/attendees`).$ref.transaction(tagValue => {
-                  return ac;
-                });
-              }
-            )
+        if (voteCount == 0){
+          let eventMemberKeyUrl = `/attendees/${eventKey}/members/${memberKey}`;
+          this.af.object(eventMemberKeyUrl).remove();
 
-
-          }
+          let ac = 0;
+          this.af.object(`/attendees/${eventKey}/attendeesCount`).$ref.transaction(tagValue => {
+            ac = tagValue ? tagValue - 1 : 0;
+            return ac;
+          }).then(
+            result =>{
+              this.af.object(`/events/${eventKey}/attendeesCount`).$ref.transaction(tagValue => {
+                return ac;
+              });
+            }
+          )
         }
+      }
     });
   }
 

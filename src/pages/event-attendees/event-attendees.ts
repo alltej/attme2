@@ -69,6 +69,7 @@ export class EventAttendeesPage  implements OnInit {
   }
 
   setFilteredItems(){
+
     if (this.searchTerm == null || this.searchTerm == ''){
       //console.log('setFilteredItems: aa');
       this.members = this.membersSvc.getMembers()
