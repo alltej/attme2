@@ -57,18 +57,19 @@
         <ion-col>
           <button ion-button icon-left clear small>
             <ion-icon name="chatbubbles"></ion-icon>
-            <!--<div>{{(event.isLiked | async)?.on}}</div>-->
-            <div>{{(event.isLiked | async)?.on==null}}</div>
+            <!--<div>{{(event.isLiked | async)?.on==null}}</div>-->
+            <!--<div>{{event?.$key}}</div>-->
+            <div>2</div>
           </button>
         </ion-col>
         <ion-col>
           <button ion-button
                   icon-left clear small
                   color="secondary"
-                  (click)="goToEventAttendees(event.id)">
+                  (click)="goToEventAttendees(event?.$key)">
             <!--<ion-icon name="people" *ngIf="getAttendanceCount(event.id)>0"></ion-icon>-->
             <ion-icon name="people"></ion-icon>
-            <label>{{event?.attendees}}</label>
+            <label>{{event?.attendeesCount}}</label>
           </button>
         </ion-col>
         <!--<ion-col center text-center>-->

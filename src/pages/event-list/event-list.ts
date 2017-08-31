@@ -65,9 +65,9 @@ export class EventListPage implements OnInit {
     this.navCtrl.push('event-detail', { 'eventId': eventId });
   }
 
-  goToEventAttendees(eventId) {
+  goToEventAttendees(eventKey) {
     //console.log('goToEventAttendees:' + eventId);
-    this.navCtrl.push('event-attendees', { 'eventId': eventId });
+    this.navCtrl.push('event-attendees', { 'eventKey': eventKey });
   }
 
 }

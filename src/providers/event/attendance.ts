@@ -4,11 +4,6 @@ import {FirebaseListObservable, AngularFireDatabase} from 'angularfire2/database
 import 'rxjs/Rx';
 import {AuthProvider} from "../auth/auth";
 
-// export class vote {
-//   constructor(
-//     public on: Date) {}
-// }
-
 @Injectable()
 export class AttendanceProvider{
 
@@ -21,42 +16,63 @@ export class AttendanceProvider{
   }
 
   addAttendee(eventKey: string, memberKey:string) {
+    console.log('addAttendee')
     const userId = this.authService.getActiveUser().uid;
-    let url = `/attendees/${eventKey}/${memberKey}/votes/${userId}`;
-    this.af.object(url).$ref.transaction(currentValue => {
+
+    this.af.object(`/attendees/${eventKey}/members/${memberKey}`).$ref.transaction(currentValue => {
       if (currentValue === null) {
-        return{on : new Date().toISOString()};
+        //console.log('aaa-11::this is new member key');
+        return{voteCount : 0};
       } else {
-        //console.log('This username is taken. Try another one');
+        //console.log('This member already exists. do not increment counter');
         //return Promise.reject(Error('username is taken'))
       }
-    })
-      .then( result => {
-        // Good to go, user does not exist
-        if (result.committed) {
-          let voteUrl = `/attendees/${eventKey}/${memberKey}/voteCount`;
-          let tagObs = this.af.object(voteUrl);
-          tagObs.$ref.transaction(tagValue => {
-            return tagValue ? tagValue + 1 : 1;
+    }).then(
+      result0 =>{
+
+        this.af.object(`/attendees/${eventKey}/members/${memberKey}/votes/${userId}`).$ref.transaction(currentValue => {
+          if (currentValue === null) {
+            return{on : new Date().toISOString()};
+          }
+        })
+          .then( result1 => {
+            let ac = 0;
+            let mc = 0;
+            // Good to go, user does not exist
+            if (result1.committed) {
+              this.af.object(`/attendees/${eventKey}/members/${memberKey}/voteCount`).$ref.transaction(tagValue => {
+                mc = tagValue ? tagValue + 1 : 1;
+                return mc;
+              })
+
+              if (result0.committed) {
+                console.log(`is new member therefore increment counter`)
+                this.af.object(`/attendees/${eventKey}/attendeesCount`).$ref.transaction(tagValue => {
+                  ac = tagValue ? tagValue + 1 : 1;
+                  return ac;
+                }).then(result =>{
+                  if (result.committed) {
+                    this.af.object(`/events/${eventKey}/attendeesCount`).$ref.transaction(tagValue => {
+                      return ac;
+                    });
+                  }
+                })
+              }
+            }
+          })
+          .catch( error => {
+            // handle error
           });
 
-          let attendeeCountUrl = `/events/${eventKey}/attendeeCount`;
-          let attendeeCountObj = this.af.object(attendeeCountUrl);
-          attendeeCountObj.$ref.transaction(tagValue => {
-            return tagValue ? tagValue + 1 : 1;
-          });
-        }
-      })
-      .catch( error => {
-        // handle error
-      });
+      }
+    )
+
   }
 
   isVoted(eventKey:string, memberKey:string) {
     const userKey = this.authService.getActiveUser().uid;
-    let url = `/attendees/${eventKey}/${memberKey}/votes/${userKey}`;
     let voted = false;
-    const eventMemberVoteRef = this.af.object(url, { preserveSnapshot: true });
+    const eventMemberVoteRef = this.af.object(`/attendees/${eventKey}/members/${memberKey}/votes/${userKey}`, { preserveSnapshot: true });
 
     eventMemberVoteRef.subscribe(data => {
       if(data.val()==null) {
@@ -69,13 +85,14 @@ export class AttendanceProvider{
   }
 
   removeAttendee(eventKey: string, memberKey: string) {
+    //console.log('removeAttendee')
     const userId = this.authService.getActiveUser().uid;
-    let voteKeyUserUrl = `/attendees/${eventKey}/${memberKey}/votes/${userId}`;
-    const voteUserKeyRef = this.af.object(voteKeyUserUrl);
+
+    
+    const voteUserKeyRef = this.af.object(`/attendees/${eventKey}/members/${memberKey}/votes/${userId}`);
     voteUserKeyRef.remove();
 
-    let voteCountUrl = `/attendees/${eventKey}/${memberKey}/voteCount`;
-    let voteCountRef = this.af.object(voteCountUrl);
+    let voteCountRef = this.af.object(`/attendees/${eventKey}/members/${memberKey}/voteCount`);
     let voteCount = 0;
     voteCountRef.$ref.transaction(tagValue => {
       voteCount = tagValue ? tagValue - 1 : 0;
@@ -83,8 +100,22 @@ export class AttendanceProvider{
     }).then(result => {
         if (result.committed) {
           if (voteCount == 0){
-            let eventMemberKeyUrl = `/attendees/${eventKey}/${memberKey}`;
+            let eventMemberKeyUrl = `/attendees/${eventKey}/members/${memberKey}`;
             this.af.object(eventMemberKeyUrl).remove();
+
+            let ac = 0;
+            this.af.object(`/attendees/${eventKey}/attendees`).$ref.transaction(tagValue => {
+              ac = tagValue ? tagValue - 1 : 0;
+              return ac;
+            }).then(
+              result =>{
+                this.af.object(`/events/${eventKey}/attendees`).$ref.transaction(tagValue => {
+                  return ac;
+                });
+              }
+            )
+
+
           }
         }
     });
@@ -92,7 +123,7 @@ export class AttendanceProvider{
 
   getUpVotes(eventKey: string, memberKey: string) {
     let voteCount = 0;
-    let voteCountUrl = `/attendees/${eventKey}/${memberKey}/voteCount`;
+    let voteCountUrl = `/attendees/${eventKey}/members/${memberKey}/voteCount`;
     var voteCountRef = this.af.object(voteCountUrl,{ preserveSnapshot: true})
 
     voteCountRef.subscribe(snapshot => {

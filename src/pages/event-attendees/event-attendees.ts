@@ -13,7 +13,7 @@ import {AttendanceProvider} from "../../providers/event/attendance";
 
 @IonicPage({
   name: 'event-attendees',
-  segment: ':eventId/event-attendees'
+  segment: ':eventKey/event-attendees'
 })
 @Component({
   selector: 'page-event-attendees',
@@ -31,7 +31,7 @@ export class EventAttendeesPage  implements OnInit {
   searchControl: FormControl;
   searchTerm: string = '';
   searching: any = false;
-  private currentEventId: string;
+  private currentEventKey: string;
 
   constructor(public navCtrl: NavController,
               private membersSvc: MemberProvider,
@@ -40,9 +40,10 @@ export class EventAttendeesPage  implements OnInit {
               private alertCtrl: AlertController,
               private userSvc: UserCircleProvider) {
 
-    console.log('EventAttendeesPage::constructor')
+
     this.searchControl = new FormControl();
-    this.currentEventId = this.navParams.get('eventId');
+    this.currentEventKey = this.navParams.get('eventKey');
+    console.log(`EventAttendeesPage::constructor::${this.currentEventKey}`);
   }
 
   ngOnInit(): void {
@@ -95,15 +96,16 @@ export class EventAttendeesPage  implements OnInit {
   }
 
   onUpVote(selectedMember: any){
-    this.attendanceSvc.addAttendee(this.currentEventId, selectedMember.$key);
+    console.log(`${this.currentEventKey}, ${selectedMember.$key}`)
+    this.attendanceSvc.addAttendee(this.currentEventKey, selectedMember.$key);
   }
 
   onDownVote(selectedMember: any){
-    this.attendanceSvc.removeAttendee(this.currentEventId, selectedMember.$key);
+    this.attendanceSvc.removeAttendee(this.currentEventKey, selectedMember.$key);
   }
 
   isVoted(selectedMember: any){
-    return this.attendanceSvc.isVoted(this.currentEventId, selectedMember.$key);
+    return this.attendanceSvc.isVoted(this.currentEventKey, selectedMember.$key);
   }
 
   selectedAll(){
@@ -136,7 +138,7 @@ export class EventAttendeesPage  implements OnInit {
   }
 
   getVoteCount(selectedMember: any){
-    let c = this.attendanceSvc.getUpVotes(this.currentEventId, selectedMember.$key);
+    let c = this.attendanceSvc.getUpVotes(this.currentEventKey, selectedMember.$key);
     //console.log(c);
     return c;
   }
