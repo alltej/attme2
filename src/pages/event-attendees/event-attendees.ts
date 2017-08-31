@@ -23,6 +23,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   members: Observable<any[]>;
   relationship: any;
   userCircles: any[];
+
   //let circleKeys = [];
   searchControl: FormControl;
   searchTerm: string = '';
@@ -43,19 +44,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
     //console.log(`EventAttendeesPage::constructor::${this.currentEventKey}`);
   }
 
-  ngOnInit(): void {
-    console.log('EventAttendeesPage::ngOnInit')
-    this.userSvc.getMyCircles()
-      .takeUntil(this.componentDestroyed$)
-      .subscribe(itemKeys=>{
-        itemKeys.forEach(data => {
-          if (!(data.val().isFinished == false || data.val().isFinished == null)) {
-            this.userCircles.push(data.$key);
-          }
-        });
-      })
-    //return circleKeys;;
-  }
+
 
   ngOnDestroy(): void {
     //console.log('EventAttendeesPage::everything works as intended with or without super call');
@@ -76,14 +65,26 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   }
 
   setFilteredItems(){
+    console.log('setFilteredItems')
 
+      // .takeUntil(this.componentDestroyed$)
+      // .map((members) =>
+      //   members.filter(member => circleKeys.indexOf(member.$key) !== -1)
+      // )
+      // .subscribe(m => {
+      //   this.members = m;
+      // })
     if (this.searchTerm == null || this.searchTerm == ''){
-      //console.log('setFilteredItems: aa');
+      console.log('setFilteredItems: xx');
       this.members = this.membersSvc.getMembers()
-        .map((members) => {return members});
+        .takeUntil(this.componentDestroyed$)
+        .map((members) => {return members})
     }else{
+      console.log('setFilteredItems: zz');
+
       //return items.filter(item => item.name.toLowerCase().indexOf(args[0].toLowerCase()) !== -1);
       this.members = this.membersSvc.getMembers()
+        .takeUntil(this.componentDestroyed$)
         .map((members) =>
           members.filter(member => member.lastName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1));
     }
@@ -121,17 +122,103 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
       .map((members) => {return members});
   }
 
+  ngOnInit(): void {
+    console.log('EventAttendeesPage::ngOnInit')
+    // this.userSvc.getMyCircles()
+    //   .takeUntil(this.componentDestroyed$)
+    //   .subscribe(itemKeys=>{
+    //     itemKeys.forEach(data => {
+    //       if (!(data.val().isFinished == false || data.val().isFinished == null)) {
+    //         this.userCircles.push(data.$key);
+    //       }
+    //     });
+    //   })
+    //return circleKeys;;
+  }
+
   selectedCircles(){
+    console.log('EventAttendeesPage::selectedCircles')
+    let circleKeys = [];
+    this.userSvc.getMyCircles()
+      .takeUntil(this.componentDestroyed$)
+      .subscribe(itemKeys=>{
+        itemKeys.forEach(data => {
+          circleKeys.push(data.key);
+        });
+      })
+
+    console.log(circleKeys);
+
+    this.searching = false;
+    this.members =  this.membersSvc.getMembers()
+      .takeUntil(this.componentDestroyed$)
+      .map((members) => {
+          members.filter(member => {
+            circleKeys.indexOf(member.$key) !== -1
+            return member;
+          })
+          return members;
+        }
+      )
+    ;
+    // this.members = this.membersSvc.getMembers()
+    //   .takeUntil(this.componentDestroyed$)
+    //   .map((members) => {return members})
+    // ;
+    console.log(this.members)
+    if (this.searchTerm == null || this.searchTerm == ''){
+      console.log('setFilteredItems: aa');
+      // this.members = this.membersSvc.getMembers()
+      //   .map((members) => {return members});
+    }else{
+      //return items.filter(item => item.name.toLowerCase().indexOf(args[0].toLowerCase()) !== -1);
+      this.members = this.members
+        .takeUntil(this.componentDestroyed$)
+        .map((members) =>
+          members.filter(member => member.lastName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1));
+    }
+    //TODO: refactor
+    //let favs = ["-Ke2CyV2BJ5S3_7qcQj5", "-Ke2CyV2BJ5S3_7qcQj6", "-Ke2CyV39UwBuq36wSM6", "-KeKL1A7J2pcCKAPMvIr"];
+    //let userCircles = this.userSvc.getMyCircles();
+    //console.log(favs);
+    // this.searching = false;
+    //  this.membersSvc.getMembers()
+    //   .takeUntil(this.componentDestroyed$)
+    //   .map((members) =>
+    //     members.filter(member => this.userCircles.indexOf(member.$key) !== -1)
+    //   )
+    //   .subscribe(m => {
+    //     this.members = m;
+    //   })
+    //  ;
+    //
+    // if (this.searchTerm == null || this.searchTerm == ''){
+    //   //console.log('setFilteredItems: aa');
+    //   // this.members = this.membersSvc.getMembers()
+    //   //   .map((members) => {return members});
+    // }else{
+    //   //return items.filter(item => item.name.toLowerCase().indexOf(args[0].toLowerCase()) !== -1);
+    //   this.members = this.members
+    //     .map((members) =>
+    //       members.filter(member => member.lastName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1));
+    // }
+  }
+  selectedCircles1(){
     //console.log('selectedCircles');
     //TODO: refactor
     //let favs = ["-Ke2CyV2BJ5S3_7qcQj5", "-Ke2CyV2BJ5S3_7qcQj6", "-Ke2CyV39UwBuq36wSM6", "-KeKL1A7J2pcCKAPMvIr"];
     //let userCircles = this.userSvc.getMyCircles();
     //console.log(favs);
     this.searching = false;
-    this.members = this.membersSvc.getMembers()
+     this.membersSvc.getMembers()
+      .takeUntil(this.componentDestroyed$)
       .map((members) =>
         members.filter(member => this.userCircles.indexOf(member.$key) !== -1)
-      );
+      )
+      .subscribe(m => {
+        this.members = m;
+      })
+     ;
 
     if (this.searchTerm == null || this.searchTerm == ''){
       //console.log('setFilteredItems: aa');
