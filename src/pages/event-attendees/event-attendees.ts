@@ -1,15 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
-import {EventProvider} from "../../providers/event/event";
 import {FormControl} from "@angular/forms";
 import {Observable} from "rxjs/Observable";
-import {Attendee} from "../../models/attendee.interface";
-import {Event} from "../../models/event.interface";
-import {AuthProvider} from "../../providers/auth/auth";
 import {UserCircleProvider} from "../../providers/user-circle/user-circle";
 import {MemberProvider} from "../../providers/member/member";
-import "rxjs/add/operator/debounceTime";
+//import "rxjs/add/operator/debounceTime";
 import {AttendanceProvider} from "../../providers/event/attendance";
+import {BaseClass} from "../BasePage";
 
 @IonicPage({
   name: 'event-attendees',
@@ -19,12 +16,11 @@ import {AttendanceProvider} from "../../providers/event/attendance";
   selector: 'page-event-attendees',
   templateUrl: 'event-attendees.html',
 })
-export class EventAttendeesPage  implements OnInit {
+export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
 
   public currentEvent: any = {};
 
   members: Observable<any[]>;
-  //eventGroup: {event: Event, attendees: Attendee[], icon: string};
   relationship: any;
   userCircles: any[];
 
@@ -39,19 +35,29 @@ export class EventAttendeesPage  implements OnInit {
               public navParams: NavParams,
               private alertCtrl: AlertController,
               private userSvc: UserCircleProvider) {
+    super();
 
 
     this.searchControl = new FormControl();
     this.currentEventKey = this.navParams.get('eventKey');
-    console.log(`EventAttendeesPage::constructor::${this.currentEventKey}`);
+    //console.log(`EventAttendeesPage::constructor::${this.currentEventKey}`);
   }
 
   ngOnInit(): void {
-    //console.log('EventAttendeesPage')
-    //this.eventGroup = { event: this.navParams.data, attendees : [], icon : "brush"};
-    //this.eventGroup.event.id = this.navParams.data.$key;
 
-    this.userCircles = this.userSvc.getMyCircles();
+    this.userSvc.getMyCircles()
+      .takeUntil(this.componentDestroyed$)
+      .subscribe(itemKeys=>{
+        itemKeys.forEach(itemKey => {
+          //console.log(itemKey.key);
+          this.userCircles.push(itemKey.key);
+        });
+      })
+    //return circleKeys;;
+  }
+
+  ngOnDestroy(): void {
+    //console.log('EventAttendeesPage::everything works as intended with or without super call');
   }
 
   ionViewDidLoad() {

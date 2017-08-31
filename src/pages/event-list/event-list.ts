@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
 import {EventProvider} from "../../providers/event/event";
 import {Observable} from "rxjs/Observable";
 import {UserLikesProvider} from "../../providers/user-likes/user-likes";
+import {BaseClass} from "../BasePage";
 
 @IonicPage({
   name: 'event-list'
@@ -11,13 +12,16 @@ import {UserLikesProvider} from "../../providers/user-likes/user-likes";
   selector: 'page-event-list',
   templateUrl: 'event-list.html',
 })
-export class EventListPage implements OnInit {
+export class EventListPage extends BaseClass implements OnInit, OnDestroy{
+
+
   public eventsRx: Observable<any[]>;
   private startAtFilter: string;
 
   constructor(public navCtrl: NavController,
               public eventSvc: EventProvider,
               private userLikeSvc: UserLikesProvider) {
+    super();
     var newDate = Date.now() + -60*24*3600*1000; // date n days ago in milliseconds UTC
     this.startAtFilter = new Date(newDate).toISOString();
 
@@ -34,23 +38,22 @@ export class EventListPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.reloadEvents();
-  }
-
-  private reloadEvents() {
-    this.eventsRx = this.eventSvc.getEvents().map((items) => {
+    this.eventsRx = this.eventSvc.getEvents()
+      .takeUntil(this.componentDestroyed$)
+      .map((items) => {
       return items.map(item => {
-        item.isLiked = this.userLikeSvc.isLiked(item.$key);
-        // this.userLikeSvc.isLiked(item.$key).subscribe(data => {
-        //   if (data.val() == null) {
-        //     item.isLiked = false;
-        //   } else {
-        //     item.isLiked = true;
-        //   }
-        // });
+        this.userLikeSvc.isLiked(item.$key)
+          .takeUntil(this.componentDestroyed$)
+          .map( (ul) =>{
+            item.isLiked = ul;
+          });
         return item;
       })
     })
+  }
+
+  ngOnDestroy(): void {
+    //console.log('EventListPage::everything works as intended with or without super call');
   }
 
   onNewEvent(){

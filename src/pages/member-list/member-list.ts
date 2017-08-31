@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {Observable} from "rxjs/Observable";
 import {MemberProvider} from "../../providers/member/member";
 import {UserCircleProvider} from "../../providers/user-circle/user-circle";
+import {BaseClass} from "../BasePage";
 
 @IonicPage({
   name: 'member-list'
@@ -11,18 +12,24 @@ import {UserCircleProvider} from "../../providers/user-circle/user-circle";
   selector: 'page-member-list',
   templateUrl: 'member-list.html',
 })
-export class MemberListPage implements OnInit{
+export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
+
   members: Observable<any[]>;
   constructor(
     private navCtrl: NavController,
     private membersSvc: MemberProvider,
     private userCircleSvc: UserCircleProvider) {
+    super();
   }
 
   ngOnInit() {
-    //this.members = this.membersSvc.getMembers();
     this.members = this.membersSvc.getMembers()
+      .takeUntil(this.componentDestroyed$)
       .map( (arr) => { return arr; } );
+  }
+
+  ngOnDestroy(): void {
+    //console.log('MemberListPage::everything works as intended with or without super call');
   }
 
   onLoadMember(selectedMember:any){
@@ -41,7 +48,17 @@ export class MemberListPage implements OnInit{
   }
 
   isMyCircle(selectedMember: any){
-    return this.userCircleSvc.isMyCircle(selectedMember.$key);
+    let isIn:boolean = false;
+    this.userCircleSvc.isMyCircle(selectedMember.$key)
+      .takeUntil(this.componentDestroyed$)
+      .subscribe(data => {
+        if(data.val()==null) {
+          isIn = false;
+        } else {
+          isIn = true;
+        }
+      });
+    return isIn;
   }
 
   onCreateMember(){

@@ -31,6 +31,15 @@ export class UserCircleProvider {
   }
 
   getMyCircles(){
+    console.log('UserCircles.getMyCircles')
+    let circleKeys = [];
+    const userKey = this.authService.getActiveUser().uid;
+    let url = `/userCircles/${userKey}`;
+    return this.af.list(url);
+  }
+
+  getMyCircles1(){
+    console.log('UserCircles.getMyCircles')
     let circleKeys = [];
     const userKey = this.authService.getActiveUser().uid;
     let url = `/userCircles/${userKey}`;
@@ -45,6 +54,13 @@ export class UserCircleProvider {
   }
 
   isMyCircle(memberKey: string) {
+    //const userId = this.authService.getActiveUser().uid;
+    //console.log('isMyCircle::' + memberKey);
+    let url = `/userCircles/${this.userId}/${memberKey}`;
+    return this.af.object(url, { preserveSnapshot: true });
+
+  }
+  isMyCircle1(memberKey: string) {
     //const userId = this.authService.getActiveUser().uid;
     //console.log('isMyCircle::' + memberKey);
     let url = `/userCircles/${this.userId}/${memberKey}`;
