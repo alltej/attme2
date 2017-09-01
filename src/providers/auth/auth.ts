@@ -44,11 +44,14 @@ export class AuthProvider {
 
   logoutUser(): firebase.Promise<void> {
     this.userProfileRef.child(this.afAuth.auth.currentUser.uid).off();
+
     return this.afAuth.auth.signOut();
   }
 
   getActiveUser() {
     return firebase.auth().currentUser;
+
+
   }
 
   createUserInvite(memberKey:string,lastName:string, firstName:string, email:string) {

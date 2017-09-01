@@ -53,7 +53,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   ngOnDestroy(): void {
-    //console.log('EventListPage::everything works as intended with or without super call');
+    console.log('EventListPage::everything works as intended with or without super call');
   }
 
   onNewEvent(){

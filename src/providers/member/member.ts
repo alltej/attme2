@@ -43,6 +43,7 @@ export class MemberProvider {
           this.eventAttendeeVoteCount = this.af.object(`/attendees/${eventKey}/members/${member.$key}`)
             .subscribe(vote =>{
               member.voteCount = vote.voteCount;
+              this.eventAttendeeVoteCount.unsubscribe();
             })
           return member;
         })

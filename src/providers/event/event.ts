@@ -1,9 +1,12 @@
-import { Injectable } from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import firebase from 'firebase';
 import {AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable} from "angularfire2/database";
 
 @Injectable()
-export class EventProvider {
+export class EventProvider implements OnDestroy {
+  ngOnDestroy(): void {
+  }
+
   public eventRef:firebase.database.Reference;
   private startAtFilter: string;
 
@@ -14,9 +17,8 @@ export class EventProvider {
 
   }
 
-
   getEvents(): FirebaseListObservable<any[]> {
-    return this.af.list('/events',{
+     return this.af.list('/events',{
       query: {
         orderByChild: 'when',
         startAt: this.startAtFilter

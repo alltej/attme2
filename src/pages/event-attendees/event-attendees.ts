@@ -48,8 +48,14 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
+    // if (this.membersSvc != null && this.membersSvc.eventAttendeeVoteCount != null) {
+    //   console.log('this.membersSvc.eventAttendeeVoteCount is null');
+    //   this.membersSvc.eventAttendeeVoteCount.unsubscribe();
+    // }
+    console.log('a::EventAttendeesPage::everything works as intended with or without super call');
     //this.membersSvc.eventAttendeeVoteCount.unsubscribe();
-    console.log('EventAttendeesPage::everything works as intended with or without super call');
+    //this.userSvc.circlesSub.unsubscribe();
+    console.log('z::EventAttendeesPage::everything works as intended with or without super call');
     //console.log('EventAttendeesPage::everything works as intended with or without super call');
   }
 
@@ -128,11 +134,13 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   }
 
   isVoted(selectedMember: any){
-    return this.attendanceSvc.isVoted(this.currentEventKey, selectedMember.$key);
+    return true;
+    //return this.attendanceSvc.isVoted(this.currentEventKey, selectedMember.$key);
   }
 
   selectedAll(){
     this.members = this.membersSvc.getMembersWithVoteCount(this.currentEventKey)
+      .takeUntil(this.componentDestroyed$)
       .map((members) => {return members});
   }
 

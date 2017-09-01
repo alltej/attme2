@@ -2,12 +2,14 @@ import 'rxjs/add/operator/map';
 import {Injectable} from "@angular/core";
 import {AngularFireDatabase} from 'angularfire2/database';
 import {AuthProvider} from "../auth/auth";
+import {Subscription} from "rxjs/Subscription";
 
 
 @Injectable()
 export class UserCircleProvider {
 
   userId:string;
+  public circlesSub: Subscription;
   constructor(private af:AngularFireDatabase,
               private authService:AuthProvider) {
     this.userId = this.authService.getActiveUser().uid;
@@ -43,7 +45,7 @@ export class UserCircleProvider {
     let circleKeys = [];
     const userKey = this.authService.getActiveUser().uid;
     let url = `/userCircles/${userKey}`;
-    this.af.list(url, { preserveSnapshot: true})
+    this.circlesSub = this.af.list(url, { preserveSnapshot: true})
       .subscribe(itemKeys=>{
         itemKeys.forEach(itemKey => {
           //console.log(itemKey.key);

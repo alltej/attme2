@@ -74,12 +74,13 @@ export class AttendanceProvider{
     let voted = false;
     const eventMemberVoteRef = this.af.object(`/attendees/${eventKey}/members/${memberKey}/votes/${userKey}`, { preserveSnapshot: true });
 
-    eventMemberVoteRef.subscribe(data => {
-      if(data.val()==null) {
-        voted = false;
-      } else {
-        voted = true;
-      }
+    eventMemberVoteRef
+      .subscribe(data => {
+        if(data.val()==null) {
+          voted = false;
+        } else {
+          voted = true;
+        }
     });
     return voted;
   }
