@@ -1,6 +1,6 @@
 
 import {Injectable} from "@angular/core";
-import {FirebaseListObservable, AngularFireDatabase} from 'angularfire2/database';
+import {FirebaseListObservable, AngularFireDatabase, FirebaseObjectObservable} from 'angularfire2/database';
 import 'rxjs/Rx';
 import {AuthProvider} from "../auth/auth";
 
@@ -117,7 +117,12 @@ export class AttendanceProvider{
     });
   }
 
-  getUpVotes(eventKey: string, memberKey: string) {
+  getUpVotes(eventKey: string, memberKey: string): FirebaseObjectObservable<any> {
+    console.log(`gggg::${eventKey}::${memberKey}`)
+    return this.af.object(`/attendees/${eventKey}/members/${memberKey}/voteCount`,{ preserveSnapshot: true});
+  }
+
+  getUpVotes1(eventKey: string, memberKey: string) {
     let voteCount = 0;
     let voteCountUrl = `/attendees/${eventKey}/members/${memberKey}/voteCount`;
     var voteCountRef = this.af.object(voteCountUrl,{ preserveSnapshot: true})
@@ -127,4 +132,13 @@ export class AttendanceProvider{
     });
     return voteCount;
   }
+
+
+  // isLiked(eventKey: string) {
+  //   let liked:boolean = false;
+  //   let url = `/userLikes/${this.authSvc.getActiveUser().uid}/${eventKey}`;
+  //
+  //   //return this.af.object(url, { preserveSnapshot: true });
+  //   return this.af.object(url);
+  // }
 }

@@ -96,8 +96,8 @@
         (click)="onUpVote(member)"
         *ngIf="!isVoted(member)">
         <ion-icon name="thumbs-up-outline"></ion-icon>
-        <label>{{(getVoteCount(member))}}</label>
-        <!--<div>{{(getVoteCount(member))}}</div>-->
+        <!--<label>{{member?.voteCount}}</label>-->
+        <div>{{(getVoteCount(member))}}</div>
       </button>
       <button
         ion-button
@@ -107,7 +107,9 @@
         (click)="onDownVote(member)"
         *ngIf="isVoted(member)">
         <ion-icon name="thumbs-up"></ion-icon>
+        <!--<div>{{member?.voteCount}}</div>-->
         <div>{{(getVoteCount(member))}}</div>
+
       </button>
     </div>
   </ion-item>
