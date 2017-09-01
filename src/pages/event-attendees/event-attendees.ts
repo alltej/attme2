@@ -20,7 +20,8 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
 
   public currentEvent: any = {};
 
-  members: Observable<any[]>;
+  public members: Observable<any[]>;
+  // public eventsRx: Observable<any[]>;
   relationship: any;
   userCircles: any[];
 //userCircles: any[];
@@ -47,24 +48,26 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
+    //this.membersSvc.eventAttendeeVoteCount.unsubscribe();
+    console.log('EventAttendeesPage::everything works as intended with or without super call');
     //console.log('EventAttendeesPage::everything works as intended with or without super call');
   }
 
-  ionViewDidLoad() {
-    this.setFilteredItems();
-
-    this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
-      this.searching = false;
-      this.setFilteredItems();
-    });
-  }
+  // ionViewDidLoad() {
+  //   this.setFilteredItems();
+  //
+  //   this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
+  //     this.searching = false;
+  //     this.setFilteredItems();
+  //   });
+  // }
 
 
   onSearchInput(){
     this.searching = true;
   }
 
-  // ngOnInitFromEventList(): void {
+  // ngOnInit(): void {
   //   this.eventsRx = this.eventSvc.getEvents()
   //     .takeUntil(this.componentDestroyed$)
   //     .map((items) => {
@@ -79,49 +82,12 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   //     })
   // }
 
-  getVoteCount1(selectedMember: any){
-    let c = this.attendanceSvc.getUpVotes(this.currentEventKey, selectedMember.$key);
-    //console.log(c);
-    return c;
-  }
-
-//   voteCountRef.subscribe(snapshot => {
-//   voteCount = snapshot.val();
-// });
-// return voteCount;
-
   setFilteredItems(){
-    console.log('setFilteredItems')
-
     if (this.searchTerm == null || this.searchTerm == ''){
-      console.log('setFilteredItems: xx');
-      this.members = this.membersSvc.getMembers()
-        .takeUntil(this.componentDestroyed$)
-        .map((items) => {
-            // return  items.map( item => {
-            //   //console.log(`rrrr::${member}`)
-            //   // this.attendanceSvc.getUpVotes(this.currentEventKey, item.$key)
-            //   //   //.takeUntil(this.componentDestroyed$)
-            //   //   // .map( (ul) =>{
-            //   //   //   item.voteCount = ul;
-            //   //   // })
-            //   //   .subscribe(snapshot => {
-            //   //     console.log(`yyyy${snapshot}`)
-            //   //
-            //   //     item.voteCount = snapshot;
-            //   //   });
-            //   //*******
-            //
-            //   item.voteCount = this.attendanceSvc.getUpVotes1(this.currentEventKey, item.$key);
-            //     return item;
-            // })
-          return items;
-      })
+      this.members = this.membersSvc.getMembersWithVoteCount(this.currentEventKey)
+        .takeUntil(this.componentDestroyed$);
     }else{
-      console.log('setFilteredItems: zz');
-
-      //return items.filter(item => item.name.toLowerCase().indexOf(args[0].toLowerCase()) !== -1);
-      this.members = this.membersSvc.getMembers()
+      this.members = this.membersSvc.getMembersWithVoteCount(this.currentEventKey)
         .takeUntil(this.componentDestroyed$)
         .map((members) =>
           members.filter(member => member.lastName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1));
@@ -129,18 +95,27 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
 
   }
 
-  setFilteredItems1(){
+  setFilteredItems0(){
     if (this.searchTerm == null || this.searchTerm == ''){
-      //console.log('setFilteredItems: aa');
-      this.members = this.membersSvc.getMembers()
-        .map((members) => {return members});
+      this.members = this.membersSvc.getMembersWithVoteCount(this.currentEventKey)
+        .takeUntil(this.componentDestroyed$)
+        .map((items) => {
+          return items.map( item => {
+            this.attendanceSvc.getUpVotes1(this.currentEventKey, item.$key)
+              .takeUntil(this.componentDestroyed$)
+              .map( (ul) =>{
+                item.tests = ul;
+              });
+            return item;
+          })
+      })
     }else{
-      //return items.filter(item => item.name.toLowerCase().indexOf(args[0].toLowerCase()) !== -1);
-      this.members = this.membersSvc.getMembers()
+      this.members = this.membersSvc.getMembersWithVoteCount(this.currentEventKey)
+        .takeUntil(this.componentDestroyed$)
         .map((members) =>
-          members.filter(member => member.lastName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1)
-        );
+          members.filter(member => member.lastName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1));
     }
+
   }
 
   onUpVote(selectedMember: any){
@@ -157,92 +132,46 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   }
 
   selectedAll(){
-    this.members = this.membersSvc.getMembers()
+    this.members = this.membersSvc.getMembersWithVoteCount(this.currentEventKey)
       .map((members) => {return members});
   }
 
-
-  // ngOnInit(): void {
-  //   console.log('EventAttendeesPage::ngOnInit')
-  //
-  //   this.userSvc.getMyCircles()
-  //     .subscribe(itemKeys=>{
-  //     itemKeys.forEach(itemKey => {
-  //       //console.log(itemKey.key);
-  //       this.userCircles.push(itemKey.key);
-  //     });
-  //   })
-  // }
-
   ngOnInit(): void {
-    console.log('EventAttendeesPage::ngOnInit')
+    //console.log('EventAttendeesPage::ngOnInit')
 
     this.userCircles = this.userSvc.getMyCircles1();
+
+    this.setFilteredItems();
+
+    this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
+      this.searching = false;
+      this.setFilteredItems();
+    });
   }
 
   selectedCircles(){
-    console.log('xxxEventAttendeesPage::selectedCircles')
-
     this.searching = false;
-    this.members = this.membersSvc.getMembers()
+    this.members = this.membersSvc.getMembersWithVoteCount(this.currentEventKey)
       .takeUntil(this.componentDestroyed$)
       .map((members) =>
         members.filter(member => this.userCircles.indexOf(member.$key) !== -1)
       );
 
     if (this.searchTerm == null || this.searchTerm == ''){
-      console.log('setFilteredItems: aa');
-      // this.members = this.membersSvc.getMembers()
-      //   .map((members) => {return members});
-    }else{
-      //return items.filter(item => item.name.toLowerCase().indexOf(args[0].toLowerCase()) !== -1);
-      this.members = this.members
-        .map((members) =>
-          members.filter(member => member.lastName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1));
-    }
-
-  }
-  selectedCircles1(){
-    //console.log('selectedCircles');
-    //TODO: refactor
-    //let favs = ["-Ke2CyV2BJ5S3_7qcQj5", "-Ke2CyV2BJ5S3_7qcQj6", "-Ke2CyV39UwBuq36wSM6", "-KeKL1A7J2pcCKAPMvIr"];
-    //let userCircles = this.userSvc.getMyCircles();
-    //console.log(favs);
-    this.searching = false;
-     this.membersSvc.getMembers()
-      .takeUntil(this.componentDestroyed$)
-      .map((members) =>
-        members.filter(member => this.userCircles.indexOf(member.$key) !== -1)
-      )
-      .subscribe(m => {
-        this.members = m;
-      })
-     ;
-
-    if (this.searchTerm == null || this.searchTerm == ''){
       //console.log('setFilteredItems: aa');
-      // this.members = this.membersSvc.getMembers()
-      //   .map((members) => {return members});
     }else{
-      //return items.filter(item => item.name.toLowerCase().indexOf(args[0].toLowerCase()) !== -1);
       this.members = this.members
         .map((members) =>
           members.filter(member => member.lastName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1));
     }
+
   }
 
-  getVoteCount2(selectedMember: any){
-    let voteCount = 0;
-    this.attendanceSvc.getUpVotes(this.currentEventKey, selectedMember.$key)
-     .subscribe(snapshot => {
-      voteCount = snapshot.val();
-    });
-    return voteCount;
-  }
-
+  //!!!NOTE: somehow subscribing to an Observable here triggers the call infinitely in the *.html page
+  // The work around is to subscribe in the provider and get the snapshot right there.
   getVoteCount(selectedMember: any){
-    let c = this.attendanceSvc.getUpVotes1(this.currentEventKey, selectedMember.$key);
-    //console.log(c);
+    console.log(selectedMember.$key)
+    let c = this.attendanceSvc.getUpVotes(this.currentEventKey, selectedMember.$key);
     return c;
   }
 

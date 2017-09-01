@@ -2,12 +2,16 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import {AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable} from "angularfire2/database";
 import {AuthProvider} from "../auth/auth";
+import {Observable} from "rxjs/Observable";
+import {Subscription} from "rxjs/Subscription";
 
 @Injectable()
 export class MemberProvider {
 
   public memberKey: string;
   public isMemberExists: boolean;
+  private membersWithVoteCount: Observable<any>;
+  public eventAttendeeVoteCount: Subscription;
 
   constructor(private af:AngularFireDatabase,
               private authService: AuthProvider,) {
@@ -20,6 +24,51 @@ export class MemberProvider {
       }
     });
   }
+
+  // getUpVotes1(eventKey: string, memberKey: string) {
+  //   console.log('xxx')
+  //   //return this.af.object(`/attendees/${eventKey}/members/${memberKey}`,{ preserveSnapshot: false})
+  //   return this.af.object(`/attendees/${eventKey}/members/${memberKey}`);
+  // }
+
+
+  getMembersWithVoteCount(eventKey: string): Observable<any[]> {
+    this.membersWithVoteCount =  this.af.list('/members',{
+      query: {
+        orderByChild: 'firstName'
+      }
+    })
+      .map(members =>{
+        members.map(member =>{
+          this.eventAttendeeVoteCount = this.af.object(`/attendees/${eventKey}/members/${member.$key}`)
+            .subscribe(vote =>{
+              member.voteCount = vote.voteCount;
+            })
+          return member;
+        })
+        return members;
+      });
+    return this.membersWithVoteCount;
+  }
+
+  // getMembersWithUsername(eventKey: string): Observable<any[]> {
+  //   let members =  this.af.list('/members',{
+  //     query: {
+  //       orderByChild: 'firstName'
+  //     }
+  //   })
+  //     .map(members =>{
+  //       members.map(member =>{
+  //         this.af.object(`/userProfile}/members/${member.$key}`)
+  //           .subscribe(profile =>{
+  //             member.userName = profile.userName;
+  //           })
+  //         return member;
+  //       })
+  //       return members;
+  //     });
+  //   return members;
+  // }
 
   updateMember($key: string, firstName, lastName, memberId,email) {
     let url = `/members/${$key}`;

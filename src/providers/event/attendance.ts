@@ -117,12 +117,13 @@ export class AttendanceProvider{
     });
   }
 
-  getUpVotes(eventKey: string, memberKey: string): FirebaseObjectObservable<any> {
-    console.log(`gggg::${eventKey}::${memberKey}`)
-    return this.af.object(`/attendees/${eventKey}/members/${memberKey}/voteCount`,{ preserveSnapshot: true});
+  getUpVotes1(eventKey: string, memberKey: string) {
+    console.log('xxx')
+    //return this.af.object(`/attendees/${eventKey}/members/${memberKey}`,{ preserveSnapshot: false})
+    return this.af.object(`/attendees/${eventKey}/members/${memberKey}`);
   }
 
-  getUpVotes1(eventKey: string, memberKey: string) {
+  getUpVotes(eventKey: string, memberKey: string) {
     let voteCount = 0;
     let voteCountUrl = `/attendees/${eventKey}/members/${memberKey}/voteCount`;
     var voteCountRef = this.af.object(voteCountUrl,{ preserveSnapshot: true})

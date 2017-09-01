@@ -14,6 +14,7 @@ export class EventProvider {
 
   }
 
+
   getEvents(): FirebaseListObservable<any[]> {
     return this.af.list('/events',{
       query: {
