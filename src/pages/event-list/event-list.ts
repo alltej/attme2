@@ -4,6 +4,8 @@ import {EventProvider} from "../../providers/event/event";
 import {Observable} from "rxjs/Observable";
 import {UserLikesProvider} from "../../providers/user-likes/user-likes";
 import {BaseClass} from "../BasePage";
+import {Subscription} from "rxjs/Subscription";
+import {concatStatic} from "rxjs/operator/concat";
 
 @IonicPage({
   name: 'event-list'
@@ -13,7 +15,6 @@ import {BaseClass} from "../BasePage";
   templateUrl: 'event-list.html',
 })
 export class EventListPage extends BaseClass implements OnInit, OnDestroy{
-
 
   public eventsRx: Observable<any[]>;
   private startAtFilter: string;
@@ -38,23 +39,51 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    this.eventsRx = this.eventSvc.getEvents()
+    console.log('EventList:ngOnInit')
+    this.eventSvc.getEvents()
       .takeUntil(this.componentDestroyed$)
       .map((items) => {
       return items.map(item => {
         this.userLikeSvc.isLiked(item.$key)
           .takeUntil(this.componentDestroyed$)
           .map( (ul) =>{
-            item.isLiked = ul;
+            return ul;
+          })
+          .subscribe(ul =>{
+            if (ul.on != null) {
+              item.isLiked = true;
+            }
+            else{
+              console.log('likeIt:false')
+              item.isLiked = false;
+            }
           });
         return item;
       })
     })
+      .subscribe(items =>{
+        this.eventsRx = items;
+      })
+
   }
 
-  ngOnDestroy(): void {
-    console.log('EventListPage::everything works as intended with or without super call');
-  }
+  // ngOnDestroy() {
+  //
+  //   console.log('DEBUG::A1::EventListPage::everything works as intended with or without super call');
+  //   this.subs1.unsubscribe();
+  // }
+  // ngOnDestroy() {
+  //   console.log('EventListPage::everything works as intended with or without super call');
+  //   // for (const sub of this.subscriptions) {
+  //   //   //console.log(`destroy::${sub.toString()}`)
+  //   //   //sub.unsubscribe();
+  //   // }
+  // }
+  // ngOnDestroy() {
+  //   console.log('EventListPage::everything works as intended with or without super call');
+  //   //this.ngOnDestroy();
+  //
+  // }
 
   onNewEvent(){
     this.navCtrl.push('event-create', {'parentPage': this});

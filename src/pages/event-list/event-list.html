@@ -17,7 +17,7 @@
 
 <ion-content padding>
   <ion-list>
-    <ion-card *ngFor="let event of eventsRx | async" >
+    <ion-card *ngFor="let event of eventsRx" >
 
       <ion-item (click)="goToEventDetail(event?.$key)">
         <h2>{{event?.name}}</h2>
@@ -37,7 +37,7 @@
             clear
             small
             (click)="onAddLike(event?.$key)"
-            *ngIf="((event.isLiked | async)?.on==null)">
+            *ngIf="!event?.isLiked">
             <ion-icon name="thumbs-up-outline"></ion-icon>
             <label>{{event?.likes}}</label>
           </button>
@@ -48,7 +48,7 @@
             small
             color="danger"
             (click)="onRemoveLike(event?.$key)"
-            *ngIf="!((event.isLiked | async)?.on==null)">
+            *ngIf="event?.isLiked">
             <ion-icon name="thumbs-up"></ion-icon>
             <label>{{event?.likes}}</label>
           </button>
