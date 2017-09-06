@@ -30,7 +30,9 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   searchTerm: string = '';
   searching: any = false;
   private currentEventKey: string;
-
+  private membersRx: Observable<any[]>;
+  private membersRx2: any[] = [];
+//speakers: any[] = [];
   constructor(public navCtrl: NavController,
               private membersSvc: MemberProvider,
               private attendanceSvc: AttendanceProvider,
@@ -88,12 +90,134 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   //     })
   // }
 
-  setFilteredItems(){
+  setFilteredItems(userCircles?: any[]){
+    this.membersRx =  this.membersSvc.getMembersWithVoteCount(this.currentEventKey)
+      .takeUntil(this.componentDestroyed$);
+    if (!(this.searchTerm == null || this.searchTerm == '')){
+      console.log(`search term::${this.searchTerm}`)
+      this.membersRx = this.membersRx.map((members) =>
+        members.filter(member => member.lastName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1))
+    }
+    if (userCircles){
+      this.membersRx = this.membersRx
+        .map((members) =>
+          members.filter(member => this.userCircles.indexOf(member.$key) !== -1)
+        );
+    }
+
+    this.membersRx
+      .map(members =>{
+        return members.map(member =>{
+          this.attendanceSvc.getMemberVoteCount(this.currentEventKey, member.$key)
+            .takeUntil(this.componentDestroyed$)
+            .map( (ul) =>{
+              return ul;
+            })//member.voteCount = vote.voteCount;
+            .subscribe(ul =>{
+              if (ul.votes != null){
+                console.log(ul.votes)
+              }
+              member.voteCount = ul.voteCount != null ? ul.voteCount : null;
+            });
+          return member;
+        })
+        //return members;
+      }) //TODO
+      .map(members =>{
+        return members.map(member =>{
+          this.attendanceSvc.isVoted(this.currentEventKey, member.$key)
+            .takeUntil(this.componentDestroyed$)
+            .map( (ul) =>{
+              //console.log(ul)
+              return ul;
+            })//member.voteCount = vote.voteCount;
+            .subscribe(ul =>{
+              member.isVoted = ul.on != null ? true : false;
+            });
+          return member;
+        })
+        //return members;
+      })
+      .subscribe((items: any[]) =>{
+        this.membersRx2 = items;
+      });
+    // if (this.searchTerm == null || this.searchTerm == ''){
+    //   this.membersSvc.getMembersWithVoteCount(this.currentEventKey)
+    //     .takeUntil(this.componentDestroyed$)
+    //     .map(members =>{
+    //       return members.map(member =>{
+    //         this.attendanceSvc.getMemberVoteCount(this.currentEventKey, member.$key)
+    //           .takeUntil(this.componentDestroyed$)
+    //           .map( (ul) =>{
+    //             return ul;
+    //           })//member.voteCount = vote.voteCount;
+    //           .subscribe(ul =>{
+    //             if (ul.votes != null){
+    //               console.log(ul.votes)
+    //             }
+    //             member.voteCount = ul.voteCount != null ? ul.voteCount : 0;
+    //           });
+    //         return member;
+    //       })
+    //       //return members;
+    //     }) //TODO
+    //     .map(members =>{
+    //       return members.map(member =>{
+    //         this.attendanceSvc.isVoted(this.currentEventKey, member.$key)
+    //           .takeUntil(this.componentDestroyed$)
+    //           .map( (ul) =>{
+    //             //console.log(ul)
+    //             return ul;
+    //           })//member.voteCount = vote.voteCount;
+    //           .subscribe(ul =>{
+    //             member.isVoted = ul.on != null ? true : false;
+    //           });
+    //         return member;
+    //       })
+    //       //return members;
+    //     })
+    //     .subscribe(items =>{
+    //       this.membersRx = items;
+    //     });
+    //   //return this.membersWithVoteCount;
+    // }else{
+    //   this.membersSvc.getMembersWithVoteCount(this.currentEventKey)
+    //     .takeUntil(this.componentDestroyed$)
+    //     .map((members) =>
+    //       members.filter(member => member.lastName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1))
+    //     .map(members =>{
+    //       return members.map(member =>{
+    //         this.attendanceSvc.getMemberVoteCount(this.currentEventKey, member.$key)
+    //           .takeUntil(this.componentDestroyed$)
+    //           .map( (ul) =>{
+    //             return ul;
+    //           })//member.voteCount = vote.voteCount;
+    //           .subscribe(ul =>{
+    //             if (ul.voteCount != null) {
+    //               member.voteCount = ul.voteCount;
+    //             }
+    //             else{
+    //               //console.log('likeIt:false')
+    //               member.voteCount = 0;
+    //             }
+    //           });
+    //         return member;
+    //       })
+    //       //return members;
+    //     })
+    //     .subscribe(items =>{
+    //       this.membersRx = items;
+    //     });
+    //   ;
+    // }
+
+  }
+  setFilteredItems1(){
     if (this.searchTerm == null || this.searchTerm == ''){
-      this.members = this.membersSvc.getMembersWithVoteCount(this.currentEventKey)
+      this.members = this.membersSvc.getMembersWithVoteCountO(this.currentEventKey)
         .takeUntil(this.componentDestroyed$);
     }else{
-      this.members = this.membersSvc.getMembersWithVoteCount(this.currentEventKey)
+      this.members = this.membersSvc.getMembersWithVoteCountO(this.currentEventKey)
         .takeUntil(this.componentDestroyed$)
         .map((members) =>
           members.filter(member => member.lastName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1));
@@ -107,14 +231,14 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
         .takeUntil(this.componentDestroyed$)
         .map((items) => {
           return items.map( item => {
-            this.attendanceSvc.getUpVotes1(this.currentEventKey, item.$key)
+            this.attendanceSvc.getMemberVoteCount(this.currentEventKey, item.$key)
               .takeUntil(this.componentDestroyed$)
               .map( (ul) =>{
                 item.tests = ul;
               });
             return item;
           })
-      })
+        })
     }else{
       this.members = this.membersSvc.getMembersWithVoteCount(this.currentEventKey)
         .takeUntil(this.componentDestroyed$)
@@ -139,9 +263,10 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   }
 
   selectedAll(){
-    this.members = this.membersSvc.getMembersWithVoteCount(this.currentEventKey)
-      .takeUntil(this.componentDestroyed$)
-      .map((members) => {return members});
+    this.setFilteredItems();
+    // this.members = this.membersSvc.getMembersWithVoteCount(this.currentEventKey)
+    //   .takeUntil(this.componentDestroyed$)
+    //   .map((members) => {return members});
   }
 
   ngOnInit(): void {
@@ -158,13 +283,33 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   }
 
   selectedCircles(){
+    console.log(this.userCircles);
+    this.setFilteredItems(this.userCircles);
+    this.searching = false;
+    // this.members = this.membersSvc.getMembersWithVoteCount(this.currentEventKey)
+    //   .takeUntil(this.componentDestroyed$)
+    //   .map((members) =>
+    //     members.filter(member => this.userCircles.indexOf(member.$key) !== -1)
+    //   );
+    // console.log(this.members)
+    // if (this.searchTerm == null || this.searchTerm == ''){
+    //   //console.log('setFilteredItems: aa');
+    // }else{
+    //   this.members = this.members
+    //     .map((members) =>
+    //       members.filter(member => member.lastName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1));
+    // }
+
+  }
+  selectedCirclesO(){
+    console.log(this.userCircles);
     this.searching = false;
     this.members = this.membersSvc.getMembersWithVoteCount(this.currentEventKey)
       .takeUntil(this.componentDestroyed$)
       .map((members) =>
         members.filter(member => this.userCircles.indexOf(member.$key) !== -1)
       );
-
+    console.log(this.members)
     if (this.searchTerm == null || this.searchTerm == ''){
       //console.log('setFilteredItems: aa');
     }else{
@@ -190,5 +335,9 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
       buttons: ['Ok']
     });
     alert.present();
+  }
+
+  private setFilteredItemsWithCircles(userCircles: any[]) {
+
   }
 }

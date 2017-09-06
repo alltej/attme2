@@ -72,6 +72,14 @@ export class AttendanceProvider{
   isVoted(eventKey:string, memberKey:string) {
     const userKey = this.authService.getActiveUser().uid;
     let voted = false;
+    //return this.af.object(`/attendees/${eventKey}/members/${memberKey}/votes/${userKey}`, { preserveSnapshot: true });
+    return this.af.object(`/attendees/${eventKey}/members/${memberKey}/votes/${userKey}`);
+
+  }
+
+  isVotedO(eventKey:string, memberKey:string) {
+    const userKey = this.authService.getActiveUser().uid;
+    let voted = false;
     const eventMemberVoteRef = this.af.object(`/attendees/${eventKey}/members/${memberKey}/votes/${userKey}`, { preserveSnapshot: true });
 
     eventMemberVoteRef
@@ -118,7 +126,7 @@ export class AttendanceProvider{
     });
   }
 
-  getUpVotes1(eventKey: string, memberKey: string) {
+  getMemberVoteCount(eventKey: string, memberKey: string) {
     console.log('xxx')
     //return this.af.object(`/attendees/${eventKey}/members/${memberKey}`,{ preserveSnapshot: false})
     return this.af.object(`/attendees/${eventKey}/members/${memberKey}`);

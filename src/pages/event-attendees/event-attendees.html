@@ -81,7 +81,7 @@
     <!--</ion-item>-->
   <!--</ion-list>-->
 
-  <ion-item *ngFor="let member of members | async">
+  <ion-item *ngFor="let member of membersRx2">
     <ion-avatar item-start>
       <img src="assets/img/avatar-luke.png">
     </ion-avatar>
@@ -94,7 +94,7 @@
         clear
         small
         (click)="onUpVote(member)"
-        *ngIf="!isVoted(member)">
+        *ngIf="!member.isVoted">
         <ion-icon name="thumbs-up-outline"></ion-icon>
         <!--<label>{{member?.voteCount}}</label>-->
         <div>{{member?.voteCount}}</div>
@@ -105,7 +105,7 @@
         small
         color="danger"
         (click)="onDownVote(member)"
-        *ngIf="isVoted(member)">
+        *ngIf="member.isVoted">
         <ion-icon name="thumbs-up"></ion-icon>
         <!--<div>{{member?.voteCount}}</div>-->
         <div>{{member?.voteCount}}</div>

@@ -46,6 +46,7 @@ export class UserCircleProvider {
     const userKey = this.authService.getActiveUser().uid;
     let url = `/userCircles/${userKey}`;
     this.circlesSub = this.af.list(url, { preserveSnapshot: true})
+      .take(1)
       .subscribe(itemKeys=>{
         itemKeys.forEach(itemKey => {
           //console.log(itemKey.key);
