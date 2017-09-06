@@ -14,7 +14,8 @@ import {BaseClass} from "../BasePage";
 })
 export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
 
-  members: Observable<any[]>;
+  //private events: any[] = [];
+  members: any[] = [];
   constructor(
     private navCtrl: NavController,
     private membersSvc: MemberProvider,
@@ -23,9 +24,31 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   ngOnInit() {
-    this.members = this.membersSvc.getMembers()
+    this.membersSvc.getMembers()
       .takeUntil(this.componentDestroyed$)
-      .map( (arr) => { return arr; } );
+      .map( (members) => {
+        return members.map(member =>{
+          this.userCircleSvc.isMyCircle(member.$key)
+            .takeUntil(this.componentDestroyed$)
+            .map( (ul) =>{
+              return ul;
+            })
+            .subscribe(data => {
+              //console.log(data.$value)
+              member.isMyCircle = data.$value ? true:false;
+              //member.voteCount = ul.voteCount != null ? ul.voteCount : null;
+              // if(data.val()==null) {
+              //   member.isMyCircle = false;
+              // } else {
+              //   member.isMyCircle = true;
+              // }
+            });
+          return member;
+        })
+      } )
+      .subscribe((items: any[]) =>{
+        this.members = items;
+      });
   }
 
   ngOnDestroy(): void {
@@ -33,7 +56,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   onLoadMember(selectedMember:any){
-    //console.log(member);
+    console.log(selectedMember);
     this.navCtrl.push('member-detail', {memberKey: selectedMember.$key});
   }
 
@@ -50,7 +73,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
   isMyCircle(selectedMember: any){
     let isIn:boolean = false;
     this.userCircleSvc.isMyCircle(selectedMember.$key)
-      .takeUntil(this.componentDestroyed$)
+      .take(1)
       .subscribe(data => {
         if(data.val()==null) {
           isIn = false;

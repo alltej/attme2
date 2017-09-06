@@ -19,11 +19,11 @@
 
 <ion-content padding>
   <ion-list>
-    <ion-item *ngFor="let member of members | async">
+    <ion-item *ngFor="let member of members">
       <ion-avatar item-start (click)="onLoadMember(member)">
         <img src="assets/img/avatar-luke.png">
       </ion-avatar>
-      <h2>{{member.firstName}} {{member.lastName}}</h2>
+      <h2>{{member?.firstName}} {{member?.lastName}}</h2>
       <!--<p>Hayao Miyazaki • 1988</p>-->
       <!--<button ion-button clear item-end>View</button>-->
       <div item-content>
@@ -32,7 +32,7 @@
           clear
           small
           (click)="onAddToCircle(member)"
-          *ngIf="!isMyCircle(member)">
+          *ngIf="!member?.isMyCircle">
           <ion-icon name="heart-outline"></ion-icon>
         </button>
         <button
@@ -41,7 +41,7 @@
           small
           color="danger"
           (click)="onRemoveFromCircle(member)"
-          *ngIf="isMyCircle(member)">
+          *ngIf="member?.isMyCircle">
           <ion-icon name="heart"></ion-icon>
         </button>
       </div>

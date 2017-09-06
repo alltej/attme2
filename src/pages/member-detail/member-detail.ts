@@ -28,7 +28,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
   }
 
   ngOnInit(): void {
-    //console.log(this.memberId);
+    //console.log(this.memberKey);
     this.memberSvc.getMember(this.memberKey)
       .takeUntil(this.componentDestroyed$)
       .subscribe((data)=>{
@@ -37,13 +37,13 @@ export class MemberDetailPage extends BaseClass implements OnInit{
         }
       });
 
-    this.memberSvc.findMemberId(this.memberKey)
-      .take(1)
-      .subscribe((data) => {
-        if (data.length>0) {
-          this.isUserProfileExists = true;
-        }
-      });
+    // this.memberSvc.findMemberId(this.memberKey)
+    //   .take(1)
+    //   .subscribe((data) => {
+    //     if (data.length>0) {
+    //       this.isUserProfileExists = true;
+    //     }
+    //   });
   }
 
 

@@ -60,7 +60,8 @@ export class UserCircleProvider {
     //const userId = this.authService.getActiveUser().uid;
     //console.log('isMyCircle::' + memberKey);
     let url = `/userCircles/${this.userId}/${memberKey}`;
-    return this.af.object(url, { preserveSnapshot: true });
+    //return this.af.object(url, { preserveSnapshot: true });
+    return this.af.object(url);
 
   }
   isMyCircle1(memberKey: string) {
