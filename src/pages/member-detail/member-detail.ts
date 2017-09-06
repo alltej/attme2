@@ -3,6 +3,7 @@ import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angula
 import {MemberProvider} from "../../providers/member/member";
 //import {FirebaseObjectObservable} from "angularfire2/database";
 import {AuthProvider} from "../../providers/auth/auth";
+import {BaseClass} from "../BasePage";
 
 @IonicPage({
   name: 'member-detail',
@@ -12,7 +13,7 @@ import {AuthProvider} from "../../providers/auth/auth";
   selector: 'page-member-detail',
   templateUrl: 'member-detail.html',
 })
-export class MemberDetailPage implements OnInit{
+export class MemberDetailPage extends BaseClass implements OnInit{
   private memberKey: any;
 
   public member: any = {};
@@ -22,12 +23,14 @@ export class MemberDetailPage implements OnInit{
               public navParams: NavParams,
               private memberSvc: MemberProvider,
               private authSvc: AuthProvider) {
+    super();
     this.memberKey = this.navParams.get('memberKey');
   }
 
   ngOnInit(): void {
     //console.log(this.memberId);
     this.memberSvc.getMember(this.memberKey)
+      .takeUntil(this.componentDestroyed$)
       .subscribe((data)=>{
         if (data.val()!=null) {
           this.member = data.val();
@@ -35,6 +38,7 @@ export class MemberDetailPage implements OnInit{
       });
 
     this.memberSvc.findMemberId(this.memberKey)
+      .take(1)
       .subscribe((data) => {
         if (data.length>0) {
           this.isUserProfileExists = true;
