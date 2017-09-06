@@ -114,14 +114,13 @@ export class MemberProvider {
   }
 
   findMemberId(memberKey: string) {
-    console.log('find: '+ memberKey);
+    //console.log('find: '+ memberKey);
     return this.af.list(`/userProfile/`, {
       query: {
         orderByChild: 'memberKey',
         equalTo: memberKey,
         limitToFirst: 1
-      },
-      preserveSnapshot: true
+      }
     });
   }
 

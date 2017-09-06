@@ -37,13 +37,14 @@ export class MemberDetailPage extends BaseClass implements OnInit{
         }
       });
 
-    // this.memberSvc.findMemberId(this.memberKey)
-    //   .take(1)
-    //   .subscribe((data) => {
-    //     if (data.length>0) {
-    //       this.isUserProfileExists = true;
-    //     }
-    //   });
+    this.memberSvc.findMemberId(this.memberKey)
+      .take(1)
+      .subscribe((data) => {
+        //console.log(data)
+        if (data.length>0) {
+          this.isUserProfileExists = true;
+        }
+      });
   }
 
 
