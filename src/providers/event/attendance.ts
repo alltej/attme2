@@ -127,8 +127,6 @@ export class AttendanceProvider{
   }
 
   getMemberVoteCount(eventKey: string, memberKey: string) {
-    console.log('xxx')
-    //return this.af.object(`/attendees/${eventKey}/members/${memberKey}`,{ preserveSnapshot: false})
     return this.af.object(`/attendees/${eventKey}/members/${memberKey}`);
   }
 

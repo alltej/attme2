@@ -54,7 +54,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
               item.isLiked = true;
             }
             else{
-              console.log('likeIt:false')
+              //console.log('likeIt:false')
               item.isLiked = false;
             }
           });

@@ -20,68 +20,7 @@
       My Circles
     </ion-segment-button>
   </ion-segment>
-  <!--<ion-card-->
-    <!--*ngFor="let member of members | async">-->
-    <!--<ion-card-content>-->
-      <!--<p>{{member.firstName}} {{member.lastName}}</p>-->
-    <!--</ion-card-content>-->
-    <!--<ion-row>-->
-      <!--<ion-col icon-left>-->
-        <!--<button-->
-          <!--ion-button-->
-          <!--clear-->
-          <!--small-->
-          <!--(click)="onUpVote(member)"-->
-          <!--*ngIf="!isVoted(member)">-->
-          <!--<ion-icon name="thumbs-up-outline"></ion-icon>-->
-          <!--<div>{{(getVoteCount(member))}}</div>-->
-        <!--</button>-->
-        <!--<button-->
-          <!--ion-button-->
-          <!--clear-->
-          <!--small-->
-          <!--color="danger"-->
-          <!--(click)="onDownVote(member)"-->
-          <!--*ngIf="isVoted(member)">-->
-          <!--<ion-icon name="thumbs-up"></ion-icon>-->
-          <!--<div>{{(getVoteCount(member))}}</div>-->
-        <!--</button>-->
-      <!--</ion-col>-->
-    <!--</ion-row>-->
-  <!--</ion-card>-->
-  <!--<ion-list>-->
-    <!--<ion-item *ngFor="let member of members | async">-->
-      <!--<ion-avatar item-start>-->
-        <!--<img src="assets/img/avatar-luke.png">-->
-      <!--</ion-avatar>-->
-      <!--<h2>{{member.firstName}} {{member.lastName}}</h2>-->
-      <!--&lt;!&ndash;<p>Hayao Miyazaki • 1988</p>&ndash;&gt;-->
-      <!--&lt;!&ndash;<button ion-button clear item-end>View</button>&ndash;&gt;-->
-      <!--<div item-content>-->
-        <!--<button-->
-          <!--ion-button-->
-          <!--clear-->
-          <!--small-->
-          <!--(click)="onUpVote(member)"-->
-          <!--*ngIf="!isVoted(member)">-->
-          <!--<ion-icon name="thumbs-up-outline"></ion-icon>-->
-          <!--<div>{{(getVoteCount(member))}}</div>-->
-        <!--</button>-->
-        <!--<button-->
-          <!--ion-button-->
-          <!--clear-->
-          <!--small-->
-          <!--color="danger"-->
-          <!--(click)="onDownVote(member)"-->
-          <!--*ngIf="isVoted(member)">-->
-          <!--<ion-icon name="thumbs-up"></ion-icon>-->
-          <!--<div>{{(getVoteCount(member))}}</div>-->
-        <!--</button>-->
-      <!--</div>-->
-    <!--</ion-item>-->
-  <!--</ion-list>-->
-
-  <ion-item *ngFor="let member of membersRx2">
+  <ion-item *ngFor="let member of members">
     <ion-avatar item-start>
       <img src="assets/img/avatar-luke.png">
     </ion-avatar>
