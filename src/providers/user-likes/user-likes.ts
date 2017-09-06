@@ -53,7 +53,8 @@ export class UserLikesProvider {
     let url = `/userLikes/${this.authSvc.getActiveUser().uid}/${eventKey}`;
 
     //return this.af.object(url, { preserveSnapshot: true });
-    return this.af.object(url, { preserveSnapshot: true });
+    //return this.af.object(url, { preserveSnapshot: true });
+    return this.af.object(url);
   }
 
   isLikedO(eventKey: string) {

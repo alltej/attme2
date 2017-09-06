@@ -4,8 +4,6 @@ import {EventProvider} from "../../providers/event/event";
 import {Observable} from "rxjs/Observable";
 import {UserLikesProvider} from "../../providers/user-likes/user-likes";
 import {BaseClass} from "../BasePage";
-import {Subscription} from "rxjs/Subscription";
-import {concatStatic} from "rxjs/operator/concat";
 
 @IonicPage({
   name: 'event-list'
@@ -16,7 +14,8 @@ import {concatStatic} from "rxjs/operator/concat";
 })
 export class EventListPage extends BaseClass implements OnInit, OnDestroy{
 
-  public eventsRx: Observable<any[]>;
+  //public eventsRx: Observable<any[]>;
+  private events: any[] = [];
   private startAtFilter: string;
 
   constructor(public navCtrl: NavController,
@@ -39,7 +38,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    console.log('EventList:ngOnInit')
+    //console.log('EventList:ngOnInit')
     this.eventSvc.getEvents()
       .takeUntil(this.componentDestroyed$)
       .map((items) => {
@@ -61,29 +60,11 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
         return item;
       })
     })
-      .subscribe(items =>{
-        this.eventsRx = items;
+      .subscribe((items: any[]) =>{
+        this.events = items;
       })
 
   }
-
-  // ngOnDestroy() {
-  //
-  //   console.log('DEBUG::A1::EventListPage::everything works as intended with or without super call');
-  //   this.subs1.unsubscribe();
-  // }
-  // ngOnDestroy() {
-  //   console.log('EventListPage::everything works as intended with or without super call');
-  //   // for (const sub of this.subscriptions) {
-  //   //   //console.log(`destroy::${sub.toString()}`)
-  //   //   //sub.unsubscribe();
-  //   // }
-  // }
-  // ngOnDestroy() {
-  //   console.log('EventListPage::everything works as intended with or without super call');
-  //   //this.ngOnDestroy();
-  //
-  // }
 
   onNewEvent(){
     this.navCtrl.push('event-create', {'parentPage': this});

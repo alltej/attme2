@@ -54,9 +54,9 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    console.log('a::EventAttendeesPage::everything works as intended with or without super call');
-  }
+  // ngOnDestroy(): void {
+  //   console.log('a::EventAttendeesPage::everything works as intended with or without super call');
+  // }
 
   onSearchInput(){
     this.searching = true;
@@ -66,7 +66,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
     this.membersRx =  this.membersSvc.getMembersWithVoteCount(this.currentEventKey)
       .takeUntil(this.componentDestroyed$);
     if (!(this.searchTerm == null || this.searchTerm == '')){
-      console.log(`search term::${this.searchTerm}`)
+      //console.log(`search term::${this.searchTerm}`)
       this.membersRx = this.membersRx.map((members) =>
         members.filter(member => member.lastName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1))
     }
@@ -86,9 +86,9 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
               return ul;
             })//member.voteCount = vote.voteCount;
             .subscribe(ul =>{
-              if (ul.votes != null){
-                console.log(ul.votes)
-              }
+              // if (ul.votes != null){
+              //   console.log(ul.votes)
+              // }
               member.voteCount = ul.voteCount != null ? ul.voteCount : null;
             });
           return member;

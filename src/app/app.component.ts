@@ -22,14 +22,14 @@ export class MyApp {
               private authService: AuthProvider) {
 
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-      console.log('firebase.auth().onAuthStateChanged')
+      //console.log('firebase.auth().onAuthStateChanged')
       if (!user) {
-        console.log('logout true')
+        //console.log('logout true')
         this.isAuthenticated = false;
         this.rootPage = 'login';
         unsubscribe();
       } else {
-        console.log('logout false')
+        //console.log('logout false')
         this.isAuthenticated = true;
         this.rootPage = 'tabs';
         unsubscribe();

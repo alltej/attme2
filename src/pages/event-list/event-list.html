@@ -17,7 +17,7 @@
 
 <ion-content padding>
   <ion-list>
-    <ion-card *ngFor="let event of eventsRx" >
+    <ion-card *ngFor="let event of events" >
 
       <ion-item (click)="goToEventDetail(event?.$key)">
         <h2>{{event?.name}}</h2>

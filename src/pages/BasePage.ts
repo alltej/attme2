@@ -11,15 +11,15 @@ export class BaseClass {
       // without this I was getting an error if the subclass had
       // this.blah() in ngOnDestroy
       f.bind(this)();
-      console.log('next')
+      //console.log('next')
       this.componentDestroyed$.next(true);
-      console.log('complete')
+      //console.log('complete')
       this.componentDestroyed$.complete();
     };
   }
 
   /// placeholder of ngOnDestroy. no need to do super() call of extended class.
   ngOnDestroy() {
-    console.log('DEBUG::BaseClass::everything works as intended with or without super call');
+    //console.log('DEBUG::BaseClass::everything works as intended with or without super call');
   }
 }
