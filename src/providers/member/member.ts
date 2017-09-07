@@ -125,7 +125,8 @@ export class MemberProvider {
   }
 
   getMember(memberKey: string):FirebaseObjectObservable<any> {
-    return this.af.object(`/members/${memberKey}`, { preserveSnapshot: true });
+    //return this.af.object(`/members/${memberKey}`, { preserveSnapshot: true });
+    return this.af.object(`/members/${memberKey}`);
   }
 
   confirmMember(memberKey: string) {
@@ -182,16 +183,16 @@ export class MemberProvider {
     return this.af.object(url, { preserveSnapshot: true });
   }
 
-  updateEmail($key: string, newEmail: string) {
-    let url = `/members/${$key}`;
+  updateEmail(memberKey: string, newEmail: string) {
+    //console.log(`U THERE?${memberKey}, ${newEmail}`);
+    let url = `/members/${memberKey}`;
     return this.af.object(url).update({
       email: newEmail
     });
   }
 
   updateMemberId(memberKey: string, memberId: string): firebase.Promise<void> {
-    console.log(`U THERE?${memberKey}, ${memberId}`);
-    console.log(memberKey);
+    //console.log(`U THERE?${memberKey}, ${memberId}`);
     let url = `/members/${memberKey}`;
     return this.af.object(url).update({
       memberId: memberId

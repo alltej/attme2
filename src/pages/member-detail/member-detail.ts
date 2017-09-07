@@ -18,6 +18,9 @@ export class MemberDetailPage extends BaseClass implements OnInit{
 
   public member: any = {};
   public isUserProfileExists: boolean = false;
+  private enableEditEmail: boolean = false;
+  private enableInvite: boolean = false;
+
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
               public navParams: NavParams,
@@ -30,23 +33,24 @@ export class MemberDetailPage extends BaseClass implements OnInit{
   ngOnInit(): void {
     console.log(this.memberKey);
     this.memberSvc.getMember(this.memberKey)
-      .take(1)
-      //.takeUntil(this.componentDestroyed$)
+      .takeUntil(this.componentDestroyed$)
       .subscribe((data)=>{
-        if (data.val()!=null) {
-          this.member = data.val();
+        if (data!=null) {
+          this.member = data;
           //TODO
           this.member.imageUrl = 'assets/img/profile.png';
         }
       });
 
     this.memberSvc.findMemberId(this.memberKey)
-      .take(1)
+      .takeUntil(this.componentDestroyed$)
       .subscribe((data) => {
-        //console.log(data)
         if (data.length>0) {
           this.isUserProfileExists = true;
+        }else{
+          //this.isUserProfileExists = (this.member.email==null);//true;
         }
+        this.enableEditEmail = !this.isUserProfileExists||(this.member.email==null);
       });
   }
 
@@ -103,7 +107,6 @@ export class MemberDetailPage extends BaseClass implements OnInit{
             //let newEmail = data.newEmail;
 
             this.memberSvc.updateEmail(this.memberKey, data.newEmail).then( () =>{
-              //this.userProfile.email = newEmail;
             }).catch(error => {
               console.log('ERROR: '+error.message);
             });

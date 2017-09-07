@@ -46,7 +46,7 @@
                     [(ngModel)]="birthDate" (ionChange)="updateDOB(birthDate)"></ion-datetime>
     </ion-item>
 
-    <ion-item (click)="!isUserProfileExists&&updateEmail()">
+    <ion-item (click)="enableEditEmail&&updateEmail()">
       <ion-grid>
         <ion-row>
           <ion-col col-6>
@@ -86,11 +86,11 @@
     <ion-item>
       <ion-col>
         <button
-          *ngIf="!isUserProfileExists"
+          *ngIf="(this.member?.email?.length>0) && !this.isUserProfileExists"
           ion-button
           outline
           block
-          (click)="onCreateInvite()">Invite</button>
+          (click)="onCreateInvite()">Invite </button>
       </ion-col>
 
     </ion-item>
