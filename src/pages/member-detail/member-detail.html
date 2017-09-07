@@ -11,7 +11,17 @@
     <!--<ion-list-header>-->
       <!--Personal Information-->
     <!--</ion-list-header>-->
+  <ion-list no-border *ngIf="userDataLoaded">
 
+  <ion-list-header>
+    Basic Info
+  </ion-list-header>
+  <ion-item>
+    <ion-thumbnail item-left>
+      <!--<img src="{{userProfile.image}}">-->
+      <forum-user-avatar [user]="user" *ngIf="userDataLoaded"></forum-user-avatar>
+    </ion-thumbnail>
+  </ion-item>
     <ion-item (click)="!isUserProfileExists&&updateName()">
       <ion-grid>
         <ion-row>
@@ -84,6 +94,33 @@
       </ion-col>
 
     </ion-item>
+
+  </ion-list>
+
+  <ion-list *ngIf="userDataLoaded">
+
+    <ion-list-header>
+      Activity
+    </ion-list-header>
+
+    <ion-item>
+      # Threads
+      <ion-icon name='text' item-left></ion-icon>
+      <ion-badge item-right>{{userStatistics.totalAttendance}}</ion-badge>
+    </ion-item>
+
+    <ion-item>
+      # Comments
+      <ion-icon name='quote' item-left></ion-icon>
+      <ion-badge item-right>{{userStatistics.totalComments}}</ion-badge>
+    </ion-item>
+    <ion-item>
+      # Favorites
+      <ion-icon name='heart' item-left></ion-icon>
+      <ion-badge item-right>{{userProfile.totalCircles}}</ion-badge>
+    </ion-item>
+
+  </ion-list>
   <!--<ion-grid>-->
     <!--<ion-row>-->
       <!--<ion-col col-6>-->

@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import { IonicPage, NavController, AlertController } from 'ionic-angular';
 import { ProfileProvider } from '../../providers/profile/profile';
 import { AuthProvider } from '../../providers/auth/auth';
 import {MemberProvider} from "../../providers/member/member";
+import {ProfileImageProvider} from "../../providers/profile/profile-image";
 
 @IonicPage({
   name: 'profile'
@@ -14,14 +15,16 @@ import {MemberProvider} from "../../providers/member/member";
 export class ProfilePage implements OnInit
 {
   ngOnInit(): void {
-    this.profileProvider.getUserProfile().on('value', userProfileSnapshot => {
-      this.userProfile = userProfileSnapshot.val();
+    this.profileSvc.getUserProfile().on('value', snapShot => {
+      this.userProfile = snapShot.val();
 
       //console.log(this.userProfile);
-      if (userProfileSnapshot.val().birthDate) {
-        this.birthDate = userProfileSnapshot.val().birthDate;
+      if (snapShot.val().birthDate) {
+        this.birthDate = snapShot.val().birthDate;
       }
-
+      this.zone.run(() => {
+        this.avatar = snapShot.val().photoURL;
+      })
       // if (this.birthDate == null) {
       //   this.birthDate = new Date().toISOString();
       // }
@@ -30,11 +33,16 @@ export class ProfilePage implements OnInit
 
   public userProfile:any;
   public birthDate:string;
+  userDataLoaded: boolean = false;
+  avatar: string;
+  displayName: string;
 
   constructor(public navCtrl: NavController, public alertCtrl: AlertController,
-              public profileProvider: ProfileProvider,
-              public authProvider: AuthProvider,
-              public memberProvider: MemberProvider) {}
+              public profileSvc: ProfileProvider,
+              private profileImageSvc: ProfileImageProvider,
+              public authSvc: AuthProvider,
+              public memberSvc: MemberProvider,
+              public zone: NgZone,) {}
 
   // ionViewDidEnter() {
   //   this.profileProvider.getUserProfile().on('value', userProfileSnapshot => {
@@ -48,7 +56,7 @@ export class ProfilePage implements OnInit
   // }
 
   logOut(): void {
-    this.authProvider.logoutUser().then(() => {
+    this.authSvc.logoutUser().then(() => {
       this.navCtrl.setRoot('login');
     });
   }
@@ -75,8 +83,8 @@ export class ProfilePage implements OnInit
         {
           text: 'Save',
           handler: data => {
-            this.profileProvider.updateName(data.firstName, data.lastName);
-            this.memberProvider.updateName(this.userProfile.memberKey, data.firstName, data.lastName);
+            this.profileSvc.updateName(data.firstName, data.lastName);
+            this.memberSvc.updateName(this.userProfile.memberKey, data.firstName, data.lastName);
           }
         }
       ]
@@ -85,7 +93,7 @@ export class ProfilePage implements OnInit
   }
 
   updateDOB(birthDate){
-    this.profileProvider.updateDOB(birthDate);
+    this.profileSvc.updateDOB(birthDate);
   }
 
   updateEmail(){
@@ -110,7 +118,7 @@ export class ProfilePage implements OnInit
           handler: data => {
             let newEmail = data.newEmail;
 
-            this.profileProvider.updateEmail(data.newEmail, data.password).then( () =>{
+            this.profileSvc.updateEmail(data.newEmail, data.password).then( () =>{
               this.userProfile.email = newEmail;
             }).catch(error => {
               console.log('ERROR: '+error.message);
@@ -143,7 +151,7 @@ export class ProfilePage implements OnInit
         {
           text: 'Save',
           handler: data => {
-            this.profileProvider.updatePassword(data.newPassword, data.oldPassword);
+            this.profileSvc.updatePassword(data.newPassword, data.oldPassword);
           }
         }
       ]
@@ -151,4 +159,25 @@ export class ProfilePage implements OnInit
     alert.present();
   }
 
+  editimage() {
+    let statusalert = this.alertCtrl.create({
+      buttons: ['okay']
+    });
+    this.profileImageSvc.uploadimage().then((url: any) => {
+      this.profileSvc.updateimage(url).then((res: any) => {
+        if (res.success) {
+          statusalert.setTitle('Updated');
+          statusalert.setSubTitle('Your profile pic has been changed successfully!!');
+          statusalert.present();
+          this.zone.run(() => {
+            this.avatar = url;
+          })
+        }
+      }).catch((err) => {
+        statusalert.setTitle('Failed');
+        statusalert.setSubTitle('Your profile pic was not changed');
+        statusalert.present();
+      })
+    })
+  }
 }

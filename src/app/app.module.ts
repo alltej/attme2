@@ -18,6 +18,10 @@ import { MemberProvider } from '../providers/member/member';
 import { UserCircleProvider } from '../providers/user-circle/user-circle';
 import {AttendanceProvider} from "../providers/event/attendance";
 import { UserLikesProvider } from '../providers/user-likes/user-likes';
+import { ProfileImageProvider } from '../providers/profile/profile-image';
+import {File} from "@ionic-native/file";
+import {FilePath} from "@ionic-native/file-path";
+import {FileChooser} from "@ionic-native/file-chooser";
 
 
 @NgModule({
@@ -40,6 +44,9 @@ import { UserLikesProvider } from '../providers/user-likes/user-likes';
   providers: [
     StatusBar,
     SplashScreen,
+    File,
+    FilePath,
+    FileChooser,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthProvider,
     EventProvider,
@@ -48,6 +55,7 @@ import { UserLikesProvider } from '../providers/user-likes/user-likes';
     MemberProvider,
     UserCircleProvider,
     UserLikesProvider,
+    ProfileImageProvider
   ]
 })
 export class AppModule {}

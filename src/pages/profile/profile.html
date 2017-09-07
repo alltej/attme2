@@ -19,7 +19,22 @@
     <ion-list-header>
       Personal Information
     </ion-list-header>
-
+    <ion-item>
+      <ion-thumbnail item-left>
+        <!--<img src="{{userProfile.image}}">-->
+        <div (click)="editimage()">
+          <img src="{{avatar}}">
+        </div>
+      </ion-thumbnail>
+      <!--<ion-thumbnail item-left>-->
+        <!--&lt;!&ndash;<img src="{{userProfile.image}}">&ndash;&gt;-->
+        <!--<div class="profile-image" (click)="editimage()">-->
+          <!--<img src="{{avatar}}">-->
+        <!--</div>-->
+      <!--</ion-thumbnail>-->
+      <!--<h2>{{userProfile.username}}</h2>-->
+      <!--<p>{{firebaseAccount.email}}</p>-->
+    </ion-item>
     <ion-item (click)="updateName()">
       <ion-grid>
         <ion-row>

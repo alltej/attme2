@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import {Observable} from "rxjs/Observable";
 import {MemberProvider} from "../../providers/member/member";
 import {UserCircleProvider} from "../../providers/user-circle/user-circle";
 import {BaseClass} from "../BasePage";
@@ -35,7 +34,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
               return ul;
             })
             .subscribe(data => {
-              //console.log(data.$value)
+              //console.log(data)
               member.isMyCircle = data.$value ? true:false;
               //member.voteCount = ul.voteCount != null ? ul.voteCount : null;
               // if(data.val()==null) {

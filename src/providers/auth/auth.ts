@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 //import 'rxjs/add/operator/map';
-import firebase from 'firebase';
-import {AngularFireAuth} from "angularfire2/auth";
+import { AngularFireAuth } from 'angularfire2/auth';
+
+// Do not import from 'firebase' as you'd lose the tree shaking benefits
+//import * as firebase from 'firebase/app';
+import * as firebase from 'firebase';
 import {Observable} from "rxjs/Observable";
 
 @Injectable()
@@ -17,10 +20,13 @@ export class AuthProvider {
     this.userProfileRef = firebase.database().ref('/userProfile');
 
     this.authState = this.afAuth.authState;
+
     this.authState.subscribe(user => {
       if (user) {
+        console.log(`DEBUG::User::${user}`)
         this.currentUser = user;
       } else {
+        console.log(`DEBUG::User::Is NULL!!!!`)
         this.currentUser = null;
       }
     });

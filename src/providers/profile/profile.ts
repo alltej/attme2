@@ -55,4 +55,52 @@ export class ProfileProvider {
       });
     });
   }
+
+  updateimage(imageUrl) {
+    var promise = new Promise((resolve, reject) => {
+      this.currentUser.updateProfile({
+        displayName: this.currentUser.displayName,
+        photoURL: imageUrl
+      }).then(() => {
+        this.userProfile.update({
+          displayName: this.currentUser.displayName,
+          photoURL: imageUrl,
+          //uid: this.currentUser.uid
+        }).then(() => {
+          resolve({ success: true });
+        }).catch((err) => {
+          reject(err);
+        })
+      }).catch((err) => {
+        reject(err);
+      })
+    })
+    return promise;
+  }
+
+
+  // uploadImage(image: string): any {
+  //   let storageRef = firebase.storage().ref();
+  //   let imageName = this.generateUUID();
+  //
+  //   let imageRef = storageRef.child(`${this.currentUser.uid}/${imageName}.jpg`);
+  //   return imageRef.putString(image, 'data_url');
+  // }
+  //
+  // getImage(userId: string, imageId: string): any {
+  //   let storageRef = firebase.storage().ref();
+  //   let imageRef = storageRef.child(`${this.currentUser.uid}/${imageId}`);
+  //   return imageRef.getDownloadURL();
+  // }
+  //
+  //
+  // private generateUUID(): string {
+  //   function s4() {
+  //     return Math.floor((1 + Math.random()) * 0x10000)
+  //       .toString(16)
+  //       .substring(1);
+  //   }
+  //   return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+  //     s4() + '-' + s4() + s4() + s4();
+  // }
 }
