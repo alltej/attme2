@@ -11,15 +11,15 @@
     <!--<ion-list-header>-->
       <!--Personal Information-->
     <!--</ion-list-header>-->
-  <ion-list no-border *ngIf="userDataLoaded">
+  <ion-list no-border >
 
   <ion-list-header>
     Basic Info
   </ion-list-header>
   <ion-item>
     <ion-thumbnail item-left>
-      <!--<img src="{{userProfile.image}}">-->
-      <forum-user-avatar [user]="user" *ngIf="userDataLoaded"></forum-user-avatar>
+      <img src="{{member?.imageUrl}}">
+      <!--<forum-user-avatar [user]="user" *ngIf="userDataLoaded"></forum-user-avatar>-->
     </ion-thumbnail>
   </ion-item>
     <ion-item (click)="!isUserProfileExists&&updateName()">

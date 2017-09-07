@@ -28,12 +28,15 @@ export class MemberDetailPage extends BaseClass implements OnInit{
   }
 
   ngOnInit(): void {
-    //console.log(this.memberKey);
+    console.log(this.memberKey);
     this.memberSvc.getMember(this.memberKey)
-      .takeUntil(this.componentDestroyed$)
+      .take(1)
+      //.takeUntil(this.componentDestroyed$)
       .subscribe((data)=>{
         if (data.val()!=null) {
           this.member = data.val();
+          //TODO
+          this.member.imageUrl = 'assets/img/profile.png';
         }
       });
 

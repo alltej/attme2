@@ -25,6 +25,8 @@ export class ProfilePage implements OnInit
       this.zone.run(() => {
         this.avatar = snapShot.val().photoURL;
       })
+
+      this.userDataLoaded = true;
       // if (this.birthDate == null) {
       //   this.birthDate = new Date().toISOString();
       // }
