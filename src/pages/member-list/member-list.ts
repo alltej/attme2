@@ -28,8 +28,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
       .map( (members) => {
         return members.map(member =>{
           this.userCircleSvc.isMyCircle(member.$key)
-            .take(1)
-            //.takeUntil(this.componentDestroyed$)
+            .takeUntil(this.componentDestroyed$)
             .map( (ul) =>{
               return ul;
             })

@@ -1,6 +1,6 @@
 {
-  "name": "attme2",
-  "app_id": "",
+  "name": "attme",
+  "app_id": "021755b4",
   "type": "ionic-angular",
   "integrations": {
     "cordova": {}
