@@ -16,7 +16,7 @@ export class ProfileImageProvider {
 
   For uploading an image to firebase storage.
 
-  Called from - profilepic.ts
+  Called from - profile.ts
   Inputs - None.
   Outputs - The image url of the stored image.
 

@@ -20,6 +20,6 @@ export class BaseClass {
 
   /// placeholder of ngOnDestroy. no need to do super() call of extended class.
   ngOnDestroy() {
-    console.log('DEBUG::BaseClass::everything works as intended with or without super call');
+    //console.log('DEBUG::BaseClass::everything works as intended with or without super call');
   }
 }

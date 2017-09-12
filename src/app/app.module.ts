@@ -23,6 +23,13 @@ import {File} from "@ionic-native/file";
 import {FilePath} from "@ionic-native/file-path";
 import {FileChooser} from "@ionic-native/file-chooser";
 
+//import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
+
+// const cloudSettings: CloudSettings = {
+//   'core': {
+//     'app_id': 'fc4e7ed2'
+//   }
+// };
 
 @NgModule({
   declarations: [
@@ -32,6 +39,7 @@ import {FileChooser} from "@ionic-native/file-chooser";
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    //CloudModule.forRoot(cloudSettings),
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule,
     AngularFireAuthModule
