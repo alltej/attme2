@@ -31,6 +31,14 @@ import {FileChooser} from "@ionic-native/file-chooser";
 //   }
 // };
 
+declare var window;
+
+export class MyErrorHandler implements ErrorHandler {
+  handleError(err: any): void {
+    window.Ionic.handleNewError(err);
+  }
+}
+
 @NgModule({
   declarations: [
     MyApp,
@@ -55,7 +63,8 @@ import {FileChooser} from "@ionic-native/file-chooser";
     File,
     FilePath,
     FileChooser,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    //{provide: ErrorHandler, useClass: IonicErrorHandler},
+    {provide: ErrorHandler, useClass: MyErrorHandler },
     AuthProvider,
     EventProvider,
     AttendanceProvider,
