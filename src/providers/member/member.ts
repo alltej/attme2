@@ -104,6 +104,13 @@ export class MemberProvider {
     });
   }
 
+  updatePhotoUrl($key: string, photoUrl:string): firebase.Promise<void> {
+    let url = `/members/${$key}`;
+    return this.af.object(url).update({
+      photoUrl: photoUrl
+    });
+  }
+
   private getMemberJson(firstName, lastName, memberId, email) {
     return {
       firstName: firstName,

@@ -5,9 +5,7 @@ import {Observable} from "rxjs/Observable";
 import {UserLikesProvider} from "../../providers/user-likes/user-likes";
 import {BaseClass} from "../BasePage";
 
-@IonicPage({
-  name: 'event-list'
-})
+@IonicPage()
 @Component({
   selector: 'page-event-list',
   templateUrl: 'event-list.html',

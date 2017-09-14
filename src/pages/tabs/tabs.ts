@@ -9,6 +9,6 @@ import { IonicPage } from 'ionic-angular';
   templateUrl: 'tabs.html',
 })
 export class TabsPage {
-  tab1 = 'event-list';
+  tab1 = 'EventListPage';
   tab2 = 'circles'
 }

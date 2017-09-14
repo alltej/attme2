@@ -21,7 +21,7 @@
   <ion-list>
     <ion-item *ngFor="let member of members">
       <ion-avatar item-start (click)="onLoadMember(member)">
-        <img src="assets/img/avatar-luke.png">
+        <img src={{member.photoUrl}}>
       </ion-avatar>
       <h2>{{member?.firstName}} {{member?.lastName}}</h2>
       <!--<p>Hayao Miyazaki • 1988</p>-->

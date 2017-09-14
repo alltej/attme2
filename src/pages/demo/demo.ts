@@ -14,7 +14,7 @@ export class DemoPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad DemoPage');
+    //console.log('ionViewDidLoad DemoPage');
   }
 
 }

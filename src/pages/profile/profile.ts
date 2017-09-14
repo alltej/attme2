@@ -123,7 +123,7 @@ export class ProfilePage implements OnInit
             this.profileSvc.updateEmail(data.newEmail, data.password).then( () =>{
               this.userProfile.email = newEmail;
             }).catch(error => {
-              console.log('ERROR: '+error.message);
+              //console.log('ERROR: '+error.message);
             });
           }
         }

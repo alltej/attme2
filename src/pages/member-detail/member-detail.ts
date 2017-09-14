@@ -31,7 +31,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
   }
 
   ngOnInit(): void {
-    console.log(this.memberKey);
+    //console.log(this.memberKey);
     this.memberSvc.getMember(this.memberKey)
       .takeUntil(this.componentDestroyed$)
       .subscribe((data)=>{
@@ -108,7 +108,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
 
             this.memberSvc.updateEmail(this.memberKey, data.newEmail).then( () =>{
             }).catch(error => {
-              console.log('ERROR: '+error.message);
+              //console.log('ERROR: '+error.message);
             });
           }
         }
@@ -139,7 +139,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
           handler: data => {
             this.memberSvc.updateMemberId(this.memberKey, data.newMemberId).then( () =>{
             }).catch(error => {
-              console.log('ERROR: '+error.message);
+              //console.log('ERROR: '+error.message);
             });
           }
         }
@@ -149,7 +149,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
   }
 
   onCreateInvite() {
-    console.log(`onCreateInvite::${this.memberKey},${this.member.email}`);
+    //console.log(`onCreateInvite::${this.memberKey},${this.member.email}`);
     this.authSvc.createUserInvite(this.memberKey, this.member.lastName, this.member.firstName, this.member.email);
 
   }

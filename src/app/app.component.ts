@@ -21,20 +21,44 @@ export class MyApp {
               private menuCtrl: MenuController,
               private authService: AuthProvider) {
 
-    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-      //console.log('firebase.auth().onAuthStateChanged')
-      if (!user) {
-        //console.log('logout true')
-        this.isAuthenticated = false;
-        this.rootPage = 'login';
-        unsubscribe();
-      } else {
-        //console.log('logout false')
+
+    // console.log('MyApp:constructor')
+    // const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+    //   //console.log('firebase.auth().onAuthStateChanged')
+    //   if (!user) {
+    //     console.log('aaa')
+    //     console.log(user)
+    //     this.isAuthenticated = true;
+    //     this.rootPage = 'login';
+    //     unsubscribe();
+    //   } else {
+    //     console.log('bbb')
+    //     console.log(user)
+    //     this.isAuthenticated = true;
+    //     this.rootPage = 'tabs';
+    //     unsubscribe();
+    //   }
+    // });
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
         this.isAuthenticated = true;
         this.rootPage = 'tabs';
-        unsubscribe();
+      } else {
+        this.isAuthenticated = false;
+        this.rootPage = 'login';
       }
     });
+
+    // if (this.authService.getActiveUser() == null) {
+    //       console.log('aaa')
+    //       this.isAuthenticated = false;
+    //       this.rootPage = 'login';
+    //       //unsubscribe();
+    // }else{
+    //       console.log('bbb')
+    //       this.isAuthenticated = true;
+    //       this.rootPage = 'tabs';
+    // }
 
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -45,6 +69,7 @@ export class MyApp {
   }
 
   onLoad(page: any) {
+    //console.log('MyApp:onLoad')
     this.nav.setRoot(page);
     this.menuCtrl.close();
   }

@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import firebase from 'firebase';
+import {MemberProvider} from "../member/member";
 
 @Injectable()
 export class ProfileProvider {
   public userProfile:firebase.database.Reference;
   public currentUser:firebase.User;
 
-  constructor() {
+  constructor(private memberSvc: MemberProvider) {
     firebase.auth().onAuthStateChanged( user => {
       if (user){
         this.currentUser = user;
@@ -49,9 +50,9 @@ export class ProfileProvider {
 
     return this.currentUser.reauthenticateWithCredential(credential).then( user => {
       this.currentUser.updatePassword(newPassword).then( user => {
-        console.log("Password Changed");
+        //console.log("Password Changed");
       }, error => {
-        console.log(error);
+        //console.log(error);
       });
     });
   }
@@ -71,7 +72,10 @@ export class ProfileProvider {
         }).catch((err) => {
           reject(err);
         })
-      }).catch((err) => {
+      }).then( () =>{
+          this.memberSvc.updatePhotoUrl(this.currentUser.uid, imageUrl);
+        })
+        .catch((err) => {
         reject(err);
       })
     })

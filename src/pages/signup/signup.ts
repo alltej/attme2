@@ -31,7 +31,7 @@ export class SignupPage {
 
   signupUser(){
     if (!this.signupForm.valid){
-      console.log(this.signupForm.value);
+      //console.log(this.signupForm.value);
     } else {
       this.authProvider.signupUser(this.signupForm.value.email, this.signupForm.value.password)
         .then(() => {

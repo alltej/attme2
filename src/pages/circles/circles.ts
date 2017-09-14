@@ -14,7 +14,7 @@ export class CirclesPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad CirclesPage');
+    //console.log('ionViewDidLoad CirclesPage');
   }
 
 }

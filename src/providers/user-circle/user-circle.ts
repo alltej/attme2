@@ -33,7 +33,7 @@ export class UserCircleProvider {
   }
 
   getMyCircles(){
-    console.log('UserCircles.getMyCircles')
+    //console.log('UserCircles.getMyCircles')
     let circleKeys = [];
     const userKey = this.authService.getActiveUser().uid;
     let url = `/userCircles/${userKey}`;
@@ -41,7 +41,7 @@ export class UserCircleProvider {
   }
 
   getMyCircles1(){
-    console.log('UserCircles.getMyCircles')
+    //console.log('UserCircles.getMyCircles')
     let circleKeys = [];
     const userKey = this.authService.getActiveUser().uid;
     let url = `/userCircles/${userKey}`;

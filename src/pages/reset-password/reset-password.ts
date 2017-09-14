@@ -25,7 +25,7 @@ export class ResetPasswordPage {
 
   resetPassword(){
     if (!this.resetPasswordForm.valid){
-      console.log(this.resetPasswordForm.value);
+      //console.log(this.resetPasswordForm.value);
     } else {
       this.authProvider.resetPassword(this.resetPasswordForm.value.email)
         .then((user) => {

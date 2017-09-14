@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="io.ionic.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>attme</name>
-    <description>An awesome Ionic/Cordova app.</description>
+    <name>AttMe</name>
+    <description>Attendance Made Easy applicatin in Ionic</description>
     <author email="allan.tejano@gmail.com" href="http://attme.io/">Allan Tejano</author>
     <content src="index.html" />
     <access origin="*" />
@@ -79,12 +79,18 @@
     </platform>
     <engine name="android" spec="^6.2.3" />
     <engine name="ios" spec="^4.4.0" />
+    <plugin name="cordova-plugin-camera" spec="~2.4.1">
+        <variable name="CAMERA_USAGE_DESCRIPTION" value=" " />
+        <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value=" " />
+    </plugin>
     <plugin name="cordova-plugin-console" spec="^1.0.5" />
     <plugin name="cordova-plugin-device" spec="^1.1.4" />
     <plugin name="cordova-plugin-file" spec="^4.3.3" />
     <plugin name="cordova-plugin-filechooser" spec="^1.0.1" />
     <plugin name="cordova-plugin-filepath" spec="^1.0.2" />
-    <plugin name="cordova-plugin-geolocation" spec="^2.4.3" />
+    <plugin name="cordova-plugin-geolocation" spec="^2.4.3">
+        <variable name="GEOLOCATION_USAGE_DESCRIPTION" value=" " />
+    </plugin>
     <plugin name="cordova-plugin-ionic" spec="^1.1.8">
         <variable name="APP_ID" value="fc4e7ed2" />
         <variable name="CHANNEL_NAME" value="Master" />

@@ -16,7 +16,7 @@ export class AttendanceProvider{
   }
 
   addAttendee(eventKey: string, memberKey:string) {
-    console.log('addAttendee')
+    //console.log('addAttendee')
     const userId = this.authService.getActiveUser().uid;
 
     this.af.object(`/attendees/${eventKey}/members/${memberKey}`).$ref.transaction(currentValue => {

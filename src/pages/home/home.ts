@@ -13,6 +13,6 @@ export class HomePage {
 
   goToCreate(){ this.navCtrl.push('event-create'); }
 
-  goToList(){ this.navCtrl.push('event-list'); }
+  goToList(){ this.navCtrl.push('EventListPage'); }
 
 }

@@ -23,16 +23,17 @@ export class AuthProvider {
 
     this.authState.subscribe(user => {
       if (user) {
-        console.log(`DEBUG::User::${user}`)
+        //console.log(`DEBUG::AuthProvider::User::${user}`)
         this.currentUser = user;
       } else {
-        console.log(`DEBUG::User::Is NULL!!!!`)
+        //console.log(`DEBUG::AuthProvider::User::Is NULL!!!!`)
         this.currentUser = null;
       }
     });
   }
 
   loginUser(email: string, password: string): firebase.Promise<any> {
+    //console.log('AuthProvider::login!!!')
     return this.afAuth.auth.signInWithEmailAndPassword(email, password);
   }
 
@@ -73,15 +74,16 @@ export class AuthProvider {
 
           //let user:any = firebase.auth().currentUser;
           let user:any = newUser;
-          console.log(`User Created::${user}`);
+          //console.log(`User Created::${user}`);
           user.sendEmailVerification().then(
-            (success) => {console.log("please verify your email")
+            (success) => {
+              //console.log("please verify your email")
             }
           ).catch(
             (err) => {
               //this.error = err;
-              console.log('errA');
-              console.log(err);
+              //console.log('errA');
+              //console.log(err);
             }
           )
         }
@@ -95,7 +97,7 @@ export class AuthProvider {
         } else {
           alert(errorMessage);
         }
-        console.log(error);
+        //console.log(error);
       })
     // this.fireAuth.createUserWithEmailAndPassword({
     //   email: email,
