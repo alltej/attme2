@@ -27,6 +27,10 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
       .takeUntil(this.componentDestroyed$)
       .map( (members) => {
         return members.map(member =>{
+          if (member.photoUrl == null) {
+            member.photoUrl = "assets/img/profile-default.png" //"assets/img/avatar-luke.png"
+          }
+          //console.log(member.photoUrl);
           this.userCircleSvc.isMyCircle(member.$key)
             .takeUntil(this.componentDestroyed$)
             .map( (ul) =>{
@@ -87,4 +91,12 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
     this.navCtrl.push('member-create', {'parentPage': this});
   }
 
+  getAvatar(photoUrl: String) {
+    //console.log(photoUrl);
+    if (photoUrl == null) {
+      return "assets/img/avatar-luke.png"
+    }else{
+      return photoUrl;
+    }
+  }
 }

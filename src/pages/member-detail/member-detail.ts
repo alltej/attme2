@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
 import {MemberProvider} from "../../providers/member/member";
 //import {FirebaseObjectObservable} from "angularfire2/database";
 import {AuthProvider} from "../../providers/auth/auth";
 import {BaseClass} from "../BasePage";
+import {ProfileImageProvider} from "../../providers/profile/profile-image";
 
 @IonicPage({
   name: 'member-detail',
@@ -20,25 +21,37 @@ export class MemberDetailPage extends BaseClass implements OnInit{
   public isUserProfileExists: boolean = false;
   private enableEditEmail: boolean = false;
   private enableInvite: boolean = false;
+  avatar: string = "assets/img/profile-default.png";
 
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
               public navParams: NavParams,
               private memberSvc: MemberProvider,
-              private authSvc: AuthProvider) {
+              private authSvc: AuthProvider,
+              private profileImageSvc: ProfileImageProvider,
+              public zone: NgZone) {
     super();
     this.memberKey = this.navParams.get('memberKey');
   }
 
   ngOnInit(): void {
-    //console.log(this.memberKey);
+    console.log(`MemberDetailPage::${this.memberKey}`);
     this.memberSvc.getMember(this.memberKey)
       .takeUntil(this.componentDestroyed$)
       .subscribe((data)=>{
         if (data!=null) {
           this.member = data;
           //TODO
-          this.member.imageUrl = 'assets/img/profile.png';
+          //this.avatar = 'assets/img/profile.png';
+          //this.member.imageUrl = 'assets/img/profile.png';
+          this.zone.run(() => {
+            this.avatar = this.member.photoUrl;
+          })
+          if (this.member.photoUrl == null) {
+            this.avatar = "assets/img/profile-default.png";
+          }else{
+            this.avatar = this.member.photoUrl
+          }
         }
       });
 
@@ -152,5 +165,27 @@ export class MemberDetailPage extends BaseClass implements OnInit{
     //console.log(`onCreateInvite::${this.memberKey},${this.member.email}`);
     this.authSvc.createUserInvite(this.memberKey, this.member.lastName, this.member.firstName, this.member.email);
 
+  }
+
+  editimage() {
+    let statusalert = this.alertCtrl.create({
+      buttons: ['okay']
+    });
+    this.profileImageSvc.uploadMemberImage(this.memberKey).then((url: any) => {
+      this.memberSvc.updatePhotoUrl(this.memberKey, url).then((res: any) => {
+        if (res.success) {
+          statusalert.setTitle('Updated');
+          statusalert.setSubTitle('Your profile pic has been changed successfully!!');
+          statusalert.present();
+          this.zone.run(() => {
+            this.avatar = url;
+          })
+        }
+      }).catch((err) => {
+          statusalert.setTitle('Failed');
+          statusalert.setSubTitle('Your profile pic was not changed');
+          statusalert.present();
+        })
+    })
   }
 }

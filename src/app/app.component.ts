@@ -22,18 +22,18 @@ export class MyApp {
               private authService: AuthProvider) {
 
 
-    // console.log('MyApp:constructor')
+    //console.log('MyApp:constructor')
     // const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
     //   //console.log('firebase.auth().onAuthStateChanged')
     //   if (!user) {
-    //     console.log('aaa')
-    //     console.log(user)
+    //     //console.log('aaa')
+    //     //console.log(user)
     //     this.isAuthenticated = true;
     //     this.rootPage = 'login';
     //     unsubscribe();
     //   } else {
-    //     console.log('bbb')
-    //     console.log(user)
+    //     //console.log('bbb')
+    //     //console.log(user)
     //     this.isAuthenticated = true;
     //     this.rootPage = 'tabs';
     //     unsubscribe();

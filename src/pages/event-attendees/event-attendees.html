@@ -13,16 +13,16 @@
     <ion-spinner></ion-spinner>
   </div>
   <ion-segment [(ngModel)]="relationship" color="primary">
-    <ion-segment-button value="all" (ionSelect)="selectedAll()">
-      All
-    </ion-segment-button>
     <ion-segment-button value="circles" (ionSelect)="selectedCircles()">
       My Circles
+    </ion-segment-button>
+    <ion-segment-button value="all" (ionSelect)="selectedAll()">
+      All
     </ion-segment-button>
   </ion-segment>
   <ion-item *ngFor="let member of members">
     <ion-avatar item-start>
-      <img src="assets/img/avatar-luke.png">
+      <img [src]="getAvatar(member?.photoUrl)">
     </ion-avatar>
     <h2>{{member.firstName}} {{member.lastName}}</h2>
     <!--<p>Hayao Miyazaki • 1988</p>-->
@@ -30,25 +30,24 @@
     <div item-content>
       <button
         ion-button
+        icon-left
         clear
         small
         (click)="onUpVote(member)"
         *ngIf="!member.isVoted">
         <ion-icon name="thumbs-up-outline"></ion-icon>
-        <!--<label>{{member?.voteCount}}</label>-->
-        <div>{{member?.voteCount}}</div>
+        <label>{{member?.voteCount}}</label>
       </button>
       <button
         ion-button
+        icon-left
         clear
         small
         color="danger"
         (click)="onDownVote(member)"
         *ngIf="member.isVoted">
         <ion-icon name="thumbs-up"></ion-icon>
-        <!--<div>{{member?.voteCount}}</div>-->
-        <div>{{member?.voteCount}}</div>
-
+        <label>{{member?.voteCount}}</label>
       </button>
     </div>
   </ion-item>

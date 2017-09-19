@@ -32,17 +32,21 @@ export class UserLikesProvider {
   }
 
   removeLike(eventKey: string) {
-    let countUrl = `/events/${eventKey}/likes`;
-    let likeCountRef = this.af.object(countUrl);
+    let likeCountRef = this.af.object(`/events/${eventKey}/likes`);
     let likeCount = 0;
     likeCountRef.$ref.transaction(tagValue => {
       likeCount = tagValue ? tagValue - 1 : 0;
+      // if (likeCount == 0) {
+      //   likeCountRef.remove();
+      // }
       return likeCount;
     }).then(result => {
       if (result.committed) {
+        let url = `/userLikes/${this.authSvc.getActiveUser().uid}/${eventKey}`;
+        //console.log(`removeEventLike::${url}`);
+        this.af.object(url).remove();
         if (likeCount == 0){
-          let url = `/userLikes/${this.authSvc.getActiveUser().uid}/${eventKey}`;
-          this.af.object(url).remove();
+          likeCountRef.remove();
         }
       }
     });

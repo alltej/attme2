@@ -43,14 +43,14 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
+    this.relationship = "circles";
     this.userCircles = this.userSvc.getMyCircles1();
-
-    this.setFilteredItems();
-
+//this.userCircles
+//    this.setFilteredItems(this.userCircles);
+//this.setFilteredItems(this.userCircles);
     this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
       this.searching = false;
-      this.setFilteredItems();
+      this.setFilteredItems(this.userCircles);
     });
   }
 
@@ -143,4 +143,14 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
     alert.present();
   }
 
+
+  getAvatar(photoUrl: String) {
+    //console.log(photoUrl);
+    if (photoUrl == null) {
+      return "assets/img/profile-default.png";
+      //return "assets/img/avatar-luke.png"
+    }else{
+      return photoUrl;
+    }
+  }
 }

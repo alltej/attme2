@@ -96,16 +96,16 @@ export class MemberProvider {
     membersRef.push(data);
   }
 
-  updateName($key: string, firstName, lastName): firebase.Promise<void> {
-    let url = `/members/${$key}`;
+  updateName(memberKey: string, firstName, lastName): firebase.Promise<void> {
+    let url = `/members/${memberKey}`;
     return this.af.object(url).update({
       firstName: firstName,
       lastName: lastName,
     });
   }
 
-  updatePhotoUrl($key: string, photoUrl:string): firebase.Promise<void> {
-    let url = `/members/${$key}`;
+  updatePhotoUrl(memberKey: string, photoUrl:string): firebase.Promise<void> {
+    let url = `/members/${memberKey}`;
     return this.af.object(url).update({
       photoUrl: photoUrl
     });

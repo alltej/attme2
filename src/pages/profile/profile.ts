@@ -175,7 +175,11 @@ export class ProfilePage implements OnInit
             this.avatar = url;
           })
         }
-      }).catch((err) => {
+      }).then( () =>{
+        //console.log(`ProfilePage::${this.userProfile.memberKey}`)
+        this.memberSvc.updatePhotoUrl(this.userProfile.memberKey, this.avatar)
+      })
+        .catch((err) => {
         statusalert.setTitle('Failed');
         statusalert.setSubTitle('Your profile pic was not changed');
         statusalert.present();

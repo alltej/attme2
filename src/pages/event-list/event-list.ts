@@ -48,6 +48,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
           })
           .subscribe(ul =>{
             if (ul.on != null) {
+              //console.log('likeIt:true')
               item.isLiked = true;
             }
             else{
@@ -59,7 +60,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
       })
     })
       .subscribe((items: any[]) =>{
-        this.events = items;
+        this.events = items.reverse();
       })
 
   }

@@ -8,18 +8,24 @@
 </ion-header>
 
 <ion-content padding>
-    <!--<ion-list-header>-->
-      <!--Personal Information-->
-    <!--</ion-list-header>-->
+    <ion-list-header>
+      Member Detail
+    </ion-list-header>
   <ion-list no-border >
 
-  <ion-list-header>
-    Basic Info
-  </ion-list-header>
+  <!--<ion-list-header>-->
+    <!--Basic Info-->
+  <!--</ion-list-header>-->
   <ion-item>
     <ion-thumbnail item-left>
-      <img src="{{member?.imageUrl}}">
+      <!--<img src="{{member?.photoUrl}}">-->
+      <!--<div (click)="editimage()">-->
+        <!--<img src="{{avatar}}">-->
+      <!--</div>-->
       <!--<forum-user-avatar [user]="user" *ngIf="userDataLoaded"></forum-user-avatar>-->
+      <div (click)="editimage()">
+      <img src="{{avatar}}">
+    </div>
     </ion-thumbnail>
   </ion-item>
     <ion-item (click)="!isUserProfileExists&&updateName()">
