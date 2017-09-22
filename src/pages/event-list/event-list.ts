@@ -78,7 +78,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   goToEventAttendees(eventKey) {
-    //console.log('goToEventAttendees:' + eventId);
+    //console.log('goToEventAttendees:' + eventKey);
     this.navCtrl.push('event-attendees', { 'eventKey': eventKey });
   }
 

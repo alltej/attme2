@@ -14,6 +14,19 @@ import {ProfileImageProvider} from "../../providers/profile/profile-image";
 })
 export class ProfilePage implements OnInit
 {
+  public userProfile:any;
+  public birthDate:string;
+  userDataLoaded: boolean = false;
+  avatar: string = "assets/img/profile-default.png";
+  displayName: string;
+
+  constructor(public navCtrl: NavController, public alertCtrl: AlertController,
+              public profileSvc: ProfileProvider,
+              private profileImageSvc: ProfileImageProvider,
+              public authSvc: AuthProvider,
+              public memberSvc: MemberProvider,
+              public zone: NgZone,) {}
+
   ngOnInit(): void {
     this.profileSvc.getUserProfile().on('value', snapShot => {
       this.userProfile = snapShot.val();
@@ -25,27 +38,17 @@ export class ProfilePage implements OnInit
       this.zone.run(() => {
         this.avatar = snapShot.val().photoURL;
       })
-
+      if (this.userProfile.photoUrl == null) {
+        this.avatar = "assets/img/profile-default.png";
+      }else{
+        this.avatar = this.userProfile.photoUrl
+      }
       this.userDataLoaded = true;
       // if (this.birthDate == null) {
       //   this.birthDate = new Date().toISOString();
       // }
     });
   }
-
-  public userProfile:any;
-  public birthDate:string;
-  userDataLoaded: boolean = false;
-  avatar: string;
-  displayName: string;
-
-  constructor(public navCtrl: NavController, public alertCtrl: AlertController,
-              public profileSvc: ProfileProvider,
-              private profileImageSvc: ProfileImageProvider,
-              public authSvc: AuthProvider,
-              public memberSvc: MemberProvider,
-              public zone: NgZone,) {}
-
   // ionViewDidEnter() {
   //   this.profileProvider.getUserProfile().on('value', userProfileSnapshot => {
   //     this.userProfile = userProfileSnapshot.val();
