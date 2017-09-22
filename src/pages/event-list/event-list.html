@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="hcolor">
     <ion-buttons start>
       <button ion-button menuToggle>
         <ion-icon name="menu"></ion-icon>
@@ -39,7 +39,7 @@
             small
             (click)="onAddLike(event?.$key)"
             *ngIf="!event?.isLiked">
-            <ion-icon name="thumbs-up-outline"></ion-icon>
+            <ion-icon name="heart-outline"></ion-icon>
             <label>{{event?.likes}}</label>
           </button>
           <button
@@ -50,7 +50,7 @@
             color="danger"
             (click)="onRemoveLike(event?.$key)"
             *ngIf="event?.isLiked">
-            <ion-icon name="thumbs-up"></ion-icon>
+            <ion-icon name="heart"></ion-icon>
             <label>{{event?.likes}}</label>
           </button>
 

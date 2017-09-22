@@ -22,6 +22,7 @@ import { ProfileImageProvider } from '../providers/profile/profile-image';
 import {File} from "@ionic-native/file";
 import {FilePath} from "@ionic-native/file-path";
 import {FileChooser} from "@ionic-native/file-chooser";
+import {MemberInviteProvider} from "../providers/member/member-invite";
 
 //import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 
@@ -72,7 +73,8 @@ export class MyErrorHandler implements ErrorHandler {
     MemberProvider,
     UserCircleProvider,
     UserLikesProvider,
-    ProfileImageProvider
+    ProfileImageProvider,
+    MemberInviteProvider
   ]
 })
 export class AppModule {}

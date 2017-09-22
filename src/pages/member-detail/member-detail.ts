@@ -5,6 +5,7 @@ import {MemberProvider} from "../../providers/member/member";
 import {AuthProvider} from "../../providers/auth/auth";
 import {BaseClass} from "../BasePage";
 import {ProfileImageProvider} from "../../providers/profile/profile-image";
+import {MemberInviteProvider} from "../../providers/member/member-invite";
 
 @IonicPage({
   name: 'member-detail',
@@ -27,15 +28,15 @@ export class MemberDetailPage extends BaseClass implements OnInit{
               public alertCtrl: AlertController,
               public navParams: NavParams,
               private memberSvc: MemberProvider,
-              private authSvc: AuthProvider,
               private profileImageSvc: ProfileImageProvider,
+              private memberInviteSvc: MemberInviteProvider,
               public zone: NgZone) {
     super();
     this.memberKey = this.navParams.get('memberKey');
   }
 
   ngOnInit(): void {
-    console.log(`MemberDetailPage::${this.memberKey}`);
+    //console.log(`MemberDetailPage::${this.memberKey}`);
     this.memberSvc.getMember(this.memberKey)
       .takeUntil(this.componentDestroyed$)
       .subscribe((data)=>{
@@ -56,7 +57,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
       });
 
     this.memberSvc.findMemberId(this.memberKey)
-      .takeUntil(this.componentDestroyed$)
+      //.takeUntil(this.componentDestroyed$)
       .subscribe((data) => {
         if (data.length>0) {
           this.isUserProfileExists = true;
@@ -163,7 +164,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
 
   onCreateInvite() {
     //console.log(`onCreateInvite::${this.memberKey},${this.member.email}`);
-    this.authSvc.createUserInvite(this.memberKey, this.member.lastName, this.member.firstName, this.member.email);
+    this.memberInviteSvc.createUserInvite(this.memberKey, this.member.lastName, this.member.firstName, this.member.email);
 
   }
 
