@@ -2,16 +2,20 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import {AngularFireDatabase} from "angularfire2/database";
 import {AuthProvider} from "../auth/auth";
+import {ProfileProvider} from "../profile/profile";
 
 @Injectable()
 export class UserLikesProvider {
 
   constructor(private af:AngularFireDatabase,
-              private authSvc:AuthProvider) {
+              private authSvc:AuthProvider,
+              private profileSvc:ProfileProvider,
+              ) {
   }
 
   addLike(eventKey: string) {
-    let url = `/userLikes/${this.authSvc.getActiveUser().uid}/${eventKey}`;
+    let currentUid = this.authSvc.getActiveUser().uid;
+    let url = `/userLikes/${currentUid}/${eventKey}`;
     this.af.object(url).$ref.transaction(currentValue => {
       if (currentValue === null) {
         return{on : new Date().toISOString()};
@@ -19,11 +23,28 @@ export class UserLikesProvider {
     })
       .then( result => {
         if (result.committed) {
-          let voteUrl = `/events/${eventKey}/likes`;
-          let tagObs = this.af.object(voteUrl);
-          tagObs.$ref.transaction(tagValue => {
-            return tagValue ? tagValue + 1 : 1;
-          });
+          //console.log(this.authSvc.getActiveUser().lastName)
+          let un = "";
+          this.profileSvc.getUserProfile().once('value').then( userProfileValue => {
+            un =  userProfileValue.val().lastName + " " + userProfileValue.val().firstName.charAt(0)
+          }).then(sf => {
+            this.af.object(`/events/${eventKey}/likedBy/${currentUid}`).$ref.transaction(currentValue => {
+              if (currentValue === null) {
+                return{
+                  on : new Date().toISOString(),
+                  name: un
+                };
+              }
+            }).then(data => {
+              if (data.committed) {
+                //console.log(data)
+                let tagObs = this.af.object(`/events/${eventKey}/likes`);
+                tagObs.$ref.transaction(tagValue => {
+                  return tagValue ? tagValue + 1 : 1;
+                });
+              }
+            })
+          })
         }
       })
       .catch( error => {
@@ -42,9 +63,11 @@ export class UserLikesProvider {
       return likeCount;
     }).then(result => {
       if (result.committed) {
-        let url = `/userLikes/${this.authSvc.getActiveUser().uid}/${eventKey}`;
+        let currentUid = this.authSvc.getActiveUser().uid;
+        this.af.object(`/events/${eventKey}/likedBy/${currentUid}`).remove()
+
         //console.log(`removeEventLike::${url}`);
-        this.af.object(url).remove();
+        this.af.object(`/userLikes/${currentUid}/${eventKey}`).remove();
         if (likeCount == 0){
           likeCountRef.remove();
         }

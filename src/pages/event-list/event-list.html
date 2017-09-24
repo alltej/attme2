@@ -38,7 +38,7 @@
         <p><strong>{{event?.when}}</strong></p>
       </ion-item>
 
-      <ion-card-content>
+      <ion-card-content (click)="goToEventDetail(event?.$key)">
         <p>{{event?.description}}</p>
       </ion-card-content>
 
@@ -49,7 +49,8 @@
             icon-left
             clear
             small
-            *ngIf="!event?.isLiked">
+            *ngIf="!event?.isLiked"
+            (click)="goToEventDetail(event?.$key)">
             <ion-icon name="heart-outline"></ion-icon>
             <label>{{event?.likes}} Likes</label>
           </button>
@@ -59,7 +60,8 @@
             clear
             small
             color="danger"
-            *ngIf="event?.isLiked">
+            *ngIf="event?.isLiked"
+            (click)="goToEventDetail(event?.$key)">
             <ion-icon name="heart"></ion-icon>
             <label>{{event?.likes}} Likes</label>
           </button>

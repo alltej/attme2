@@ -16,6 +16,10 @@ export class ProfileProvider {
     });
   }
 
+  getUsers(): firebase.database.Reference {
+    return firebase.database().ref(`/userProfile`);
+  }
+
   getUserProfile(): firebase.database.Reference {
     return this.userProfile;
   }

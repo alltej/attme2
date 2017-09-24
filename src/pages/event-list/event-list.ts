@@ -66,7 +66,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
       selectedEvents = selectedEvents.map((events) =>
         events.filter(event => event.name.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || event.description.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1))
     }
-    
+
     selectedEvents
       .takeUntil(this.componentDestroyed$)
       .map((items) => {
