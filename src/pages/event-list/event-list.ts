@@ -1,7 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage, NavController} from 'ionic-angular';
+import {FormControl} from "@angular/forms";
 import {EventProvider} from "../../providers/event/event";
-import {Observable} from "rxjs/Observable";
+//import {Observable} from "rxjs/Observable";
 import {UserLikesProvider} from "../../providers/user-likes/user-likes";
 import {BaseClass} from "../BasePage";
 
@@ -15,11 +16,15 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   //public eventsRx: Observable<any[]>;
   private events: any[] = [];
   private startAtFilter: string;
-
+  searchControl: FormControl;
+  searchTerm: string = '';
+  searching: any = false;
+  relationship: any;
   constructor(public navCtrl: NavController,
               public eventSvc: EventProvider,
               private userLikeSvc: UserLikesProvider) {
     super();
+    this.searchControl = new FormControl();
     var newDate = Date.now() + -60*24*3600*1000; // date n days ago in milliseconds UTC
     this.startAtFilter = new Date(newDate).toISOString();
 
@@ -36,6 +41,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
+    this.relationship = "current";
     //console.log('EventList:ngOnInit')
     this.eventSvc.getEvents()
       .takeUntil(this.componentDestroyed$)
@@ -82,4 +88,15 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
     this.navCtrl.push('event-attendees', { 'eventKey': eventKey });
   }
 
+  onSearchInput(){
+    this.searching = true;
+  }
+
+  selectPastEvents() {
+
+  }
+
+  selectCurrentEvents() {
+
+  }
 }

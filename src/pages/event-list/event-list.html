@@ -17,6 +17,18 @@
 </ion-header>
 
 <ion-content padding>
+  <ion-searchbar [(ngModel)]="searchTerm" [formControl]="searchControl" (ionInput)="onSearchInput()"></ion-searchbar>
+  <div *ngIf="searching" class="spinner-container">
+    <ion-spinner></ion-spinner>
+  </div>
+  <ion-segment [(ngModel)]="relationship" color="primary">
+    <ion-segment-button value="past" (ionSelect)="selectPastEvents()">
+      Previous
+    </ion-segment-button>
+    <ion-segment-button value="current" (ionSelect)="selectCurrentEvents()">
+      Current/Upcoming
+    </ion-segment-button>
+  </ion-segment>
   <ion-list>
     <ion-card *ngFor="let event of events" >
 
@@ -39,7 +51,7 @@
             small
             *ngIf="!event?.isLiked">
             <ion-icon name="heart-outline"></ion-icon>
-            <label>{{event?.likes}}</label>
+            <label>{{event?.likes}} Likes</label>
           </button>
           <button
             ion-button
@@ -49,7 +61,7 @@
             color="danger"
             *ngIf="event?.isLiked">
             <ion-icon name="heart"></ion-icon>
-            <label>{{event?.likes}}</label>
+            <label>{{event?.likes}} Likes</label>
           </button>
 
         </ion-col>

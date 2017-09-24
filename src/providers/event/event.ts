@@ -9,11 +9,16 @@ export class EventProvider implements OnDestroy {
 
   public eventRef:firebase.database.Reference;
   private startAtFilter: string;
+  private endAtFilter: string;
 
   constructor(private af:AngularFireDatabase) {
     //this.eventRef = firebase.database().ref(`events`);
-    var newDate = Date.now() + -60*24*3600*1000; // date n days ago in milliseconds UTC
-    this.startAtFilter = new Date(newDate).toISOString();
+    let pastDateMin = Date.now() + -60*24*3600*1000; // date n days ago in milliseconds UTC
+    let currentDate = Date.now();
+    let futureDateMax = Date.now() + +60*24*3600*1000; // date n days ago in milliseconds UTC
+    //this.startAtFilter = new Date(newDate).toISOString();
+    this.startAtFilter = new Date(currentDate).toISOString();
+    this.endAtFilter = new Date(futureDateMax).toISOString();
 
   }
 
@@ -21,7 +26,8 @@ export class EventProvider implements OnDestroy {
      return this.af.list('/events',{
       query: {
         orderByChild: 'when',
-        startAt: this.startAtFilter
+        startAt: this.startAtFilter,
+        endAt: this.endAtFilter,
       }
     });
   }

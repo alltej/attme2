@@ -44,7 +44,7 @@
           (click)="onAddLike(currentEvent?.eventId)"
           *ngIf="!this.isLiked">
           <ion-icon name="heart-outline"></ion-icon>
-          <label>{{currentEvent?.likes}}</label>
+          <label>{{currentEvent?.likes}} Likes</label>
         </button>
         <button
           ion-button
@@ -55,7 +55,7 @@
           (click)="onRemoveLike(currentEvent?.eventId)"
           *ngIf="this.isLiked">
           <ion-icon name="heart"></ion-icon>
-          <label>{{currentEvent?.likes}}</label>
+          <label>{{currentEvent?.likes}} Likes</label>
         </button>
 
       </ion-col>
