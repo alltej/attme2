@@ -32,6 +32,35 @@
       <p>Where: <strong>{{currentEvent?.where}}</strong></p>
       <p>{{currentEvent?.description}}</p>
     </ion-card-content>
+
+
+    <ion-row>
+      <ion-col>
+        <button
+          ion-button
+          icon-left
+          clear
+          small
+          (click)="onAddLike(currentEvent?.eventId)"
+          *ngIf="!this.isLiked">
+          <ion-icon name="heart-outline"></ion-icon>
+          <label>{{currentEvent?.likes}}</label>
+        </button>
+        <button
+          ion-button
+          icon-left
+          clear
+          small
+          color="danger"
+          (click)="onRemoveLike(currentEvent?.eventId)"
+          *ngIf="this.isLiked">
+          <ion-icon name="heart"></ion-icon>
+          <label>{{currentEvent?.likes}}</label>
+        </button>
+
+      </ion-col>
+
+    </ion-row>
   </ion-card>
 
 
