@@ -61,7 +61,12 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
       selectedEvents = this.eventSvc.getEvents();
     }
 
-
+    if (!(this.searchTerm == null || this.searchTerm == '')){
+      //console.log(`search term::${this.searchTerm}`)
+      selectedEvents = selectedEvents.map((events) =>
+        events.filter(event => event.name.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || event.description.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1))
+    }
+    
     selectedEvents
       .takeUntil(this.componentDestroyed$)
       .map((items) => {
