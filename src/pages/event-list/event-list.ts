@@ -5,6 +5,7 @@ import {EventProvider} from "../../providers/event/event";
 //import {Observable} from "rxjs/Observable";
 import {UserLikesProvider} from "../../providers/user-likes/user-likes";
 import {BaseClass} from "../BasePage";
+import {Observable} from "rxjs/Observable";
 
 @IonicPage()
 @Component({
@@ -42,33 +43,50 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     this.relationship = "current";
-    //console.log('EventList:ngOnInit')
-    this.eventSvc.getEvents()
+    this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
+      this.searching = false;
+      this.setFilteredItems();
+    });
+
+
+  }
+
+  private setFilteredItems() {
+    // console.log(this.relationship)
+    // console.log("hello")
+    let selectedEvents: Observable<any[]>; //= this.eventSvc.getEvents();
+    if (this.relationship == "past"){
+      selectedEvents = this.eventSvc.getPastEvents();
+    }else{
+      selectedEvents = this.eventSvc.getEvents();
+    }
+
+
+    selectedEvents
       .takeUntil(this.componentDestroyed$)
       .map((items) => {
-      return items.map(item => {
-        this.userLikeSvc.isLiked(item.$key)
-          .takeUntil(this.componentDestroyed$)
-          .map( (ul) =>{
-            return ul;
-          })
-          .subscribe(ul =>{
-            if (ul.on != null) {
-              //console.log('likeIt:true')
-              item.isLiked = true;
-            }
-            else{
-              //console.log('likeIt:false')
-              item.isLiked = false;
-            }
-          });
-        return item;
+        return items.map(item => {
+          this.userLikeSvc.isLiked(item.$key)
+            .takeUntil(this.componentDestroyed$)
+            .map((ul) => {
+              return ul;
+            })
+            .subscribe(ul => {
+              if (ul.on != null) {
+                //console.log('likeIt:true')
+                item.isLiked = true;
+              }
+              else {
+                //console.log('likeIt:false')
+                item.isLiked = false;
+              }
+            });
+          return item;
+        })
       })
-    })
-      .subscribe((items: any[]) =>{
+      .subscribe((items: any[]) => {
         this.events = items.reverse();
       })
-
   }
 
   onNewEvent(){
@@ -93,10 +111,12 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   selectPastEvents() {
-
+    this.relationship = "past";
+    this.setFilteredItems();
   }
 
   selectCurrentEvents() {
-
+    this.relationship = "current";
+    this.setFilteredItems();
   }
 }

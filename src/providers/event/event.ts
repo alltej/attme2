@@ -32,6 +32,18 @@ export class EventProvider implements OnDestroy {
     });
   }
 
+  getPastEvents(): FirebaseListObservable<any[]> {
+    let pastDateMin = Date.now() + -60*24*3600*1000; // date n days ago in milliseconds UTC
+    let currentDate = Date.now();
+     return this.af.list('/events',{
+      query: {
+        orderByChild: 'when',
+        startAt: new Date(pastDateMin).toISOString(),
+        endAt: new Date(currentDate).toISOString(),
+      }
+    });
+  }
+
   // getEventDetail(eventId:string): firebase.database.Reference {
   //   return this.eventRef.child(eventId);
   // }
