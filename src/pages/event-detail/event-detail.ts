@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { EventProvider } from '../../providers/event/event';
 import {UserLikesProvider} from "../../providers/user-likes/user-likes";
 import {BaseClass} from "../BasePage";
+import {FirebaseListObservable} from "angularfire2/database";
 
 @IonicPage({
   name: 'event-detail',
@@ -17,6 +18,7 @@ export class EventDetailPage extends BaseClass implements OnInit{
   private eventId: string;
   public isLiked: boolean = false;
   private likedBy: any;
+  likedByList: FirebaseListObservable<any[]>;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -56,6 +58,7 @@ export class EventDetailPage extends BaseClass implements OnInit{
         // return circleKeys;
       });
 
+    this.likedByList = this.eventSvc.getEventLikes(this.eventId);
     //console.log(item)
     this.userLikeSvc.isLiked(this.eventId)
       .subscribe(ul =>{

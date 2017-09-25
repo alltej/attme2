@@ -64,5 +64,16 @@
   </ion-card>
 
 
+<ion-list>
+  <ion-item>
+    Likes
+    <ul id="taglist">
+      <li *ngFor="let item of likedByList | async">
+        <button ion-button color="light">{{ item.name }}</button>
+      </li>
+    </ul>
+  </ion-item>
+
+</ion-list>
 
 </ion-content>

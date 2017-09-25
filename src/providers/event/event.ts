@@ -44,9 +44,14 @@ export class EventProvider implements OnDestroy {
     });
   }
 
-  // getEventDetail(eventId:string): firebase.database.Reference {
-  //   return this.eventRef.child(eventId);
-  // }
+  getEventLikes(eventId: string) {
+    return this.af.list(`/events/${eventId}/likedBy`,{
+      query: {
+        orderByKey: true,
+        limitToLast: 20
+      }
+    });
+  }
 
   getEventDetail(eventId:string) {
     return this.af.object(`/events/${eventId}`, { preserveSnapshot: true });
@@ -148,4 +153,5 @@ export class EventProvider implements OnDestroy {
   //     }
   //   });
   // }
+
 }
