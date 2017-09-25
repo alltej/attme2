@@ -178,8 +178,8 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
 
 
   isEnableAttendance(eventDate) {
-    if (this.isToday(eventDate)) return true;
-    if (this.isYesterday(eventDate)) return true;
+    //if (this.isToday(eventDate)) return true;
+    if (this.isAttendanceEnabledForEvent(eventDate)) return true;
     return false;
   }
 
@@ -188,11 +188,13 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
     return (today.toDateString() == otherDate.toDateString());
   }
 
-  isYesterday(otherDate){
+  isAttendanceEnabledForEvent(eventDate){
     //const NUM_DAYS_TO_ALLOW_ATTENDANCE: number = 2;
-    let d = new Date();
-    d.setDate(d.getDate() - attmeConfig.numDaysAfterEventAttendanceEnabled);
-    return (d.toDateString() == otherDate.toDateString());
+    let today = new Date();
+    let nDaysAgo = new Date();
+    nDaysAgo.setDate(nDaysAgo.getDate() - attmeConfig.numDaysAfterEventAttendanceEnabled);
+    //return (d.toDateString() == otherDate.toDateString());
+    return (nDaysAgo < eventDate) && (eventDate <= today);
   }
 
 }
