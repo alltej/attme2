@@ -20,6 +20,9 @@
       All
     </ion-segment-button>
   </ion-segment>
+  <ion-item *ngIf="!isAttendanceEnabled">
+    <ion-label>Attendance is disabled</ion-label>
+  </ion-item>
   <ion-item *ngFor="let member of members">
     <ion-avatar item-start>
       <img [src]="getAvatar(member?.photoUrl)">
@@ -27,7 +30,7 @@
     <h2>{{member.firstName}} {{member.lastName}}</h2>
     <!--<p>Hayao Miyazaki • 1988</p>-->
     <!--<button ion-button clear item-end>View</button>-->
-    <div item-content>
+    <div item-content *ngIf="isAttendanceEnabled">
       <button
         ion-button
         icon-left
@@ -47,6 +50,17 @@
         (click)="onDownVote(member)"
         *ngIf="member.isVoted">
         <ion-icon name="thumbs-up"></ion-icon>
+        <label>{{member?.voteCount}}</label>
+      </button>
+    </div>
+    <div item-content *ngIf="!isAttendanceEnabled">
+      <button
+        ion-button
+        icon-left
+        clear
+        small
+        color="hcolor">
+        <ion-icon name="thumbs-up" *ngIf="member?.voteCount>0"></ion-icon>
         <label>{{member?.voteCount}}</label>
       </button>
     </div>

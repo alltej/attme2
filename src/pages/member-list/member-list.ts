@@ -64,7 +64,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   onAddToCircle(selectedMember: any){
-    //console.log('onAddToCircle');
+    //console.log(`onAddToCircle${selectedMember.$key}`);
     this.userCircleSvc.addToMyCircle(selectedMember.$key);
   }
 

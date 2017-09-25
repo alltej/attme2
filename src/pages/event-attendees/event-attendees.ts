@@ -7,6 +7,8 @@ import {MemberProvider} from "../../providers/member/member";
 //import "rxjs/add/operator/debounceTime";
 import {AttendanceProvider} from "../../providers/event/attendance";
 import {BaseClass} from "../BasePage";
+import {EventProvider} from "../../providers/event/event";
+import {attmeConfig} from "../../config/attme.config";
 
 @IonicPage({
   name: 'event-attendees',
@@ -27,19 +29,23 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   private currentEventKey: string;
   private membersRx: Observable<any[]>;
   private members: any[] = [];
+  private isAttendanceEnabled: boolean  = false;
 
   constructor(public navCtrl: NavController,
               private membersSvc: MemberProvider,
               private attendanceSvc: AttendanceProvider,
               public navParams: NavParams,
               private alertCtrl: AlertController,
-              private userSvc: UserCircleProvider) {
+              private userSvc: UserCircleProvider,
+              private  eventSvc: EventProvider) {
     super();
 
 
     this.searchControl = new FormControl();
     this.currentEventKey = this.navParams.get('eventKey');
     //console.log(`EventAttendeesPage::constructor::${this.currentEventKey}`);
+    //this.eventDate = eventSvc.getEventDetail(this.currentEventKey);
+
   }
 
   ngOnInit(): void {
@@ -52,6 +58,19 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
       this.searching = false;
       this.setFilteredItems(this.userCircles);
     });
+
+
+    this.eventSvc.getEventDetail(this.currentEventKey).take(1)
+      .subscribe( (data)=> {
+        //console.log(data.val())
+        let eventDate = new Date(data.val().when);
+        this.isAttendanceEnabled =  this.isEnableAttendance(eventDate);
+      })
+    //   .then( userProfileValue => {
+    //   let eventDate =  userProfileValue.val().when;
+    //   this.isPastEvent =  this.isDateBeforeToday(eventDate);
+    //
+    // })
   }
 
   // ngOnDestroy(): void {
@@ -156,4 +175,24 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
       return photoUrl;
     }
   }
+
+
+  isEnableAttendance(eventDate) {
+    if (this.isToday(eventDate)) return true;
+    if (this.isYesterday(eventDate)) return true;
+    return false;
+  }
+
+  isToday(otherDate){
+    let today = new Date();
+    return (today.toDateString() == otherDate.toDateString());
+  }
+
+  isYesterday(otherDate){
+    //const NUM_DAYS_TO_ALLOW_ATTENDANCE: number = 2;
+    let d = new Date();
+    d.setDate(d.getDate() - attmeConfig.numDaysAfterEventAttendanceEnabled);
+    return (d.toDateString() == otherDate.toDateString());
+  }
+
 }

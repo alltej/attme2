@@ -1,6 +1,7 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import firebase from 'firebase';
 import {AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable} from "angularfire2/database";
+import {attmeConfig} from "../../config/attme.config";
 
 @Injectable()
 export class EventProvider implements OnDestroy {
@@ -14,15 +15,16 @@ export class EventProvider implements OnDestroy {
   constructor(private af:AngularFireDatabase) {
     //this.eventRef = firebase.database().ref(`events`);
     let pastDateMin = Date.now() + -60*24*3600*1000; // date n days ago in milliseconds UTC
-    let currentDate = Date.now();
+    let currentDate = Date.now() + -2*24*3600*1000; // date n days ago in milliseconds UTC;
     let futureDateMax = Date.now() + +60*24*3600*1000; // date n days ago in milliseconds UTC
     //this.startAtFilter = new Date(newDate).toISOString();
+    //d.setDate(d.getDate() - NUM_DAYS_TO_ALLOW_ATTENDANCE);
     this.startAtFilter = new Date(currentDate).toISOString();
     this.endAtFilter = new Date(futureDateMax).toISOString();
 
   }
 
-  getEvents(): FirebaseListObservable<any[]> {
+  getRecentEvents(): FirebaseListObservable<any[]> {
      return this.af.list('/events',{
       query: {
         orderByChild: 'when',
@@ -34,7 +36,7 @@ export class EventProvider implements OnDestroy {
 
   getPastEvents(): FirebaseListObservable<any[]> {
     let pastDateMin = Date.now() + -60*24*3600*1000; // date n days ago in milliseconds UTC
-    let currentDate = Date.now();
+    let currentDate = Date.now()+ -attmeConfig.recentPreviousNumDays*24*3600*1000; // date n days ago in milliseconds UTC
      return this.af.list('/events',{
       query: {
         orderByChild: 'when',

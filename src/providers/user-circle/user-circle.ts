@@ -25,9 +25,8 @@ export class UserCircleProvider {
   // }
 
   addToMyCircle(memberKey:string){
-    //const userId = this.authService.getActiveUser().uid;
-    //console.log(`addUserCircle+${memberKey}`);
-    let url = `/userCircles/${this.userId}/${memberKey}`;
+    const userId = this.authService.getActiveUser().uid;
+    let url = `/userCircles/${userId}/${memberKey}`;
     let afRef = this.af.object(url);
     afRef.set(true);
   }

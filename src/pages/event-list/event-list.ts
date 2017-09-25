@@ -58,7 +58,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
     if (this.relationship == "past"){
       selectedEvents = this.eventSvc.getPastEvents();
     }else{
-      selectedEvents = this.eventSvc.getEvents();
+      selectedEvents = this.eventSvc.getRecentEvents();
     }
 
     if (!(this.searchTerm == null || this.searchTerm == '')){
@@ -90,7 +90,12 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
         })
       })
       .subscribe((items: any[]) => {
-        this.events = items.reverse();
+        //this.events = items.reverse();
+        if (this.relationship == "past"){
+          this.events = items.reverse();
+        }else{
+          this.events = items;
+        }
       })
   }
 
