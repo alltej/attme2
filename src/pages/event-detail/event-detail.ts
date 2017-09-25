@@ -16,6 +16,7 @@ export class EventDetailPage extends BaseClass implements OnInit{
   public currentEvent: any = {};
   private eventId: string;
   public isLiked: boolean = false;
+  private likedBy: any;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -41,6 +42,18 @@ export class EventDetailPage extends BaseClass implements OnInit{
         //   this.currentEvent.e//ventId = this.eventId;
         //   //console.log(this.currentEvent)
         // }
+        //this.likedBy = this.currentEvent.likedBy;
+        //console.log(this.currentEvent.likedBy);
+
+        // this.circlesSub = this.af.list(url, { preserveSnapshot: true})
+        //   .take(1)
+        //   .subscribe(itemKeys=>{
+        //     itemKeys.forEach(itemKey => {
+        //       //console.log(itemKey.key);
+        //       circleKeys.push(itemKey.key);
+        //     });
+        //   })
+        // return circleKeys;
       });
 
     //console.log(item)

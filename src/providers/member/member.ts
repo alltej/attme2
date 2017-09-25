@@ -32,7 +32,7 @@ export class MemberProvider {
   // }
 
 
-  getMembersWithVoteCount(eventKey: string): FirebaseListObservable<any[]> {
+  getMembersForEvent(eventKey: string): FirebaseListObservable<any[]> {
     return  this.af.list('/members',{
       query: {
         orderByChild: 'firstName'

@@ -63,14 +63,13 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   }
 
   setFilteredItems(userCircles?: any[]){
-    this.membersRx =  this.membersSvc.getMembersWithVoteCount(this.currentEventKey)
+    this.membersRx =  this.membersSvc.getMembersForEvent(this.currentEventKey)
       .takeUntil(this.componentDestroyed$);
     if (!(this.searchTerm == null || this.searchTerm == '')){
-      //console.log(`search term::${this.searchTerm}`)
       this.membersRx = this.membersRx.map((members) =>
         members.filter(member => member.lastName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1))
     }
-    if (userCircles){
+    if (this.relationship == "circles"){
       this.membersRx = this.membersRx
         .map((members) =>
           members.filter(member => this.userCircles.indexOf(member.$key) !== -1)
@@ -126,11 +125,15 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   }
 
   selectedAll(){
+    this.relationship = "all";
     this.setFilteredItems();
+    this.searching = false;
   }
 
   selectedCircles(){
-    this.setFilteredItems(this.userCircles);
+    this.relationship = "circles";
+    //this.setFilteredItems(this.userCircles);
+    this.setFilteredItems();
     this.searching = false;
   }
 
