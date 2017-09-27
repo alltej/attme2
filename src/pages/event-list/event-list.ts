@@ -131,7 +131,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   goToEventComments(eventId: string) {
-    console.log(eventId);
+    //console.log(eventId);
     this.navCtrl.push('event-comments', {
       'eventId': eventId
     });

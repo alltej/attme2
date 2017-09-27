@@ -19,7 +19,7 @@ export class EventCommentsProvider{
 
 
   getEventCommentsRef(eventId: string)  {
-    console.log(`getEventCommentsRef::${eventId}`)
+    //console.log(`getEventCommentsRef::${eventId}`)
     return this.commentsRef.orderByChild('event').equalTo(eventId);
   }
 
@@ -27,15 +27,16 @@ export class EventCommentsProvider{
     return this.commentsRef;
   }
 
-  submitComment(threadKey: string, comment: IComment) {
+  submitComment(eventId: string, comment: IComment) {
     // let commentRef = this.commentsRef.push();
     // let commentkey: string = commentRef.key;
+    //console.log(`submitComment::${eventId}`)
     this.commentsRef.child(comment.key).set(comment);
 
-    return this.eventsRef.child(threadKey + '/comments').once('value')
+    return this.eventsRef.child(eventId + '/comments').once('value')
       .then((snapshot) => {
         let numberOfComments = snapshot == null ? 0 : snapshot.val();
-        this.eventsRef.child(threadKey + '/comments').set(numberOfComments + 1);
+        this.eventsRef.child(eventId + '/comments').set(numberOfComments + 1);
       });
   }
 }

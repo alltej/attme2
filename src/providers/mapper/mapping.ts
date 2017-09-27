@@ -25,7 +25,7 @@ export class MappingProvider {
       comments.push({
         key: key,
         text: comment.text,
-        thread: comment.thread,
+        event: comment.eventId,
         dateCreated: comment.dateCreated,
         user: comment.user,
         votesUp: this.itemsService.groupByBoolean(comment.votes, true),
@@ -43,11 +43,11 @@ export class MappingProvider {
       return null;
 
     let snapshotComment = snapshot.val();
-    console.log(snapshotComment);
+    //console.log(snapshotComment);
     comment = {
       key: commentKey,
       text: snapshotComment.text,
-      thread: snapshotComment.thread,
+      event: snapshotComment.eventId,
       dateCreated: snapshotComment.dateCreated,
       user: snapshotComment.user,
       votesUp: this.itemsService.groupByBoolean(snapshotComment.votes, true),

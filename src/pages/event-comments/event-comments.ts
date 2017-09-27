@@ -44,19 +44,19 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
       this.comments = this.mappingsService.getComments(snapshot);
       this.commentsLoaded = true;
     }, function (error) {
-      console.log(error)
+      //console.log(error)
     });
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad EventCommentsPage');
+    //console.log('ionViewDidLoad EventCommentsPage');
   }
 
   createComment() {
-    let self = this;
-
-    let modalPage = this.modalCtrl.create(CommentCreatePage, {
-      threadKey: this.eventId
+    //console.log('createComment')
+    //CommentCreatePage
+    let modalPage = this.modalCtrl.create('comment-create', {
+      eventId: this.eventId
     });
 
     modalPage.onDidDismiss((commentData: any) => {
@@ -66,7 +66,7 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
 
         let createdComment: IComment = {
           key: commentVals.key,
-          thread: commentVals.thread,
+          event: commentVals.event,
           text: commentVals.text,
           user: commentUser,
           dateCreated: commentVals.dateCreated,
@@ -92,4 +92,5 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
   scrollToBottom() {
     this.content.scrollToBottom();
   }
+
 }

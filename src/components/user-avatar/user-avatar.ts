@@ -9,7 +9,7 @@ import {PhotoViewer} from "@ionic-native/photo-viewer";
   template: ` <img *ngIf="imageLoaded" src="{{imageUrl}}" (click)="zoom()">`
 })
 export class UserAvatarComponent implements OnInit {
-  @Input() user: IUser;
+  @Input() public user: IUser;
   imageLoaded: boolean = false;
   imageUrl: string;
 

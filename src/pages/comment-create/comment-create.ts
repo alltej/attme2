@@ -8,7 +8,10 @@ import {IComment} from "../../models/comment.interface";
 import {ProfileProvider} from "../../providers/profile/profile";
 
 
-@IonicPage()
+@IonicPage({
+  name: 'comment-create',
+  segment: ':eventId/comment-create'
+})
 @Component({
   selector: 'page-comment-create',
   templateUrl: 'comment-create.html',
@@ -17,7 +20,7 @@ export class CommentCreatePage implements OnInit{
 
   createCommentForm: FormGroup;
   comment: AbstractControl;
-  eventKey: string;
+  eventId: string;
   loaded: boolean = false;
 
   constructor(public nav: NavController,
@@ -31,8 +34,9 @@ export class CommentCreatePage implements OnInit{
   }
 
   ngOnInit() {
-    this.eventKey = this.navParams.get('eventId');
-
+    //console.log(`CommentCreatePage::ngOnInit`);
+    this.eventId = this.navParams.get('eventId');
+    //console.log(this.eventId)
     this.createCommentForm = this.fb.group({
       'comment': ['', Validators.compose([Validators.required, Validators.minLength(10)])]
     });
@@ -46,7 +50,7 @@ export class CommentCreatePage implements OnInit{
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad CommentCreatePage');
+    //console.log('ionViewDidLoad CommentCreatePage');
   }
 
   onSubmit(commentForm: any): void {
@@ -60,9 +64,11 @@ export class CommentCreatePage implements OnInit{
       loader.present();
 
       let uid = this.authService.getActiveUser().uid;
+      //console.log(`uid::${uid}`)
       //const userId = this.authService.getActiveUser().uid;
       this.profileSvc.getUserProfile().once('value').then(snapshot => {
         let username  =  snapshot.val().lastName + " " + snapshot.val().firstName.charAt(0)
+        //console.log(`username::${username}`)
 
         let commentRef = this.commentsSvc.getCommentsRef().push();
         let commentkey: string = commentRef.key;
@@ -71,16 +77,16 @@ export class CommentCreatePage implements OnInit{
         let newComment: IComment = {
           key: commentkey,
           text: commentForm.comment,
-          thread: this.eventKey,
+          event: this.eventId,
           user: user,
           dateCreated: new Date().toString(),
           votesUp: null,
           votesDown: null
         };
 
-        this.commentsSvc.submitComment(this.eventKey, newComment)
-          .then(function (snapshot) {
-            loader.dismiss()
+        this.commentsSvc.submitComment(this.eventId, newComment)
+          .then(snapshot => {
+          loader.dismiss()
               .then(() => {
                 this.viewCtrl.dismiss({
                   comment: newComment,

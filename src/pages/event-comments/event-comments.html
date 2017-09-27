@@ -18,6 +18,7 @@
         <ion-item>
           <ion-avatar item-left>
             <!--<user-avatar [user]="comment.user"></user-avatar>-->
+            <attme-user-avatar></attme-user-avatar>
           </ion-avatar>
           <h2>{{comment.user.username}}</h2>
           <p>{{comment.dateCreated | date:'medium'}}</p>
@@ -51,6 +52,12 @@
     </ion-item>
   </ion-list>
 
+  <!--<ion-fab right bottom>-->
+    <!--<button ion-fab color="primary"><ion-icon name="create" (click)="addComment()" ></ion-icon></button>-->
+  <!--</ion-fab>-->
   <ion-fab right bottom>
-    <button ion-fab color="primary"><ion-icon name="create" (click)="createComment()"></ion-icon></button>
+    <button ion-fab (click)="createComment()">
+      <ion-icon name="create"></ion-icon>
+    </button>
   </ion-fab>
+</ion-content>
