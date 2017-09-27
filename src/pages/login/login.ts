@@ -25,8 +25,8 @@ export class LoginPage {
               public formBuilder: FormBuilder) {
 
     this.loginForm = formBuilder.group({
-      email: ['arankun@yahoo.com', Validators.compose([Validators.required, EmailValidator.isValid])],
-      password: ['testpswd1', Validators.compose([Validators.minLength(6), Validators.required])]
+      email: ['', Validators.compose([Validators.required, EmailValidator.isValid])],
+      password: ['', Validators.compose([Validators.minLength(6), Validators.required])]
     });
   }
 
