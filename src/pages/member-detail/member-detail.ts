@@ -109,6 +109,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
       inputs: [
         {
           name: 'newEmail',
+          value: this.member.email,
           placeholder: 'Your new email',
         }
       ],
@@ -132,8 +133,35 @@ export class MemberDetailPage extends BaseClass implements OnInit{
     alert.present();
   }
 
-  updateDOB(birthDate){
-    //this.profileProvider.updateDOB(birthDate);
+  updateDOB(){
+
+    let alert = this.alertCtrl.create({
+      inputs: [
+        {
+          name: 'birthDate',
+          value: this.member.birthDate,
+          placeholder: 'Date of Birth(MM/YY/DDDD)',
+          type: 'date'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Save',
+          handler: data => {
+            //let newEmail = data.newEmail;
+
+            this.memberSvc.updateDOB(this.memberKey, data.birthDate).then( () =>{
+            }).catch(error => {
+              //console.log('ERROR: '+error.message);
+            });
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 
   updateMemberId(){

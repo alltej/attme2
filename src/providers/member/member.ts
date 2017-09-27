@@ -205,4 +205,10 @@ export class MemberProvider {
       memberId: memberId
     });
   }
+
+  updateDOB(memberKey: string, birthDate: Date) {
+    return this.af.object(`/members/${memberKey}`).update({
+      birthDate: birthDate
+    });
+  }
 }

@@ -21,9 +21,13 @@
   </ion-item>
 
   <ion-item>
-    <ion-label>Event Date</ion-label>
-    <ion-input type="date" displayFormat="D MMM, YYYY" pickerFormat="DD MMM YYYY" [(ngModel)]="eventDate">
-    </ion-input>
+    <ion-label stacked>Event Date</ion-label>
+    <!--<ion-input type="date" displayFormat="D MMM, YYYY" pickerFormat="DD MMM YYYY" [(ngModel)]="eventDate"></ion-input>-->
+    <!--<ion-datetime displayFormat="MMM D, YYYY" pickerFormat="DD MMM YYYY"-->
+                    <!--[(ngModel)]="eventDate"></ion-datetime>-->
+    <!--<ion-datetime displayFormat="D MMM, YYYY" pickerFormat="DD MMM YYYY" [(ngModel)]="eventDate"></ion-datetime>-->
+    <ion-datetime displayFormat="MMM D, YYYY" pickerFormat="D MMM YYYY"
+                  [(ngModel)]="eventDate" ></ion-datetime>
   </ion-item>
 
   <ion-item>
