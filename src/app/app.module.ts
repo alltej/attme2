@@ -27,6 +27,7 @@ import {EventCommentsProvider} from "../providers/event/event-comments";
 import {ItemsProvider} from "../providers/mapper/items-provider";
 import {MappingProvider} from "../providers/mapper/mapping";
 import { StorageProvider } from '../providers/storage/storage';
+import {PhotoViewer} from "@ionic-native/photo-viewer";
 
 //import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 
@@ -82,7 +83,8 @@ export class MyErrorHandler implements ErrorHandler {
     EventCommentsProvider,
     ItemsProvider,
     MappingProvider,
-    StorageProvider
+    StorageProvider,
+    PhotoViewer
   ]
 })
 export class AppModule {}

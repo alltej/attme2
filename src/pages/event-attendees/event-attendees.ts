@@ -26,6 +26,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   searchControl: FormControl;
   searchTerm: string = '';
   searching: any = false;
+  eventName: string = "";
   private eventId: string;
   private membersRx: Observable<any[]>;
   private members: any[] = [];
@@ -61,9 +62,10 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
 
 
     this.eventSvc.getEventDetail(this.eventId).take(1)
-      .subscribe( (data)=> {
-        //console.log(data.val())
-        let eventDate = new Date(data.val().when);
+      .subscribe( (snapshot)=> {
+        if (snapshot.val() == null) return null;
+        let eventDate = new Date(snapshot.val().when);
+        this.eventName = snapshot.val().name;
         this.isAttendanceEnabled =  this.isEnableAttendance(eventDate);
       })
     //   .then( userProfileValue => {

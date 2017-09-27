@@ -1,20 +1,19 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { EventCommentsPage } from './event-comments';
-import {AttmeUserAvatarComponent} from "../../components/attme-user-avatar/attme-user-avatar";
-//import {CommentCreatePage} from "../comment-create/comment-create";
+import {UserAvatarComponent} from "../../components/user-avatar";
 
 @NgModule({
   declarations: [
     EventCommentsPage,
-    AttmeUserAvatarComponent,
+    UserAvatarComponent,
   ],
   imports: [
     IonicPageModule.forChild(EventCommentsPage),
   ],
   exports: [
     EventCommentsPage,
-    AttmeUserAvatarComponent,
+    UserAvatarComponent,
   ]
 })
 export class EventCommentsPageModule {}

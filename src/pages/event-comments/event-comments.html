@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar color="hcolor">
-    <ion-title>{{currentEvent?.name | uppercase}}</ion-title>
+    <ion-title>{{eventName | uppercase}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -18,7 +18,7 @@
         <ion-item>
           <ion-avatar item-left>
             <!--<user-avatar [user]="comment.user"></user-avatar>-->
-            <attme-user-avatar></attme-user-avatar>
+            <user-avatar [user]="comment.user"></user-avatar>
           </ion-avatar>
           <h2>{{comment.user.username}}</h2>
           <p>{{comment.dateCreated | date:'medium'}}</p>

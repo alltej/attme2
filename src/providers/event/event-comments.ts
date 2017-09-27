@@ -23,6 +23,10 @@ export class EventCommentsProvider{
     return this.commentsRef.orderByChild('event').equalTo(eventId);
   }
 
+  getEvent(eventId: string) {
+    return this.eventsRef.child(eventId).once('value');
+  }
+
   getCommentsRef() {
     return this.commentsRef;
   }
@@ -36,6 +40,7 @@ export class EventCommentsProvider{
     return this.eventsRef.child(eventId + '/comments').once('value')
       .then((snapshot) => {
         let numberOfComments = snapshot == null ? 0 : snapshot.val();
+        //console.log(`numberOfComments::${numberOfComments}`)
         this.eventsRef.child(eventId + '/comments').set(numberOfComments + 1);
       });
   }

@@ -7,6 +7,7 @@ import {EventCommentsProvider} from "../../providers/event/event-comments";
 import {AuthProvider} from "../../providers/auth/auth";
 import {CommentCreatePage} from "../comment-create/comment-create";
 import {MappingProvider} from "../../providers/mapper/mapping";
+import {IEvent} from "../../models/event.interface";
 
 @IonicPage({
   name: 'event-comments',
@@ -20,6 +21,7 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
 
   @ViewChild(Content) content: Content;
   eventId: string;
+  eventName: string = "";
   commentsLoaded: boolean = false;
   comments: IComment[];
 
@@ -39,17 +41,29 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.eventId = this.navParams.get('eventId');
     this.commentsLoaded = false;
+    this.commentsSvc.getEvent(this.eventId)
+      .then(snapshot => {
+        if (snapshot.val() == null) return null;
+        let eventData: any = snapshot.val();
+
+        this.eventName = eventData.name;
+      })
 
     this.commentsSvc.getEventCommentsRef(this.eventId).once('value', snapshot =>  {
       this.comments = this.mappingsService.getComments(snapshot);
       this.commentsLoaded = true;
-    }, function (error) {
+      }, error => {
       //console.log(error)
     });
   }
 
   ionViewDidLoad() {
     //console.log('ionViewDidLoad EventCommentsPage');
+  }
+
+  getEventData() {
+
+
   }
 
   createComment() {

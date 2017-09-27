@@ -1,6 +1,6 @@
 import {Attendee} from "./attendee.interface";
 
-export class Event {
+export interface IEvent {
   id: string;
   description: string;
   name: string;
