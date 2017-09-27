@@ -33,6 +33,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
               public zone: NgZone) {
     super();
     this.memberKey = this.navParams.get('memberKey');
+
   }
 
   ngOnInit(): void {

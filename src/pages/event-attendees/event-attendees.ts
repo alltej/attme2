@@ -12,7 +12,7 @@ import {attmeConfig} from "../../config/attme.config";
 
 @IonicPage({
   name: 'event-attendees',
-  segment: ':eventKey/event-attendees'
+  segment: ':eventId/event-attendees'
 })
 @Component({
   selector: 'page-event-attendees',
@@ -26,7 +26,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   searchControl: FormControl;
   searchTerm: string = '';
   searching: any = false;
-  private currentEventKey: string;
+  private eventId: string;
   private membersRx: Observable<any[]>;
   private members: any[] = [];
   private isAttendanceEnabled: boolean  = false;
@@ -42,7 +42,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
 
 
     this.searchControl = new FormControl();
-    this.currentEventKey = this.navParams.get('eventKey');
+    this.eventId = this.navParams.get('eventId');
     //console.log(`EventAttendeesPage::constructor::${this.currentEventKey}`);
     //this.eventDate = eventSvc.getEventDetail(this.currentEventKey);
 
@@ -56,11 +56,11 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
 //this.setFilteredItems(this.userCircles);
     this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
       this.searching = false;
-      this.setFilteredItems(this.userCircles);
+      this.setFilteredItems();
     });
 
 
-    this.eventSvc.getEventDetail(this.currentEventKey).take(1)
+    this.eventSvc.getEventDetail(this.eventId).take(1)
       .subscribe( (data)=> {
         //console.log(data.val())
         let eventDate = new Date(data.val().when);
@@ -81,8 +81,8 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
     this.searching = true;
   }
 
-  setFilteredItems(userCircles?: any[]){
-    this.membersRx =  this.membersSvc.getMembersForEvent(this.currentEventKey)
+  setFilteredItems(){
+    this.membersRx =  this.membersSvc.getMembersForEvent(this.eventId)
       .takeUntil(this.componentDestroyed$);
     if (!(this.searchTerm == null || this.searchTerm == '')){
       this.membersRx = this.membersRx.map((members) =>
@@ -98,7 +98,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
     this.membersRx
       .map(members =>{
         return members.map(member =>{
-          this.attendanceSvc.getMemberVoteCount(this.currentEventKey, member.$key)
+          this.attendanceSvc.getMemberVoteCount(this.eventId, member.$key)
             .takeUntil(this.componentDestroyed$)
             .map( (ul) =>{
               return ul;
@@ -115,7 +115,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
       }) //TODO
       .map(members =>{
         return members.map(member =>{
-          this.attendanceSvc.isVoted(this.currentEventKey, member.$key)
+          this.attendanceSvc.isVoted(this.eventId, member.$key)
             .takeUntil(this.componentDestroyed$)
             .map( (ul) =>{
               //console.log(ul)
@@ -136,11 +136,11 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
 
   onUpVote(selectedMember: any){
     //console.log(`${this.currentEventKey}, ${selectedMember.$key}`)
-    this.attendanceSvc.addAttendee(this.currentEventKey, selectedMember.$key);
+    this.attendanceSvc.addAttendee(this.eventId, selectedMember.$key);
   }
 
   onDownVote(selectedMember: any){
-    this.attendanceSvc.removeAttendee(this.currentEventKey, selectedMember.$key);
+    this.attendanceSvc.removeAttendee(this.eventId, selectedMember.$key);
   }
 
   selectedAll(){

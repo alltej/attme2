@@ -7,7 +7,7 @@ import {FirebaseListObservable} from "angularfire2/database";
 
 @IonicPage({
   name: 'event-detail',
-  segment: 'event-detail/:eventId'
+  segment: ':eventId/event-detail'
 })
 @Component({
   selector: 'page-event-detail',
@@ -81,5 +81,7 @@ export class EventDetailPage extends BaseClass implements OnInit{
     this.isLiked = false;
     //this.reloadEvents();
   }
+
+
 
 }

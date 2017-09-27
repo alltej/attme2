@@ -118,4 +118,8 @@ export class AuthProvider {
     //     this.error = err;
     //   })
   }
+
+  getUsername(uid: string) {
+
+  }
 }

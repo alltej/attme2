@@ -6,6 +6,7 @@ import {EventProvider} from "../../providers/event/event";
 import {UserLikesProvider} from "../../providers/user-likes/user-likes";
 import {BaseClass} from "../BasePage";
 import {Observable} from "rxjs/Observable";
+import {EventCommentsPage} from "../event-comments/event-comments";
 
 @IonicPage()
 @Component({
@@ -111,9 +112,8 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
     this.navCtrl.push('event-detail', { 'eventId': eventId });
   }
 
-  goToEventAttendees(eventKey) {
-    //console.log('goToEventAttendees:' + eventKey);
-    this.navCtrl.push('event-attendees', { 'eventKey': eventKey });
+  goToEventAttendees(eventId) {
+    this.navCtrl.push('event-attendees', { 'eventId': eventId });
   }
 
   onSearchInput(){
@@ -128,5 +128,12 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   selectCurrentEvents() {
     this.relationship = "current";
     this.setFilteredItems();
+  }
+
+  goToEventComments(eventId: string) {
+    console.log(eventId);
+    this.navCtrl.push('event-comments', {
+      'eventId': eventId
+    });
   }
 }

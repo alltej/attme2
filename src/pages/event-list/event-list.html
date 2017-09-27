@@ -68,14 +68,16 @@
 
         </ion-col>
         <!--TODO: Add comment count-->
-        <!--<ion-col>-->
-          <!--<button ion-button icon-left clear small>-->
-            <!--<ion-icon name="chatbubbles"></ion-icon>-->
-            <!--&lt;!&ndash;<div>{{(event.isLiked | async)?.on==null}}</div>&ndash;&gt;-->
-            <!--&lt;!&ndash;<div>{{event?.$key}}</div>&ndash;&gt;-->
-            <!--<div>2</div>-->
-          <!--</button>-->
-        <!--</ion-col>-->
+        <ion-col>
+          <button ion-button
+                  icon-left
+                  clear
+                  small
+                  (click)="goToEventComments(event?.$key)">
+            <ion-icon name="chatbubbles"></ion-icon>
+            <label>2 Comments</label>
+          </button>
+        </ion-col>
         <ion-col>
           <button ion-button
                   icon-left clear small

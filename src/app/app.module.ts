@@ -23,6 +23,10 @@ import {File} from "@ionic-native/file";
 import {FilePath} from "@ionic-native/file-path";
 import {FileChooser} from "@ionic-native/file-chooser";
 import {MemberInviteProvider} from "../providers/member/member-invite";
+import {EventCommentsProvider} from "../providers/event/event-comments";
+import {ItemsProvider} from "../providers/mapper/items-provider";
+import {MappingProvider} from "../providers/mapper/mapping";
+import { StorageProvider } from '../providers/storage/storage';
 
 //import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 
@@ -74,7 +78,11 @@ export class MyErrorHandler implements ErrorHandler {
     UserCircleProvider,
     UserLikesProvider,
     ProfileImageProvider,
-    MemberInviteProvider
+    MemberInviteProvider,
+    EventCommentsProvider,
+    ItemsProvider,
+    MappingProvider,
+    StorageProvider
   ]
 })
 export class AppModule {}
