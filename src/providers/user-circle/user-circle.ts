@@ -15,32 +15,13 @@ export class UserCircleProvider {
     this.userId = this.authService.getActiveUser().uid;
   }
 
-  // getUserCircles(): FirebaseListObservable<any[]> {
-  //   return this.af.database.list('/events', {
-  //     query: {
-  //       limitToLast: 20,
-  //       orderByChild: 'when',
-  //       startAt: this.startAtFilter,
-  //     }})
-  // }
-
   addToMyCircle(memberKey:string){
     const userId = this.authService.getActiveUser().uid;
-    let url = `/userCircles/${userId}/${memberKey}`;
-    let afRef = this.af.object(url);
+    let afRef = this.af.object(`/userCircles/${userId}/${memberKey}`);
     afRef.set(true);
   }
 
-  getMyCircles(){
-    //console.log('UserCircles.getMyCircles')
-    let circleKeys = [];
-    const userKey = this.authService.getActiveUser().uid;
-    let url = `/userCircles/${userKey}`;
-    return this.af.list(url, { preserveSnapshot: true});
-  }
-
   getMyCircles1(){
-    //console.log('UserCircles.getMyCircles')
     let circleKeys = [];
     const userKey = this.authService.getActiveUser().uid;
     let url = `/userCircles/${userKey}`;
@@ -56,29 +37,8 @@ export class UserCircleProvider {
   }
 
   isMyCircle(memberKey: string) {
-    //const userId = this.authService.getActiveUser().uid;
-    //console.log('isMyCircle::' + memberKey);
-    let url = `/userCircles/${this.userId}/${memberKey}`;
-    //return this.af.object(url, { preserveSnapshot: true });
-    return this.af.object(url);
+    return this.af.object(`/userCircles/${this.userId}/${memberKey}`);
 
-  }
-  isMyCircle1(memberKey: string) {
-    //const userId = this.authService.getActiveUser().uid;
-    //console.log('isMyCircle::' + memberKey);
-    let url = `/userCircles/${this.userId}/${memberKey}`;
-    let circleRef = this.af.object(url, { preserveSnapshot: true });
-    //console.log(circleRef);
-    //return circleRef;
-    let isSelected = false;
-    circleRef.subscribe(data => {
-      if(data.val()==null) {
-        isSelected = false;
-      } else {
-        isSelected = true;
-      }
-    });
-    return isSelected;
   }
 
   removeFromMyCircle(memberKey: string) {

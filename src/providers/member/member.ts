@@ -2,16 +2,11 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import {AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable} from "angularfire2/database";
 import {AuthProvider} from "../auth/auth";
-import {Observable} from "rxjs/Observable";
-import {Subscription} from "rxjs/Subscription";
 
 @Injectable()
 export class MemberProvider {
 
   public memberKey: string;
-  public isMemberExists: boolean;
-  private membersWithVoteCount: Observable<any>;
-  public eventAttendeeVoteCount: Subscription;
 
   constructor(private af:AngularFireDatabase,
               private authService: AuthProvider,) {
@@ -25,13 +20,6 @@ export class MemberProvider {
     });
   }
 
-  // getUpVotes1(eventKey: string, memberKey: string) {
-  //   console.log('xxx')
-  //   //return this.af.object(`/attendees/${eventKey}/members/${memberKey}`,{ preserveSnapshot: false})
-  //   return this.af.object(`/attendees/${eventKey}/members/${memberKey}`);
-  // }
-
-
   getMembersForEvent(eventKey: string): FirebaseListObservable<any[]> {
     return  this.af.list('/members',{
       query: {
@@ -40,49 +28,9 @@ export class MemberProvider {
     });
   }
 
-  getMembersWithVoteCountO(eventKey: string): Observable<any[]> {
-    this.membersWithVoteCount =  this.af.list('/members',{
-      query: {
-        orderByChild: 'firstName'
-      }
-    })
-      .map(members =>{
-        members.map(member =>{
-          this.eventAttendeeVoteCount = this.af.object(`/attendees/${eventKey}/members/${member.$key}`)
-            .subscribe(vote =>{
-              member.voteCount = vote.voteCount;
-              this.eventAttendeeVoteCount.unsubscribe();
-            })
-          return member;
-        })
-        return members;
-      });
-    return this.membersWithVoteCount;
-  }
-
-  // getMembersWithUsername(eventKey: string): Observable<any[]> {
-  //   let members =  this.af.list('/members',{
-  //     query: {
-  //       orderByChild: 'firstName'
-  //     }
-  //   })
-  //     .map(members =>{
-  //       members.map(member =>{
-  //         this.af.object(`/userProfile}/members/${member.$key}`)
-  //           .subscribe(profile =>{
-  //             member.userName = profile.userName;
-  //           })
-  //         return member;
-  //       })
-  //       return members;
-  //     });
-  //   return members;
-  // }
-
   updateMember($key: string, firstName, lastName, memberId,email) {
-    let url = `/members/${$key}`;
     let data = this.getMemberJson(firstName, lastName, memberId, email);
-    let memberRef = this.af.object(url);
+    let memberRef = this.af.object(`/members/${$key}`);
     memberRef.update(data)
     //.then(_ => console.log('update!'))
     ;
@@ -91,22 +39,19 @@ export class MemberProvider {
   addMember(firstName, lastName, memberId, email) {
     let data = this.getMemberJson(firstName, lastName, memberId, email);
 
-    let url = `/members`;
-    let membersRef = this.af.list(url);
+    let membersRef = this.af.list(`/members`);
     membersRef.push(data);
   }
 
   updateName(memberKey: string, firstName, lastName): firebase.Promise<void> {
-    let url = `/members/${memberKey}`;
-    return this.af.object(url).update({
+    return this.af.object(`/members/${memberKey}`).update({
       firstName: firstName,
       lastName: lastName,
     });
   }
 
   updatePhotoUrl(memberKey: string, photoUrl:string): firebase.Promise<void> {
-    let url = `/members/${memberKey}`;
-    return this.af.object(url).update({
+    return this.af.object(`/members/${memberKey}`).update({
       photoUrl: photoUrl
     });
   }
@@ -121,7 +66,6 @@ export class MemberProvider {
   }
 
   findMemberId(memberKey: string) {
-    //console.log('find: '+ memberKey);
     return this.af.list(`/userProfile/`, {
       query: {
         orderByChild: 'memberKey',
@@ -132,7 +76,6 @@ export class MemberProvider {
   }
 
   getMember(memberKey: string):FirebaseObjectObservable<any> {
-    //return this.af.object(`/members/${memberKey}`, { preserveSnapshot: true });
     return this.af.object(`/members/${memberKey}`);
   }
 

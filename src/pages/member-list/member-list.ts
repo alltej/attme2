@@ -37,14 +37,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
               return ul;
             })
             .subscribe(data => {
-              //console.log(data)
               member.isMyCircle = data.$value ? true:false;
-              //member.voteCount = ul.voteCount != null ? ul.voteCount : null;
-              // if(data.val()==null) {
-              //   member.isMyCircle = false;
-              // } else {
-              //   member.isMyCircle = true;
-              // }
             });
           return member;
         })
@@ -52,10 +45,6 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
       .subscribe((items: any[]) =>{
         this.members = items;
       });
-  }
-
-  ngOnDestroy(): void {
-    //console.log('MemberListPage::everything works as intended with or without super call');
   }
 
   onLoadMember(selectedMember:any){

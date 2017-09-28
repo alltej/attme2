@@ -1,8 +1,6 @@
 import {Component, NgZone, OnInit} from '@angular/core';
 import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
 import {MemberProvider} from "../../providers/member/member";
-//import {FirebaseObjectObservable} from "angularfire2/database";
-import {AuthProvider} from "../../providers/auth/auth";
 import {BaseClass} from "../BasePage";
 import {ProfileImageProvider} from "../../providers/profile/profile-image";
 import {MemberInviteProvider} from "../../providers/member/member-invite";
@@ -21,7 +19,6 @@ export class MemberDetailPage extends BaseClass implements OnInit{
   public member: any = {};
   public isUserProfileExists: boolean = false;
   private enableEditEmail: boolean = false;
-  private enableInvite: boolean = false;
   avatar: string = "assets/img/profile-default.png";
 
   constructor(public navCtrl: NavController,
@@ -37,7 +34,6 @@ export class MemberDetailPage extends BaseClass implements OnInit{
   }
 
   ngOnInit(): void {
-    //console.log(`MemberDetailPage::${this.memberKey}`);
     this.memberSvc.getMember(this.memberKey)
       .takeUntil(this.componentDestroyed$)
       .subscribe((data)=>{
@@ -62,8 +58,6 @@ export class MemberDetailPage extends BaseClass implements OnInit{
       .subscribe((data) => {
         if (data.length>0) {
           this.isUserProfileExists = true;
-        }else{
-          //this.isUserProfileExists = (this.member.email==null);//true;
         }
         this.enableEditEmail = !this.isUserProfileExists||(this.member.email==null);
       });
@@ -100,10 +94,6 @@ export class MemberDetailPage extends BaseClass implements OnInit{
     alert.present();
   }
 
-  // updateDOB(birthDate){
-  //   this.profileProvider.updateDOB(birthDate);
-  // }
-
   updateEmail(){
     let alert = this.alertCtrl.create({
       inputs: [
@@ -120,7 +110,6 @@ export class MemberDetailPage extends BaseClass implements OnInit{
         {
           text: 'Save',
           handler: data => {
-            //let newEmail = data.newEmail;
 
             this.memberSvc.updateEmail(this.memberKey, data.newEmail).then( () =>{
             }).catch(error => {
@@ -192,14 +181,13 @@ export class MemberDetailPage extends BaseClass implements OnInit{
   }
 
   onCreateInvite() {
-    //console.log(`onCreateInvite::${this.memberKey},${this.member.email}`);
     this.memberInviteSvc.createUserInvite(this.memberKey, this.member.lastName, this.member.firstName, this.member.email);
 
   }
 
   editimage() {
     let statusalert = this.alertCtrl.create({
-      buttons: ['okay']
+      buttons: ['OK']
     });
     this.profileImageSvc.uploadMemberImage(this.memberKey).then((url: any) => {
       this.memberSvc.updatePhotoUrl(this.memberKey, url).then((res: any) => {

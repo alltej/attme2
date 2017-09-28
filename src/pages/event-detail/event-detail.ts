@@ -32,30 +32,8 @@ export class EventDetailPage extends BaseClass implements OnInit{
 
     this.eventSvc.getEventDetail(this.eventId)
       .subscribe((item: any)=>{
-        //console.log(item.val());
         this.currentEvent = item.val();
         this.currentEvent.eventId = this.eventId;
-        //console.log(isLiked)
-        //this.currentEvent.isLiked = isLiked;
-        // if (data.val()!=null) {
-        //   console.log('aaaa');
-        //   console.log(data.val());
-        //   this.currentEvent = data.val();
-        //   this.currentEvent.e//ventId = this.eventId;
-        //   //console.log(this.currentEvent)
-        // }
-        //this.likedBy = this.currentEvent.likedBy;
-        //console.log(this.currentEvent.likedBy);
-
-        // this.circlesSub = this.af.list(url, { preserveSnapshot: true})
-        //   .take(1)
-        //   .subscribe(itemKeys=>{
-        //     itemKeys.forEach(itemKey => {
-        //       //console.log(itemKey.key);
-        //       circleKeys.push(itemKey.key);
-        //     });
-        //   })
-        // return circleKeys;
       });
 
     this.likedByList = this.eventSvc.getEventLikes(this.eventId);

@@ -49,16 +49,7 @@ export class ProfilePage implements OnInit
       // }
     });
   }
-  // ionViewDidEnter() {
-  //   this.profileProvider.getUserProfile().on('value', userProfileSnapshot => {
-  //     this.userProfile = userProfileSnapshot.val();
-  //     this.birthDate = userProfileSnapshot.val().birthDate;
-  //     if (this.birthDate == null) {
-  //       console.log(`$Hahahahaha:{this.birthDate}`);
-  //       this.birthDate = new Date().toISOString();
-  //     }
-  //   });
-  // }
+
 
   logOut(): void {
     this.authSvc.logoutUser().then(() => {
