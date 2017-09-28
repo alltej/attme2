@@ -11,4 +11,10 @@ page-event-detail {
   #taglist li:last-child:after {
     content: "";
   }
+
+  pre {
+    font-size:small;
+  }
+
+  font-family: -apple-system, "Helvetica Neue", "Roboto", sans-serif;
 }
