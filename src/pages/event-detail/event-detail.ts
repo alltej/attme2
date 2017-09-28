@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
 import { EventProvider } from '../../providers/event/event';
 import {UserLikesProvider} from "../../providers/user-likes/user-likes";
 import {BaseClass} from "../BasePage";
@@ -14,13 +14,14 @@ import {FirebaseListObservable} from "angularfire2/database";
   templateUrl: 'event-detail.html',
 })
 export class EventDetailPage extends BaseClass implements OnInit{
-  public currentEvent: any = {};
+  public selEvent: any = {};
   private eventId: string;
   public isLiked: boolean = false;
   private likedBy: any;
   likedByList: FirebaseListObservable<any[]>;
 
   constructor(public navCtrl: NavController,
+              public alertCtrl: AlertController,
               public navParams: NavParams,
               public eventSvc: EventProvider,
               private userLikeSvc: UserLikesProvider) {
@@ -32,8 +33,8 @@ export class EventDetailPage extends BaseClass implements OnInit{
 
     this.eventSvc.getEventDetail(this.eventId)
       .subscribe((item: any)=>{
-        this.currentEvent = item.val();
-        this.currentEvent.eventId = this.eventId;
+        this.selEvent = item.val();
+        this.selEvent.eventId = this.eventId;
       });
 
     this.likedByList = this.eventSvc.getEventLikes(this.eventId);
@@ -60,6 +61,112 @@ export class EventDetailPage extends BaseClass implements OnInit{
     //this.reloadEvents();
   }
 
+  onUpdateDate(){
+    let alert = this.alertCtrl.create({
+      inputs: [
+        {
+          name: 'newDate',
+          value: this.selEvent.when,
+          placeholder: 'New Date(MM/YY/DDDD)',
+          type: 'date'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Save',
+          handler: data => {
+            this.eventSvc.updateEventDate(this.selEvent.eventId, data.newDate).then( () =>{
+            }).catch(error => {
+              //console.log('ERROR: '+error.message);
+            });
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
 
+  onUpdateName(){
+    let alert = this.alertCtrl.create({
+      inputs: [
+        {
+          name: 'newName',
+          value: this.selEvent.name,
+          placeholder: 'New Event Name',
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Save',
+          handler: data => {
+            this.eventSvc.updateEventName(this.selEvent.eventId, data.newName).then( () =>{
+            }).catch(error => {
+              //console.log('ERROR: '+error.message);
+            });
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
 
+  onUpdateLocation(){
+    let alert = this.alertCtrl.create({
+      inputs: [
+        {
+          name: 'newLocation',
+          value: this.selEvent.where,
+          placeholder: 'New Event Location',
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Save',
+          handler: data => {
+            this.eventSvc.updateEventLocation(this.selEvent.eventId, data.newLocation).then( () =>{
+            }).catch(error => {
+              //console.log('ERROR: '+error.message);
+            });
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  onUpdateDescription(){
+    let alert = this.alertCtrl.create({
+      inputs: [
+        {
+          name: 'newDescription',
+          value: this.selEvent.description,
+          placeholder: 'New Event Description'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Save',
+          handler: data => {
+            this.eventSvc.updateEventDescription(this.selEvent.eventId, data.newDescription).then( () =>{
+            }).catch(error => {
+              //console.log('ERROR: '+error.message);
+            });
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
 }

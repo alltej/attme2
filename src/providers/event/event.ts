@@ -54,101 +54,41 @@ export class EventProvider implements OnDestroy {
     return this.af.object(`/events/${eventId}`, { preserveSnapshot: true });
   }
 
-  // createEvent(eventName:string,
-  //             eventDescription:string,
-  //             eventDate:string,
-  //             eventLocation:string): firebase.Promise<any> {
-  //   return this.eventRef.push({
-  //     name: eventName,
-  //     description: eventDescription,
-  //     when: eventDate,
-  //     where: eventLocation
-  //   });
-  // }
-  createEvent(eventName:string,
-              eventDescription:string,
-              eventDate:string,
-              eventLocation:string): firebase.Promise<any> {
+
+  createEvent(name:string,
+              description:string,
+              when:string,
+              where:string): firebase.Promise<any> {
+    //console.log(description)
     return this.af.list(`/events`).push({
-      name: eventName,
-      description: eventDescription,
-      when: eventDate,
-      where: eventLocation
+      name: name,
+      description: description,
+      when: when,
+      where: where
     });
   }
 
-  //
-  // isLiked(eventKey: string) {
-  //   let url = `/eventLikes/${eventKey}/likes/${this.authSvc.getActiveUser().uid}`;
-  //   let liked = false;
-  //   const likedRef = this.af.object(url, { preserveSnapshot: true });
-  //
-  //   likedRef.subscribe(data => {
-  //     if(data.val()==null) {
-  //       liked = false;
-  //     } else {
-  //       liked = true;
-  //     }
-  //   });
-  //   return liked;
-  // }
+  updateEventDate(eventId: string, newDate: Date) {
+    return this.af.object(`/events/${eventId}`).update({
+      when: newDate
+    });
+  }
 
-  // getLikeCount(eventKey: string) {
-  //   let voteCount = 0;
-  //   let voteUrl = `/eventLikes/${eventKey}/count`;
-  //   var voteCountRef = this.af.object(voteUrl,{ preserveSnapshot: true})
-  //
-  //   voteCountRef.subscribe(snapshot => {
-  //     voteCount = snapshot.val();
-  //   });
-  //   return voteCount;
-  // }
-  //
-  // getEvents2() : FirebaseListObservable<any[]> {
-  //   return this.af.list('/events', {
-  //     query: {
-  //       limitToLast: 20,
-  //       orderByChild: 'when',
-  //       startAt: this.startAtFilter,
-  //     }})
-  // }
-  //
-  // addLike(eventKey: string) {
-  //   let url = `/eventLikes/${eventKey}/likes/${this.authSvc.getActiveUser().uid}`;
-  //   this.af.object(url).$ref.transaction(currentValue => {
-  //     if (currentValue === null) {
-  //       return{on : new Date().toISOString()};
-  //     }
-  //   })
-  //     .then( result => {
-  //       if (result.committed) {
-  //         let voteUrl = `/eventLikes/${eventKey}/count`;
-  //         let tagObs = this.af.object(voteUrl);
-  //         tagObs.$ref.transaction(tagValue => {
-  //           return tagValue ? tagValue + 1 : 1;
-  //         });
-  //       }
-  //     })
-  //     .catch( error => {
-  //       // handle error
-  //     });
-  // }
-  //
-  // removeLike(eventKey: string) {
-  //   let countUrl = `/eventLikes/${eventKey}/count`;
-  //   let likeCountRef = this.af.object(countUrl);
-  //   let likeCount = 0;
-  //   likeCountRef.$ref.transaction(tagValue => {
-  //     likeCount = tagValue ? tagValue - 1 : 0;
-  //     return likeCount;
-  //   }).then(result => {
-  //     if (result.committed) {
-  //       if (likeCount == 0){
-  //         let url = `/eventLikes/${eventKey}/likes/${this.authSvc.getActiveUser().uid}`;
-  //         this.af.object(url).remove();
-  //       }
-  //     }
-  //   });
-  // }
+  updateEventName(eventId: string | any, newName: string) {
+    return this.af.object(`/events/${eventId}`).update({
+      name: newName
+    });
+  }
 
+  updateEventLocation(eventId: string | any, newLocation: any) {
+    return this.af.object(`/events/${eventId}`).update({
+      where: newLocation
+    });
+  }
+
+  updateEventDescription(eventId: string | any, newDescription: any) {
+    return this.af.object(`/events/${eventId}`).update({
+      description: newDescription
+    });
+  }
 }

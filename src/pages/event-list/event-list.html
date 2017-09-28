@@ -34,13 +34,18 @@
 
       <ion-item (click)="goToEventDetail(event?.$key)">
         <h2>{{event?.name}}</h2>
-        <p><strong>{{event?.where}}</strong></p>
-        <p><strong>{{event?.when}}</strong></p>
+        <p>When: {{event?.when}}</p>
+        <p>Where: {{event?.where}}</p>
+        <pre><span>{{event?.description}}</span></pre>
       </ion-item>
 
-      <ion-card-content (click)="goToEventDetail(event?.$key)">
-        <p>{{event?.description}}</p>
-      </ion-card-content>
+      <!--<ion-item small (click)="goToEventDetail(event?.$key)">-->
+        <!--<pre>{{event?.description}}</pre>-->
+      <!--</ion-item>-->
+
+      <!--<ion-card-content (click)="goToEventDetail(event?.$key)">-->
+        <!--<pre>{{event?.description}}</pre>-->
+      <!--</ion-card-content>-->
 
       <ion-row>
         <ion-col>

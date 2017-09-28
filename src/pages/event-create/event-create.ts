@@ -22,9 +22,9 @@ export class EventCreatePage {
   }
 
 
-  createEvent(eventName:string, eventDescription:string, eventDate:string, eventLocation:string) {
+  createEvent(name:string, description:string, eventDate:string, location:string) {
     let when = new Date(eventDate).toISOString().slice(0,10)
-    this.eventSvc.createEvent(eventName, eventDescription, when, eventLocation)
+    this.eventSvc.createEvent(name, description, when, location)
       .then( newEvent => {
         this.navCtrl.pop();
       });
