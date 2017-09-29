@@ -25,37 +25,18 @@ export class UserAvatarComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.imageUrl = 'assets/images/profile.png';
-    this.imageLoaded = true;
-    // let firebaseConnected: boolean = this.dataService.isFirebaseConnected();
-    // if (this.user.uid === 'default' || !firebaseConnected) {
-    //   console.log('this.user.uid===default')
-    //   this.imageUrl = 'assets/images/profile.png';
-    //   this.imageLoaded = true;
-    // } else {
-    //   console.log('this.user.uid!==default')
-    //
-    //   this.storageSvc.getStorageRef().child('images/' + this.user.uid + '/profile.png').getDownloadURL().then(function (url) {
-    //     this.imageUrl = url.split('?')[0] + '?alt=media' + '&t=' + (new Date().getTime());
-    //     this.imageLoaded = true;
-    //   });
-    // }
-    /*
-let defaultUrl = self.dataService.getDefaultImageUrl();
-if (defaultUrl == null) {
-    self.imageUrl = 'images/profile.png';
-    self.imageLoaded = true;
-    console.log('get from firebase');
-    /*
-    self.dataService.getStorageRef().child('images/' + self.user.uid + '/profile.png').getDownloadURL().then(function (url) {
-        self.imageUrl = url.split('?')[0] + '?alt=media' + '&t=' + (new Date().getTime());
-        self.imageLoaded = true;
-    });
-
-} else {
-    this.imageUrl = defaultUrl.replace('default', self.user.uid) + '&t=' + (new Date().getTime());
-    self.imageLoaded = true;
-}*/
+    let firebaseConnected: boolean = this.dataService.isFirebaseConnected();
+    if (this.user.uid === 'default' || !firebaseConnected) {
+      this.imageUrl = 'assets/images/profile.png';
+      this.imageLoaded = true;
+    } else {
+      this.storageSvc.getStorageRef().child('images/' + this.user.uid + '/profile.png').getDownloadURL()
+        .then(url=> {
+          //this.imageUrl = url.split('?')[0] + '?alt=media' + '&t=' + (new Date().getTime());
+          this.imageUrl = url;
+          this.imageLoaded = true;
+      });
+    }
   }
 
   zoom() {

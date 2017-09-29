@@ -55,7 +55,6 @@ export class ProfilePage implements OnInit
             birthDate: userData.birthDate,
             memberKey: userData.memberKey,
             image: url,
-
           };
           //this.birthDate = userData.birthDate;
 
@@ -255,10 +254,10 @@ export class ProfilePage implements OnInit
 
     // Listen for state changes, errors, and completion of the upload.
     uploadTask.on('state_changed',
-      function (snapshot) {
+      snapshot => {
         // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
         progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      }, function (error) {
+      }, error => {
         loader.dismiss().then(() => {
           switch (error.code) {
             case 'storage/unauthorized':
@@ -277,8 +276,33 @@ export class ProfilePage implements OnInit
       }, () => {
         loader.dismiss().then(() => {
           // Upload completed successfully, now we can get the download URL
-          //var downloadURL = uploadTask.snapshot.downloadURL;
-          this.profileSvc.setUserImage(uid);
+          let downloadURL = uploadTask.snapshot.downloadURL;
+
+          this.profileSvc.setUserImage(uid,downloadURL)
+            .then( () => {
+              this.memberSvc.updatePhotoUrl(this.userProfile.memberKey, downloadURL)
+            }).catch( error => {
+              console.log(error)
+          })
+            ;
+          // this.profileSvc.updateimage(url).then((res: any) => {
+          //   if (res.success) {
+          //     statusalert.setTitle('Updated');
+          //     statusalert.setSubTitle('Your profile pic has been changed successfully!!');
+          //     statusalert.present();
+          //     this.zone.run(() => {
+          //       this.avatar = url;
+          //     })
+          //   }
+          // }).then( () =>{
+          //   //console.log(`ProfilePage::${this.userProfile.memberKey}`)
+          //   this.memberSvc.updatePhotoUrl(this.userProfile.memberKey, this.avatar)
+          // })
+          //   .catch((err) => {
+          //     statusalert.setTitle('Failed');
+          //     statusalert.setSubTitle('Your profile pic was not changed');
+          //     statusalert.present();
+          //   })
           this.reload();
         });
       });

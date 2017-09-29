@@ -119,9 +119,10 @@ export class ProfileProvider {
   //     s4() + '-' + s4() + s4() + s4();
   // }
 
-  setUserImage(uid: string) {
-    this.usersRef.child(uid).update({
-      image: true
+  setUserImage(uid: string, url: string) {
+    return this.usersRef.child(uid).update({
+      image: true,
+      photoUrl: url
     });
   }
 }
