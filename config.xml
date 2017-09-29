@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.ionic.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="io.ionic.attme" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>AttMe</name>
-    <description>Attendance Made Easy applicatin in Ionic</description>
+    <description>Attendance Made Easy</description>
     <author email="allan.tejano@gmail.com" href="http://attme.io/">Allan Tejano</author>
     <content src="index.html" />
     <access origin="*" />
