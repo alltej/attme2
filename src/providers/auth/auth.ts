@@ -55,10 +55,8 @@ export class AuthProvider {
     return this.afAuth.auth.signOut();
   }
 
-  getActiveUser() {
+  getLoggedInUser() {
     return firebase.auth().currentUser;
-
-
   }
 
   createUserInvite(memberKey:string,lastName:string, firstName:string, email:string) {

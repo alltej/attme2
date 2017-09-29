@@ -17,7 +17,7 @@ export class AttendanceProvider{
 
   addAttendee(eventKey: string, memberKey:string) {
     //console.log('addAttendee')
-    const userId = this.authService.getActiveUser().uid;
+    const userId = this.authService.getLoggedInUser().uid;
 
     this.af.object(`/attendees/${eventKey}/members/${memberKey}`).$ref.transaction(currentValue => {
       if (currentValue === null) {
@@ -70,7 +70,7 @@ export class AttendanceProvider{
   }
 
   isVoted(eventKey:string, memberKey:string) {
-    const userKey = this.authService.getActiveUser().uid;
+    const userKey = this.authService.getLoggedInUser().uid;
     let voted = false;
     //return this.af.object(`/attendees/${eventKey}/members/${memberKey}/votes/${userKey}`, { preserveSnapshot: true });
     return this.af.object(`/attendees/${eventKey}/members/${memberKey}/votes/${userKey}`);
@@ -78,7 +78,7 @@ export class AttendanceProvider{
   }
 
   isVotedO(eventKey:string, memberKey:string) {
-    const userKey = this.authService.getActiveUser().uid;
+    const userKey = this.authService.getLoggedInUser().uid;
     let voted = false;
     const eventMemberVoteRef = this.af.object(`/attendees/${eventKey}/members/${memberKey}/votes/${userKey}`, { preserveSnapshot: true });
 
@@ -95,7 +95,7 @@ export class AttendanceProvider{
 
   removeAttendee(eventKey: string, memberKey: string) {
     //console.log('removeAttendee')
-    const userId = this.authService.getActiveUser().uid;
+    const userId = this.authService.getLoggedInUser().uid;
 
     let voteCount = 0;
     this.af.object(`/attendees/${eventKey}/members/${memberKey}/voteCount`).$ref.transaction(tagValue => {

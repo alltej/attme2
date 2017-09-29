@@ -28,7 +28,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
       .map( (members) => {
         return members.map(member =>{
           if (member.photoUrl == null) {
-            member.photoUrl = "assets/img/profile-default.png" //"assets/img/avatar-luke.png"
+            member.photoUrl = "assets/images/profile-default.png" //"assets/img/avatar-luke.png"
           }
           //console.log(member.photoUrl);
           this.userCircleSvc.isMyCircle(member.$key)
@@ -83,7 +83,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
   getAvatar(photoUrl: String) {
     //console.log(photoUrl);
     if (photoUrl == null) {
-      return "assets/img/avatar-luke.png"
+      return "assets/images/avatar-luke.png"
     }else{
       return photoUrl;
     }

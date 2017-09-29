@@ -171,7 +171,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   getAvatar(photoUrl: String) {
     //console.log(photoUrl);
     if (photoUrl == null) {
-      return "assets/img/profile-default.png";
+      return "assets/images/profile-default.png";
       //return "assets/img/avatar-luke.png"
     }else{
       return photoUrl;

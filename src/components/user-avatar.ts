@@ -3,6 +3,7 @@ import {IUser} from "../models/user.interface";
 import {StorageProvider} from "../providers/storage/storage";
 import {AuthProvider} from "../providers/auth/auth";
 import {PhotoViewer} from "@ionic-native/photo-viewer";
+import {DataProvider} from "../providers/data/data";
 
 @Component({
   selector: 'user-avatar',
@@ -17,37 +18,48 @@ export class UserAvatarComponent implements OnInit {
 
   constructor(private storageSvc: StorageProvider,
               public authSvc: AuthProvider,
+              private dataService: DataProvider,
               private photoViewer: PhotoViewer) {
     //console.log('Hello AttmeUserAvatarComponent Component');
 
   }
 
   ngOnInit() {
-    //TODO: need to load image in user avatar
-    // this.storageSvc.getStorageRef().child('profileImages/' + this.authSvc.getActiveUser().uid)
-    //   .getDownloadURL().then(url => {
-    //     console.log(url)
-    //   this.imageUrl = url.split('?')[0] + '?alt=media' + '&t=' + (new Date().getTime());
+    this.imageUrl = 'assets/images/profile.png';
+    this.imageLoaded = true;
+    // let firebaseConnected: boolean = this.dataService.isFirebaseConnected();
+    // if (this.user.uid === 'default' || !firebaseConnected) {
+    //   console.log('this.user.uid===default')
+    //   this.imageUrl = 'assets/images/profile.png';
     //   this.imageLoaded = true;
-    // }).catch(error =>{
-    //   console.log(error)
-    //   this.imageUrl = "assets/img/profile-default.png";
-    //   this.imageLoaded = true;
-    // })
-    //this.text = 'Hello';
-    //console.log(this.user.username)
-      this.imageUrl = "assets/img/profile-default.png";
-      this.imageLoaded = true;
-
-    // if (this.userProfile.photoUrl == null) {
-    //   this.avatar = "assets/img/profile-default.png";
-    // }else{
-    //   this.avatar = this.userProfile.photoUrl
+    // } else {
+    //   console.log('this.user.uid!==default')
+    //
+    //   this.storageSvc.getStorageRef().child('images/' + this.user.uid + '/profile.png').getDownloadURL().then(function (url) {
+    //     this.imageUrl = url.split('?')[0] + '?alt=media' + '&t=' + (new Date().getTime());
+    //     this.imageLoaded = true;
+    //   });
     // }
+    /*
+let defaultUrl = self.dataService.getDefaultImageUrl();
+if (defaultUrl == null) {
+    self.imageUrl = 'images/profile.png';
+    self.imageLoaded = true;
+    console.log('get from firebase');
+    /*
+    self.dataService.getStorageRef().child('images/' + self.user.uid + '/profile.png').getDownloadURL().then(function (url) {
+        self.imageUrl = url.split('?')[0] + '?alt=media' + '&t=' + (new Date().getTime());
+        self.imageLoaded = true;
+    });
+
+} else {
+    this.imageUrl = defaultUrl.replace('default', self.user.uid) + '&t=' + (new Date().getTime());
+    self.imageLoaded = true;
+}*/
   }
 
   zoom() {
-    //TODO: implement zoom on user avatar
-    //this.photoViewer.show(this.imageUrl, this.user.username, { share: false });
+    this.photoViewer.show(this.imageUrl, this.user.username, { share: false });
   }
+
 }

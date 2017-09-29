@@ -12,20 +12,19 @@ export class UserCircleProvider {
   public circlesSub: Subscription;
   constructor(private af:AngularFireDatabase,
               private authService:AuthProvider) {
-    this.userId = this.authService.getActiveUser().uid;
+    this.userId = this.authService.getLoggedInUser().uid;
   }
 
   addToMyCircle(memberKey:string){
-    const userId = this.authService.getActiveUser().uid;
-    let afRef = this.af.object(`/userCircles/${userId}/${memberKey}`);
+    const userId = this.authService.getLoggedInUser().uid;
+    let afRef = this.af.object(`/userCircles/${userId}/${memberKey}`)
     afRef.set(true);
   }
 
   getMyCircles1(){
     let circleKeys = [];
-    const userKey = this.authService.getActiveUser().uid;
-    let url = `/userCircles/${userKey}`;
-    this.circlesSub = this.af.list(url, { preserveSnapshot: true})
+    this.circlesSub = this.af
+      .list(`/userCircles/${this.authService.getLoggedInUser().uid}`, { preserveSnapshot: true})
       .take(1)
       .subscribe(itemKeys=>{
         itemKeys.forEach(itemKey => {

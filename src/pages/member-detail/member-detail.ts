@@ -19,7 +19,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
   public member: any = {};
   public isUserProfileExists: boolean = false;
   private enableEditEmail: boolean = false;
-  avatar: string = "assets/img/profile-default.png";
+  avatar: string = "assets/images/profile-default.png";
 
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
@@ -30,10 +30,11 @@ export class MemberDetailPage extends BaseClass implements OnInit{
               public zone: NgZone) {
     super();
     this.memberKey = this.navParams.get('memberKey');
-
   }
 
   ngOnInit(): void {
+    //console.log(this.memberKey)
+
     this.memberSvc.getMember(this.memberKey)
       .takeUntil(this.componentDestroyed$)
       .subscribe((data)=>{
@@ -46,7 +47,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
             this.avatar = this.member.photoUrl;
           })
           if (this.member.photoUrl == null) {
-            this.avatar = "assets/img/profile-default.png";
+            this.avatar = "assets/images/profile-default.png";
           }else{
             this.avatar = this.member.photoUrl
           }

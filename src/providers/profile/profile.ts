@@ -7,6 +7,8 @@ export class ProfileProvider {
   public userProfile:firebase.database.Reference;
   public currentUser:firebase.User;
 
+  usersRef: any = firebase.database().ref('userProfile');
+
   constructor(private memberSvc: MemberProvider) {
     firebase.auth().onAuthStateChanged( user => {
       if (user){
@@ -18,6 +20,10 @@ export class ProfileProvider {
 
   getUsers(): firebase.database.Reference {
     return firebase.database().ref(`/userProfile`);
+  }
+
+  getUserProfileData(userUid: string) {
+    return this.usersRef.child(userUid).once('value');
   }
 
   getUserProfile(): firebase.database.Reference {
@@ -32,6 +38,7 @@ export class ProfileProvider {
   }
 
   updateDOB(birthDate: string): firebase.Promise<any> {
+    //console.log(`profile::updateDOB::${birthDate}`)
     return this.userProfile.update({
       birthDate: birthDate,
     });
@@ -86,4 +93,35 @@ export class ProfileProvider {
     return promise;
   }
 
+
+  // uploadImage(image: string): any {
+  //   let storageRef = firebase.storage().ref();
+  //   let imageName = this.generateUUID();
+  //
+  //   let imageRef = storageRef.child(`${this.currentUser.uid}/${imageName}.jpg`);
+  //   return imageRef.putString(image, 'data_url');
+  // }
+  //
+  // getImage(userId: string, imageId: string): any {
+  //   let storageRef = firebase.storage().ref();
+  //   let imageRef = storageRef.child(`${this.currentUser.uid}/${imageId}`);
+  //   return imageRef.getDownloadURL();
+  // }
+  //
+  //
+  // private generateUUID(): string {
+  //   function s4() {
+  //     return Math.floor((1 + Math.random()) * 0x10000)
+  //       .toString(16)
+  //       .substring(1);
+  //   }
+  //   return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+  //     s4() + '-' + s4() + s4() + s4();
+  // }
+
+  setUserImage(uid: string) {
+    this.usersRef.child(uid).update({
+      image: true
+    });
+  }
 }

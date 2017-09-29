@@ -83,7 +83,7 @@ export class MemberProvider {
     //console.log('confirm:' + memberKey);
     //TODO: need to add validation that this memberKey is not taken by userKey
     // query the userMember node if a memberKey exists
-    const userKey = this.authService.getActiveUser().uid;
+    const userKey = this.authService.getLoggedInUser().uid;
     let url = `/userMember/${userKey}/${memberKey}`;
     this.af.object(url).$ref.transaction(currentValue => {
       if (currentValue === null) {
@@ -112,7 +112,7 @@ export class MemberProvider {
 
   isVerified() {
 
-    const userKey = this.authService.getActiveUser().uid;
+    const userKey = this.authService.getLoggedInUser().uid;
     let url = `/userMember/${userKey}`;
     let exists:boolean=false;
     const userMemberRef = this.af.object(url, { preserveSnapshot: true });
@@ -128,7 +128,7 @@ export class MemberProvider {
   }
 
   public getMemberKeyByUserKey() {
-    const userKey = this.authService.getActiveUser().uid;
+    const userKey = this.authService.getLoggedInUser().uid;
     let url = `/userMember/${userKey}`;
     return this.af.object(url, { preserveSnapshot: true });
   }

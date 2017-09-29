@@ -14,7 +14,7 @@ export class UserLikesProvider {
   }
 
   addLike(eventKey: string) {
-    let currentUid = this.authSvc.getActiveUser().uid;
+    let currentUid = this.authSvc.getLoggedInUser().uid;
     let url = `/userLikes/${currentUid}/${eventKey}`;
     this.af.object(url).$ref.transaction(currentValue => {
       if (currentValue === null) {
@@ -58,7 +58,7 @@ export class UserLikesProvider {
       return likeCount;
     }).then(result => {
       if (result.committed) {
-        let currentUid = this.authSvc.getActiveUser().uid;
+        let currentUid = this.authSvc.getLoggedInUser().uid;
         this.af.object(`/events/${eventKey}/likedBy/${currentUid}`).remove()
 
         this.af.object(`/userLikes/${currentUid}/${eventKey}`).remove();
@@ -70,6 +70,6 @@ export class UserLikesProvider {
   }
 
   isLiked(eventKey: string) {
-    return this.af.object(`/userLikes/${this.authSvc.getActiveUser().uid}/${eventKey}`);
+    return this.af.object(`/userLikes/${this.authSvc.getLoggedInUser().uid}/${eventKey}`);
   }
 }

@@ -63,7 +63,7 @@ export class CommentCreatePage implements OnInit{
 
       loader.present();
 
-      let uid = this.authService.getActiveUser().uid;
+      let uid = this.authService.getLoggedInUser().uid;
       //console.log(`uid::${uid}`)
       //const userId = this.authService.getActiveUser().uid;
       this.profileSvc.getUserProfile().once('value').then(snapshot => {
