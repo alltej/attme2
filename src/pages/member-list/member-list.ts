@@ -4,9 +4,7 @@ import {MemberProvider} from "../../providers/member/member";
 import {UserCircleProvider} from "../../providers/user-circle/user-circle";
 import {BaseClass} from "../BasePage";
 
-@IonicPage({
-  name: 'member-list'
-})
+@IonicPage()
 @Component({
   selector: 'page-member-list',
   templateUrl: 'member-list.html',
