@@ -5,9 +5,7 @@ import {IComment} from "../../models/comment.interface";
 import {Observable} from "rxjs/Observable";
 import {EventCommentsProvider} from "../../providers/event/event-comments";
 import {AuthProvider} from "../../providers/auth/auth";
-import {CommentCreatePage} from "../comment-create/comment-create";
 import {MappingProvider} from "../../providers/mapper/mapping";
-import {IEvent} from "../../models/event.interface";
 
 @IonicPage({
   name: 'event-comments',

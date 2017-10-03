@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController } from 'ionic-angular';
 import {MemberProvider} from "../../providers/member/member";
 import {UserCircleProvider} from "../../providers/user-circle/user-circle";
 import {BaseClass} from "../BasePage";
@@ -21,6 +21,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   ngOnInit() {
+    console.log('member-list::ngOnInit')
     this.membersSvc.getMembers()
       .takeUntil(this.componentDestroyed$)
       .map( (members) => {
