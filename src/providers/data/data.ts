@@ -7,7 +7,8 @@ import * as firebase from 'firebase';
 export class DataProvider {
   databaseRef: any = firebase.database();
   connectionRef: any = firebase.database().ref('.info/connected');
-
+  eventsRef: any = firebase.database().ref('events');
+  statisticsRef: any = firebase.database().ref('statistics');
   connected: boolean = false;
 
   constructor() {
@@ -15,7 +16,7 @@ export class DataProvider {
       this.checkFirebaseConnection();
 
     } catch (error) {
-      console.log('Data Service error:' + error);
+      //console.log('Data Service error:' + error);
     }
   }
 
@@ -56,5 +57,21 @@ export class DataProvider {
 
   goOnline() {
     firebase.database().goOnline();
+  }
+
+  getStatisticsRef() {
+    return this.statisticsRef;
+  }
+
+  getTotalThreads() {
+    return this.statisticsRef.child('events').once('value');
+  }
+
+  getEventsRef() {
+    return this.eventsRef;
+  }
+
+  loadEvents() {
+    return this.eventsRef.once('value');
   }
 }

@@ -13,30 +13,40 @@
     </ion-buttons>
 
   </ion-navbar>
-
+  <ion-toolbar no-border-top>
+    <ion-searchbar [(ngModel)]="queryText" [formControl]="searchControl" (ionInput)="onSearchInput()"></ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-  <ion-searchbar [(ngModel)]="searchTerm" [formControl]="searchControl" (ionInput)="onSearchInput()"></ion-searchbar>
-  <div *ngIf="searching" class="spinner-container">
-    <ion-spinner></ion-spinner>
+  <ion-refresher (ionRefresh)="reloadThreads($event)" *ngIf="segment=='past'">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div *ngIf="loading">
+    <img src="assets/images/ring.gif" style="display:block; margin:auto" />
   </div>
-  <ion-segment [(ngModel)]="relationship" color="primary">
-    <ion-segment-button value="past" (ionSelect)="selectPastEvents()">
+
+
+  <!--<div *ngIf="loading" class="spinner-container">-->
+    <!--<ion-spinner></ion-spinner>-->
+  <!--</div>-->
+  <ion-segment [(ngModel)]="segment" color="primary" (ionChange)="filterEvents(segment)">
+    <ion-segment-button value="past">
       Previous
     </ion-segment-button>
-    <ion-segment-button value="current" (ionSelect)="selectCurrentEvents()">
+    <ion-segment-button value="current">
       Recent
     </ion-segment-button>
   </ion-segment>
   <ion-list>
-    <ion-card *ngFor="let event of events" >
+    <ion-card *ngFor="let anEvent of iEvents" >
 
-      <ion-item (click)="goToEventDetail(event?.$key)">
-        <h2>{{event?.name}}</h2>
-        <p>When: {{event?.when}}</p>
-        <p>Where: {{event?.where}}</p>
-        <pre><span>{{event?.description}}</span></pre>
+      <ion-item (click)="goToEventDetail(anEvent?.key)">
+        <h2>{{anEvent?.name}}</h2>
+        <p>When: {{anEvent?.when}}</p>
+        <p>Where: {{anEvent?.where}}</p>
+        <pre><span>{{anEvent?.description}}</span></pre>
       </ion-item>
 
       <!--<ion-item small (click)="goToEventDetail(event?.$key)">-->
@@ -54,10 +64,10 @@
             icon-left
             clear
             small
-            *ngIf="!event?.isLiked"
-            (click)="goToEventDetail(event?.$key)">
+            *ngIf="!anEvent?.isLiked"
+            (click)="goToEventDetail(anEvent?.$key)">
             <ion-icon name="heart-outline"></ion-icon>
-            <label>{{event?.likes}} Likes</label>
+            <label>{{anEvent?.likes}} Likes</label>
           </button>
           <button
             ion-button
@@ -65,10 +75,10 @@
             clear
             small
             color="danger"
-            *ngIf="event?.isLiked"
-            (click)="goToEventDetail(event?.$key)">
+            *ngIf="anEvent?.isLiked"
+            (click)="goToEventDetail(anEvent?.$key)">
             <ion-icon name="heart"></ion-icon>
-            <label>{{event?.likes}} Likes</label>
+            <label>{{anEvent?.likes}} Likes</label>
           </button>
 
         </ion-col>
@@ -78,19 +88,19 @@
                   icon-left
                   clear
                   small
-                  (click)="goToEventComments(event?.$key)">
+                  (click)="goToEventComments(anEvent?.key)">
             <ion-icon name="chatbubbles"></ion-icon>
-            <label>{{event?.comments}} </label>
+            <label>{{anEvent?.comments}} </label>
           </button>
         </ion-col>
         <ion-col>
           <button ion-button
                   icon-left clear small
                   color="secondary"
-                  (click)="goToEventAttendees(event?.$key)">
+                  (click)="goToEventAttendees(anEvent?.$key)">
             <!--<ion-icon name="people" *ngIf="getAttendanceCount(event.id)>0"></ion-icon>-->
             <ion-icon name="people"></ion-icon>
-            <label>{{event?.attendeesCount}}</label>
+            <label>{{anEvent?.attendeesCount}}</label>
           </button>
         </ion-col>
         <!--<ion-col center text-center>-->
@@ -102,4 +112,7 @@
 
     </ion-card>
   </ion-list>
+  <ion-infinite-scroll (ionInfinite)="fetchNextThreads($event)" threshold="10px" *ngIf="(start > 0) && (queryText.trim().length == 0) && segment=='past' && internetConnected">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

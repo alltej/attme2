@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {ItemsProvider} from "./items-provider";
 import {IComment} from "../../models/comment.interface";
+import {IEvent} from "../../models/event.interface";
 
 
 
@@ -55,5 +56,50 @@ export class MappingProvider {
     };
 
     return comment;
+  }
+
+  getEvent(snapshot: any, key: string): IEvent {
+
+    let anEvent: IEvent = {
+      key: key,
+      name: snapshot.name,
+      description: snapshot.description,
+      when: snapshot.when,
+      where: snapshot.where,
+      likes: snapshot.likes,
+      comments: snapshot.comments,
+      attendeesCount: snapshot.attendeesCount,
+      isLiked: false //TODO
+    };
+
+    return anEvent;
+  }
+
+  getEvents(snapshot: any): Array<IEvent> {
+    //console.log(`mapping::getEvents::${snapshot.val()}`)
+    let iEvents: Array<IEvent> = [];
+    if (snapshot.val() == null)
+      return iEvents;
+
+    let list = snapshot.val();
+
+
+    Object.keys(snapshot.val()).map((key: any) => {
+      let anEvent: any = list[key];
+      //console.log(`mapping::getEvents::key::${key}:name:${anEvent.when}`)
+      iEvents.push({
+        key: key,
+        name: anEvent.name,
+        description: anEvent.description,
+        when: anEvent.when,
+        where: anEvent.where,
+        likes: anEvent.likes,
+        comments: anEvent.comments,
+        attendeesCount: snapshot.attendeesCount,
+        isLiked: false //TODO
+      });
+    });
+
+    return iEvents;
   }
 }

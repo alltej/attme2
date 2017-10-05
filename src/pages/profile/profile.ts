@@ -282,7 +282,7 @@ export class ProfilePage implements OnInit
             .then( () => {
               this.memberSvc.updatePhotoUrl(this.userProfile.memberKey, downloadURL)
             }).catch( error => {
-              console.log(error)
+              //console.log(error)
           })
             ;
           // this.profileSvc.updateimage(url).then((res: any) => {

@@ -29,6 +29,8 @@ import {MappingProvider} from "../providers/mapper/mapping";
 import { StorageProvider } from '../providers/storage/storage';
 import {PhotoViewer} from "@ionic-native/photo-viewer";
 import { DataProvider } from '../providers/data/data';
+import { SqliteService } from '../providers/sqlite-service/sqlite-service';
+import { ItemsService } from '../providers/items-service/item-service';
 
 //import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 
@@ -86,7 +88,9 @@ export class MyErrorHandler implements ErrorHandler {
     MappingProvider,
     StorageProvider,
     PhotoViewer,
-    DataProvider
+    DataProvider,
+    SqliteService,
+    ItemsService
   ]
 })
 export class AppModule {}

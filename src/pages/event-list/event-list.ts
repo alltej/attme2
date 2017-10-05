@@ -1,12 +1,17 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import { IonicPage, NavController} from 'ionic-angular';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Content, Events, IonicPage, NavController, ToastController} from 'ionic-angular';
 import {FormControl} from "@angular/forms";
 import {EventProvider} from "../../providers/event/event";
-//import {Observable} from "rxjs/Observable";
 import {UserLikesProvider} from "../../providers/user-likes/user-likes";
 import {BaseClass} from "../BasePage";
 import {Observable} from "rxjs/Observable";
-import {EventCommentsPage} from "../event-comments/event-comments";
+import {IEvent} from "../../models/event.interface";
+import {DataProvider} from "../../providers/data/data";
+import {SqliteService} from "../../providers/sqlite-service/sqlite-service";
+import {AuthProvider} from "../../providers/auth/auth";
+import {MappingProvider} from "../../providers/mapper/mapping";
+import {ItemsProvider} from "../../providers/mapper/items-provider";
+import {attmeConfig} from "../../config/attme.config";
 
 @IonicPage()
 @Component({
@@ -14,21 +19,47 @@ import {EventCommentsPage} from "../event-comments/event-comments";
   templateUrl: 'event-list.html',
 })
 export class EventListPage extends BaseClass implements OnInit, OnDestroy{
+  @ViewChild(Content) content: Content;
+  public internetConnected: boolean = true;
+  public firebaseConnectionAttempts: number = 0;
+  public start: number;
+  public pageSize: number = 4;
 
-  //public eventsRx: Observable<any[]>;
-  private events: any[] = [];
+  // public daysSize: number = 10;
+  // public currentStart: number;
+  // public pastStart: number;
+
+  public iEvents: Array<IEvent> = [];
+  public newIEvents: Array<IEvent> = [];
   private startAtFilter: string;
   searchControl: FormControl;
-  searchTerm: string = '';
-  searching: any = false;
-  relationship: any;
+  queryText: string = '';
+  loading: any = false;
+  segment: string;
+  selectedSegment: string = this.segment;
+
+  private whenStartFilter: string;
+  private whenEndFilter: string;
+
   constructor(public navCtrl: NavController,
+              public toastCtrl: ToastController,
               public eventSvc: EventProvider,
-              private userLikeSvc: UserLikesProvider) {
+              private userLikeSvc: UserLikesProvider,
+              public sqliteSvc: SqliteService,
+              public mappingsService: MappingProvider,
+              public itemsSvc: ItemsProvider,
+              public  authSvc: AuthProvider,
+              public dataSvc: DataProvider,
+              public events: Events) {
     super();
     this.searchControl = new FormControl();
-    var newDate = Date.now() + -60*24*3600*1000; // date n days ago in milliseconds UTC
-    this.startAtFilter = new Date(newDate).toISOString();
+    let newDate = Date.now() + -60*24*3600*1000; // date n days ago in milliseconds UTC
+    //this.startAtFilter = new Date(newDate).toISOString();
+
+    let currentDate = Date.now() + -attmeConfig.recentPreviousNumDays*24*3600*1000; // date n days ago in milliseconds UTC;
+    let futureDateMax = Date.now() + +60*24*3600*1000; // date n days ago in milliseconds UTC
+    this.whenStartFilter = new Date(currentDate).toISOString();
+    this.whenEndFilter = new Date(futureDateMax).toISOString();
 
   }
 
@@ -43,29 +74,281 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    this.relationship = "current";
-    this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
-      this.searching = false;
-      this.setFilteredItems();
+
+    let self = this;
+    self.segment = "current";
+    self.start = 52;
+
+    self.events.subscribe('network:connected', self.networkConnected);
+    self.events.subscribe('events:add', self.addNewThreads);
+
+    self.checkFirebase();
+    // this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
+    //   this.loading = false;
+    //   this.setFilteredItems();
+    // });
+  }
+
+  checkFirebase() {
+    let self = this;
+    if (!self.dataSvc.isFirebaseConnected()) {
+      setTimeout(() =>{
+        console.log('Retry : ' + self.firebaseConnectionAttempts);
+        self.firebaseConnectionAttempts++;
+        if (self.firebaseConnectionAttempts < 5) {
+          self.checkFirebase();
+        } else {
+          self.internetConnected = false;
+          self.dataSvc.goOffline();
+          self.loadSqliteEvents();
+        }
+      }, 1000);
+    } else {
+      console.log('Firebase connection found (threads.ts) - attempt: ' + self.firebaseConnectionAttempts);
+      self.dataSvc.getStatisticsRef().on('child_changed', self.onEventAdded);
+      if (self.authSvc.getLoggedInUser() === null) {
+        console.log('getLoggedInUser is null')
+      } else {
+        self.loadEvents(true);
+      }
+    }
+  }
+
+  loadSqliteEvents() {
+    let self = this;
+
+    if (self.iEvents.length > 0)
+      return;
+
+    self.iEvents = [];
+    console.log('Loading from db..');
+    self.sqliteSvc.getEvents().then((data) => {
+      console.log('Found in db: ' + data.rows.length + ' threads');
+      if (data.rows.length > 0) {
+        for (var i = 0; i < data.rows.length; i++) {
+          let anEvent: IEvent = {
+            key: data.rows.item(i).key,
+            name: data.rows.item(i).name,
+            description: data.rows.item(i).description,
+            when: data.rows.item(i).when,
+            where: data.rows.item(i).where,
+            attendeesCount: data.rows.item(i).attendeesCount,
+            likes: data.rows.item(i).likes,
+            comments: data.rows.item(i).comments,
+            isLiked: false, //TODO
+            //tags: []
+          };
+
+          self.iEvents.push(anEvent);
+          //console.log('Event added from db:' + anEvent.key);
+          //console.log(anEvent);
+        }
+        self.loading = false;
+      }
+    }, (error) => {
+      console.log('Error: ' + JSON.stringify(error));
+      self.loading = true;
+    });
+  }
+
+  public networkConnected = (connection) => {
+    let self = this;
+    self.internetConnected = connection[0];
+    console.log('NetworkConnected event: ' + self.internetConnected);
+
+    if (self.internetConnected) {
+      self.iEvents = [];
+      self.loadEvents(true);
+    } else {
+      self.notify('Connection lost. Working offline..');
+      // save current threads..
+      setTimeout(function () {
+        console.log(self.iEvents.length);
+        self.sqliteSvc.saveEvents(self.iEvents);
+        self.loadSqliteEvents();
+      }, 1000);
+    }
+  }
+
+  public onEventAdded = (childSnapshot, prevChildKey) => {
+    let priority = childSnapshot.val(); // priority..
+    let self = this;
+    self.events.publish('event:created');
+    // fetch new thread..
+    self.dataSvc.getEventsRef().orderByPriority().equalTo(priority).once('value').then(dataSnapshot => {
+      let key = Object.keys(dataSnapshot.val())[0];
+      let newThread: IEvent = self.mappingsService.getEvent(dataSnapshot.val()[key], key);
+      self.newIEvents.push(newThread);
+    });
+  }
+
+  public addNewThreads = () => {
+    let self = this;
+    self.newIEvents.forEach(function (anEvent: IEvent) {
+      self.iEvents.unshift(anEvent);
     });
 
+    self.newIEvents = [];
+    self.scrollToTop();
+    self.events.publish('events:viewed');
+  }
 
+  scrollToTop() {
+    let self = this;
+    setTimeout(function () {
+      self.content.scrollToTop();
+    }, 1500);
+  }
+
+  reloadThreads(refresher) {
+    this.queryText = '';
+    if (this.internetConnected) {
+      this.loadEvents(true);
+      refresher.complete();
+    } else {
+      refresher.complete();
+    }
+  }
+
+  fetchNextThreads(infiniteScroll) {
+    if (this.start > 0 && this.internetConnected) {
+      this.loadEvents(false);
+      infiniteScroll.complete();
+    } else {
+      infiniteScroll.complete();
+    }
+  }
+
+  loadEvents(fromStart: boolean) {
+    //console.log(`event-list::loadEvents::fromStart:${fromStart}::segment:${this.segment}`)
+    let self = this;
+
+    if (fromStart) {
+      //console.log(`fromStart::true`)
+      self.loading = true;
+      self.iEvents = [];
+      self.newIEvents = [];
+
+      if (self.segment === 'current') {
+        self.getThreads();
+
+        // this.dataSvc.getTotalThreads().then(snapshot => {
+        //   //console.log(`getTotalThreads`)
+        //   self.start = 0; snapshot.val();
+        //   //console.log(self.start)
+        //   self.getThreads();
+        // }).catch( error=> {
+        //   console.log(error)
+        // });
+      } else {
+        this.dataSvc.getTotalThreads().then(snapshot => {
+          //console.log(`getTotalThreads`)
+          self.start = 52;
+          //console.log(self.start)
+          self.getThreads();
+        }).catch( error=> {
+          console.log(error)
+        });
+      }
+    } else {
+      //console.log(`fromStart::false`)
+      self.getThreads();
+    }
+  }
+
+
+  getThreads() {
+    let self = this;
+    let startFrom: number = self.start - self.pageSize;
+
+    if (startFrom < 0)
+      startFrom = 0;
+
+    // let whenStartFromDate = Date.now() + -self.daysSize*30*24*3600*1000; // date n days ago in milliseconds UTC
+    // let whenStartEndDate = Date.now()+ -attmeConfig.recentPreviousNumDays*24*3600*1000; // date n days ago in milliseconds UTC
+
+    if (self.segment === 'current') {
+
+      let currentDate = Date.now() + -attmeConfig.recentPreviousNumDays*24*3600*1000; // date n days ago in milliseconds UTC;
+      let futureDateMax = Date.now() + +60*24*3600*1000; // date n days ago in milliseconds UTC
+      this.whenStartFilter = new Date(currentDate).toISOString();
+      this.whenEndFilter = new Date(futureDateMax).toISOString();
+
+      this.dataSvc.getEventsRef()
+        .orderByChild('when')
+        .startAt(this.whenStartFilter)
+        .endAt(this.whenEndFilter)
+        .once('value', snapshot => {
+          self.mappingsService
+            .getEvents(snapshot).forEach(anEvent => {
+            self.iEvents.push(anEvent);
+          });
+        this.iEvents.sort(function(a, b) {
+          return new Date(a.when).getTime() - new Date(b.when).getTime()
+        });
+        //   self.mappingsService.getEvents(snapshot)
+        //     .forEach(anEvent => {
+        //       self.iEvents.push(anEvent);
+        //     });
+
+        self.start -= (self.pageSize + 1);
+        self.events.publish('events:viewed');
+        self.loading = false;
+      });
+    } else {
+      console.log(`current start:${this.start}`)
+      let numberOfDaysStart:number = -(52-startFrom)*7
+      let numberOfDaysEnd:number = -(52-this.start)*7
+      let startDate = Date.now() + numberOfDaysStart*24*3600*1000; // date n days ago in milliseconds UTC
+      let endDateDate = Date.now()+ numberOfDaysEnd*24*3600*1000; // date n days ago in milliseconds UTC
+      this.whenStartFilter = new Date(startDate).toISOString();
+      this.whenEndFilter = new Date(endDateDate).toISOString();
+
+      //console.log(this.whenStartFilter)
+      //console.log(this.whenEndFilter)
+
+      console.log(`startAt::${this.whenStartFilter}::endAt::${this.whenEndFilter}`)
+      this.dataSvc.getEventsRef()
+        //.orderByPriority()
+        .orderByChild('when')
+        .startAt(this.whenStartFilter)
+        .endAt(this.whenEndFilter)
+        .once('value', snapshot=> {
+        self.itemsSvc.reversedItems<IEvent>(self.mappingsService.getEvents(snapshot))
+          .forEach(anEvent => {
+          self.iEvents.push(anEvent);
+        });
+        self.start -= (self.pageSize + 1);
+        console.log(`NEW self.start::${self.start}`)
+        self.events.publish('events:viewed');
+        self.loading = false;
+      });
+    }
+  }
+
+  notify(message: string) {
+    let toast = this.toastCtrl.create({
+      message: message,
+      duration: 3000,
+      position: 'top'
+    });
+    toast.present();
   }
 
   private setFilteredItems() {
     // console.log(this.relationship)
     // console.log("hello")
     let selectedEvents: Observable<any[]>; //= this.eventSvc.getEvents();
-    if (this.relationship == "past"){
+    if (this.segment == "past"){
       selectedEvents = this.eventSvc.getPastEvents();
     }else{
       selectedEvents = this.eventSvc.getRecentEvents();
     }
 
-    if (!(this.searchTerm == null || this.searchTerm == '')){
+    if (!(this.queryText == null || this.queryText == '')){
       //console.log(`search term::${this.searchTerm}`)
       selectedEvents = selectedEvents.map((events) =>
-        events.filter(event => event.name.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || event.description.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1))
+        events.filter(event => event.name.toLowerCase().indexOf(this.queryText.toLowerCase()) !== -1 || event.description.toLowerCase().indexOf(this.queryText.toLowerCase()) !== -1))
     }
 
     selectedEvents
@@ -92,10 +375,10 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
       })
       .subscribe((items: any[]) => {
         //this.events = items.reverse();
-        if (this.relationship == "past"){
-          this.events = items.reverse();
+        if (this.segment == "past"){
+          this.iEvents = items.reverse();
         }else{
-          this.events = items;
+          this.iEvents = items;
         }
       })
   }
@@ -117,17 +400,37 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   onSearchInput(){
-    this.searching = true;
+    // if (!(this.searchTerm == null || this.searchTerm == '')){
+    //   //console.log(`search term::${this.searchTerm}`)
+    //   selectedEvents = selectedEvents.map((events) =>
+    //     events.filter(event => event.name.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || event.description.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1))
+    // }
+
+
+    let self = this;
+    if (self.queryText.trim().length !== 0) {
+      //self.segment = 'current';
+      // empty current threads
+      self.iEvents = [];
+      self.dataSvc.loadEvents().then(snapshot => {
+        self.itemsSvc.reversedItems<IEvent>(self.mappingsService.getEvents(snapshot)).forEach(function (anEvent) {
+          if (anEvent.name.toLowerCase().includes(self.queryText.toLowerCase()) || anEvent.description.toLowerCase().includes(self.queryText.toLowerCase()))
+            self.iEvents.push(anEvent);
+        });
+      });
+    } else { // text cleared..
+      this.loadEvents(true);
+    }
   }
 
   selectPastEvents() {
-    this.relationship = "past";
-    this.setFilteredItems();
+    this.segment = "past";
+    //this.setFilteredItems();
   }
 
   selectCurrentEvents() {
-    this.relationship = "current";
-    this.setFilteredItems();
+    this.segment = "current";
+    //this.setFilteredItems();
   }
 
   goToEventComments(eventId: string) {
@@ -135,5 +438,19 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
     this.navCtrl.push('event-comments', {
       'eventId': eventId
     });
+  }
+
+  filterEvents(segment) {
+    if (this.selectedSegment !== this.segment) {
+      this.selectedSegment = this.segment;
+      // if (this.selectedSegment === 'past')
+      //   this.queryText = '';
+      //this.queryText = '';
+      if (this.internetConnected)
+      // Initialize
+        this.loadEvents(true);
+    } else {
+      this.scrollToTop();
+    }
   }
 }
