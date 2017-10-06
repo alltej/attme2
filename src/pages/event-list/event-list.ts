@@ -22,16 +22,11 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   @ViewChild(Content) content: Content;
   public internetConnected: boolean = true;
   public firebaseConnectionAttempts: number = 0;
-  public start: number;
+  public weekNumber: number;
   public pageSize: number = 4;
-
-  // public daysSize: number = 10;
-  // public currentStart: number;
-  // public pastStart: number;
 
   public iEvents: Array<IEvent> = [];
   public newIEvents: Array<IEvent> = [];
-  private startAtFilter: string;
   searchControl: FormControl;
   queryText: string = '';
   loading: any = false;
@@ -53,8 +48,6 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
               public events: Events) {
     super();
     this.searchControl = new FormControl();
-    let newDate = Date.now() + -60*24*3600*1000; // date n days ago in milliseconds UTC
-    //this.startAtFilter = new Date(newDate).toISOString();
 
     let currentDate = Date.now() + -attmeConfig.recentPreviousNumDays*24*3600*1000; // date n days ago in milliseconds UTC;
     let futureDateMax = Date.now() + +60*24*3600*1000; // date n days ago in milliseconds UTC
@@ -77,7 +70,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
 
     let self = this;
     self.segment = "current";
-    self.start = 52;
+    self.weekNumber = 0;
 
     self.events.subscribe('network:connected', self.networkConnected);
     self.events.subscribe('events:add', self.addNewThreads);
@@ -93,7 +86,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
     let self = this;
     if (!self.dataSvc.isFirebaseConnected()) {
       setTimeout(() =>{
-        console.log('Retry : ' + self.firebaseConnectionAttempts);
+        //console.log('Retry : ' + self.firebaseConnectionAttempts);
         self.firebaseConnectionAttempts++;
         if (self.firebaseConnectionAttempts < 5) {
           self.checkFirebase();
@@ -104,10 +97,10 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
         }
       }, 1000);
     } else {
-      console.log('Firebase connection found (threads.ts) - attempt: ' + self.firebaseConnectionAttempts);
+      //console.log('Firebase connection found (threads.ts) - attempt: ' + self.firebaseConnectionAttempts);
       self.dataSvc.getStatisticsRef().on('child_changed', self.onEventAdded);
       if (self.authSvc.getLoggedInUser() === null) {
-        console.log('getLoggedInUser is null')
+        //console.log('getLoggedInUser is null')
       } else {
         self.loadEvents(true);
       }
@@ -121,9 +114,9 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
       return;
 
     self.iEvents = [];
-    console.log('Loading from db..');
+    //console.log('Loading from db..');
     self.sqliteSvc.getEvents().then((data) => {
-      console.log('Found in db: ' + data.rows.length + ' threads');
+      //console.log('Found in db: ' + data.rows.length + ' threads');
       if (data.rows.length > 0) {
         for (var i = 0; i < data.rows.length; i++) {
           let anEvent: IEvent = {
@@ -146,7 +139,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
         self.loading = false;
       }
     }, (error) => {
-      console.log('Error: ' + JSON.stringify(error));
+      //console.log('Error: ' + JSON.stringify(error));
       self.loading = true;
     });
   }
@@ -154,7 +147,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   public networkConnected = (connection) => {
     let self = this;
     self.internetConnected = connection[0];
-    console.log('NetworkConnected event: ' + self.internetConnected);
+    //console.log('NetworkConnected event: ' + self.internetConnected);
 
     if (self.internetConnected) {
       self.iEvents = [];
@@ -163,7 +156,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
       self.notify('Connection lost. Working offline..');
       // save current threads..
       setTimeout(function () {
-        console.log(self.iEvents.length);
+        //console.log(self.iEvents.length);
         self.sqliteSvc.saveEvents(self.iEvents);
         self.loadSqliteEvents();
       }, 1000);
@@ -211,7 +204,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   fetchNextThreads(infiniteScroll) {
-    if (this.start > 0 && this.internetConnected) {
+    if (this.weekNumber > 0 && this.internetConnected) {
       this.loadEvents(false);
       infiniteScroll.complete();
     } else {
@@ -228,27 +221,17 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
       self.loading = true;
       self.iEvents = [];
       self.newIEvents = [];
+      self.weekNumber = 0;
 
       if (self.segment === 'current') {
         self.getThreads();
-
+      } else {
+        self.getThreads();
         // this.dataSvc.getTotalThreads().then(snapshot => {
-        //   //console.log(`getTotalThreads`)
-        //   self.start = 0; snapshot.val();
-        //   //console.log(self.start)
         //   self.getThreads();
         // }).catch( error=> {
         //   console.log(error)
         // });
-      } else {
-        this.dataSvc.getTotalThreads().then(snapshot => {
-          //console.log(`getTotalThreads`)
-          self.start = 52;
-          //console.log(self.start)
-          self.getThreads();
-        }).catch( error=> {
-          console.log(error)
-        });
       }
     } else {
       //console.log(`fromStart::false`)
@@ -259,13 +242,6 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
 
   getThreads() {
     let self = this;
-    let startFrom: number = self.start - self.pageSize;
-
-    if (startFrom < 0)
-      startFrom = 0;
-
-    // let whenStartFromDate = Date.now() + -self.daysSize*30*24*3600*1000; // date n days ago in milliseconds UTC
-    // let whenStartEndDate = Date.now()+ -attmeConfig.recentPreviousNumDays*24*3600*1000; // date n days ago in milliseconds UTC
 
     if (self.segment === 'current') {
 
@@ -286,41 +262,62 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
         this.iEvents.sort(function(a, b) {
           return new Date(a.when).getTime() - new Date(b.when).getTime()
         });
-        //   self.mappingsService.getEvents(snapshot)
-        //     .forEach(anEvent => {
-        //       self.iEvents.push(anEvent);
-        //     });
 
-        self.start -= (self.pageSize + 1);
         self.events.publish('events:viewed');
         self.loading = false;
       });
     } else {
-      console.log(`current start:${this.start}`)
-      let numberOfDaysStart:number = -(52-startFrom)*7
-      let numberOfDaysEnd:number = -(52-this.start)*7
-      let startDate = Date.now() + numberOfDaysStart*24*3600*1000; // date n days ago in milliseconds UTC
-      let endDateDate = Date.now()+ numberOfDaysEnd*24*3600*1000; // date n days ago in milliseconds UTC
-      this.whenStartFilter = new Date(startDate).toISOString();
-      this.whenEndFilter = new Date(endDateDate).toISOString();
 
-      //console.log(this.whenStartFilter)
-      //console.log(this.whenEndFilter)
+      let daysTo:number;// = this.week*7
 
-      console.log(`startAt::${this.whenStartFilter}::endAt::${this.whenEndFilter}`)
+      if (this.weekNumber == 0) {
+        let startFrom: number = self.pageSize + self.weekNumber;
+        let daysFrom:number = startFrom*7
+        daysTo = this.weekNumber*7
+        let startDate = Date.now() - daysFrom*24*3600*1000; // date n days ago in milliseconds UTC
+        let endDateDate = Date.now() - (daysTo)*24*3600*1000; // date n days ago in milliseconds UTC
+        this.whenStartFilter = new Date(startDate).toISOString().substring(0, 10);
+        this.whenEndFilter = new Date(endDateDate).toISOString().substring(0, 10);
+      }
+
+      if (this.weekNumber > 52) {
+        console.log('You have reach the max number of weeks')
+        //console.log(`NEW self.start::${self.weekNumber}`)
+        //this.scrollToTop();
+        return;
+      }
       this.dataSvc.getEventsRef()
-        //.orderByPriority()
         .orderByChild('when')
         .startAt(this.whenStartFilter)
         .endAt(this.whenEndFilter)
         .once('value', snapshot=> {
-        self.itemsSvc.reversedItems<IEvent>(self.mappingsService.getEvents(snapshot))
-          .forEach(anEvent => {
-          self.iEvents.push(anEvent);
+          self.mappingsService
+            .getEvents(snapshot).forEach(anEvent => {
+              //NOTE: Need to add this extra check before adding object to array bec of unknown duplication
+              if(!self.iEvents.filter(elem => {
+                  return elem.key === anEvent.key;
+                }).length) {
+                self.iEvents.push(anEvent);
+              }
+          });
+
+        this.iEvents.sort(function(a, b) {
+          return  new Date(b.when).getTime() - new Date(a.when).getTime()
         });
-        self.start -= (self.pageSize + 1);
-        console.log(`NEW self.start::${self.start}`)
+
+        //console.log(`startAt::${this.whenStartFilter}::endAt::${this.whenEndFilter}`)
+        self.weekNumber += (self.pageSize + 1);
         self.events.publish('events:viewed');
+
+        let startFrom: number = self.pageSize + self.weekNumber;
+
+        let daysFrom:number = startFrom*7
+        daysTo = (this.weekNumber*7)-6
+        let startDate = Date.now() - daysFrom*24*3600*1000; // date n days ago in milliseconds UTC
+        let endDateDate = Date.now() - (daysTo)*24*3600*1000; // date n days ago in milliseconds UTC
+        this.whenStartFilter = new Date(startDate).toISOString().substring(0, 10);
+        this.whenEndFilter = new Date(endDateDate).toISOString().substring(0, 10);
+
         self.loading = false;
       });
     }
@@ -441,14 +438,18 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   filterEvents(segment) {
+    //console.log(`segment=${segment}::this.segment=${this.segment}::this.selectedSegment=${this.selectedSegment}`)
     if (this.selectedSegment !== this.segment) {
       this.selectedSegment = this.segment;
+      //this.segment = segment;
       // if (this.selectedSegment === 'past')
       //   this.queryText = '';
       //this.queryText = '';
-      if (this.internetConnected)
-      // Initialize
+      if (this.internetConnected){
         this.loadEvents(true);
+      }
+      // Initialize
+
     } else {
       this.scrollToTop();
     }
