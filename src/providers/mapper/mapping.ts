@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {ItemsProvider} from "./items-provider";
 import {IComment} from "../../models/comment.interface";
 import {IEvent} from "../../models/event.interface";
+import {IMember} from "../../models/member.interface";
 
 
 
@@ -100,5 +101,34 @@ export class MappingProvider {
     };
 
     return anEvent;
+  }
+
+
+
+  getMembers(snapshot: any): Array<IMember> {
+    //console.log(`mapping::getEvents::${snapshot.val()}`)
+    let iMembers: Array<IMember> = [];
+    if (snapshot.val() == null)
+      return iMembers;
+
+    let list = snapshot.val();
+
+    Object.keys(snapshot.val()).map((key: any) => {
+      let aMember: any = list[key];
+      //console.log(`mapping::getEvents::key::${key}:name:${anEvent}`)
+      iMembers.push({
+        uid: key,
+        memberKey: key,
+        email: aMember.email,
+        birthDate: aMember.birthDate,
+        firstName: aMember.firstName,
+        lastName: aMember.lastName,
+        memberId: aMember.memberKey,
+        photoUrl: aMember.photoUrl,
+        isMyCircle: false //TODO
+      });
+    });
+
+    return iMembers;
   }
 }

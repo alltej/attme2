@@ -70,6 +70,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
           email: userData.email,
           memberId: userData.memberId,
           photoUrl: url,
+          isMyCircle: false
         };
 
         this.userDataLoaded = true;
@@ -86,6 +87,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
           email: userData.email,
           memberId: userData.memberId,
           photoUrl: 'assets/images/profile.png',
+          isMyCircle: false
         };
 
         this.userDataLoaded = true;

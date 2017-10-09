@@ -6,6 +6,7 @@ import * as firebase from 'firebase';
 @Injectable()
 export class DataProvider {
   eventsRef: any = firebase.database().ref('events');
+  membersRef: any = firebase.database().ref('members');
 
   databaseRef: any = firebase.database();
   connectionRef: any = firebase.database().ref('.info/connected');
@@ -60,12 +61,16 @@ export class DataProvider {
     firebase.database().goOnline();
   }
 
-
-  loadEvents() {
-    return this.eventsRef.once('value');
-  }
+  //
+  // loadEvents() {
+  //   return this.eventsRef.once('value');
+  // }
 
   getEventsRef() {
     return this.eventsRef;
+  }
+
+  getMembersRef() {
+    return this.membersRef;
   }
 }

@@ -7,4 +7,5 @@ export interface IMember {
   lastName: string;
   memberId: string;
   photoUrl: string;
+  isMyCircle: boolean;
 }

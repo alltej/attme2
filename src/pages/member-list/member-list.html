@@ -26,7 +26,7 @@
       <ion-avatar item-start (click)="onLoadMember(member)">
         <!--<img src="assets/img/avatar-luke.png">-->
         <!--<img src="{{member?.photoUrl}}">-->
-        <img [src]="getAvatar(member?.photoUrl)">
+        <img [src]="member?.photoUrl">
       </ion-avatar>
       <!--<h2>{{member?.photoUrl}}</h2>-->
       <h2>{{member?.firstName}} {{member?.lastName}}</h2>
@@ -53,4 +53,7 @@
       </div>
     </ion-item>
   </ion-list>
+  <ion-infinite-scroll (ionInfinite)="fetchNextThreads($event)" threshold="10px" *ngIf="(start > 0) && (queryText.trim().length == 0) && segment=='past' && internetConnected">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

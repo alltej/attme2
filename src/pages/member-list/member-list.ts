@@ -1,10 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage, NavController, Events } from 'ionic-angular';
 import {MemberProvider} from "../../providers/member/member";
 import {UserCircleProvider} from "../../providers/user-circle/user-circle";
 import {BaseClass} from "../BasePage";
 import {FormControl} from "@angular/forms";
 import {Observable} from "rxjs/Observable";
+import {DataProvider} from "../../providers/data/data";
+import {IMember} from "../../models/member.interface";
+import {ItemsProvider} from "../../providers/mapper/items-provider";
+import {MappingProvider} from "../../providers/mapper/mapping";
 
 @IonicPage()
 @Component({
@@ -14,16 +18,25 @@ import {Observable} from "rxjs/Observable";
 export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
 
   loading: boolean;
-
+  segment: string = 'all';
   searchControl: FormControl;
   queryText: string = '';
   members: any[] = [];
+  public weekNumber: number;
+  public pageSize: number = 50;
+  public start: number = 0;
+  public iMembers: Array<IMember> = [];
 
   private membersRx: Observable<any[]>;
+  private letter: string;
   constructor(
     private navCtrl: NavController,
     private membersSvc: MemberProvider,
-    private userCircleSvc: UserCircleProvider) {
+    private dataSvc: DataProvider,
+    public mappingsService: MappingProvider,
+    public itemsSvc: ItemsProvider,
+    private userCircleSvc: UserCircleProvider,
+    public events: Events) {
     super();
 
     this.searchControl = new FormControl();
@@ -37,6 +50,42 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
       this.loading = false;
     });
 
+  }
+
+  private loadMembers2() {
+    let self = this;
+    self.loading = true;
+
+
+    let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let alphaArray = str.split("");
+
+    let startFrom: number = self.start - self.pageSize;
+    if (startFrom < 0)
+      startFrom = 0;
+
+    let startAt = "A"; //alphaArray[startFrom];
+    let endAt = "Z"; //alphaArray[self.start + self.pageSize];
+
+    console.log(`startAt:${startAt}`)
+    console.log(`endAt:${endAt}`)
+    //TODO: simplify
+    this.dataSvc.getMembersRef()
+      .orderByChild('firstName')
+      .startAt(startAt)
+      .endAt(endAt).once('value', snapshot=> {
+        self.mappingsService.getMembers(snapshot)
+          .forEach(aMember => {
+            //console.log(aMember)
+            if (aMember.photoUrl == null) {
+              aMember.photoUrl = "assets/images/profile-default.png" //"assets/img/avatar-luke.png"
+            }
+            self.iMembers.push(aMember);
+          });
+        self.start -= (self.pageSize + 1);
+        self.events.publish('members:viewed');
+        self.loading = false;
+    });
   }
 
   private loadMembers() {
