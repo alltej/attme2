@@ -263,7 +263,12 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
         .once('value', snapshot => {
           self.mappingsService
             .getEvents(snapshot).forEach(anEvent => {
-            self.iEvents.push(anEvent);
+            if (self.queryText.trim().length !== 0) {
+              if (anEvent.name.toLowerCase().includes(self.queryText.toLowerCase()) || anEvent.description.toLowerCase().includes(self.queryText.toLowerCase()))
+                self.iEvents.push(anEvent);
+            }else{
+              self.iEvents.push(anEvent);
+            }
           });
           this.iEvents.sort(function(a, b) {
             return new Date(a.when).getTime() - new Date(b.when).getTime()
@@ -300,11 +305,17 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
         .once('value', snapshot=> {
           self.mappingsService
             .getEvents(snapshot).forEach(anEvent => {
+
             //NOTE: Need to add this extra check before adding object to array bec of unknown duplication
             if(!self.iEvents.filter(elem => {
                 return elem.key === anEvent.key;
               }).length) {
-              self.iEvents.push(anEvent);
+              if (self.queryText.trim().length !== 0) {
+                if (anEvent.name.toLowerCase().includes(self.queryText.toLowerCase()) || anEvent.description.toLowerCase().includes(self.queryText.toLowerCase()))
+                  self.iEvents.push(anEvent);
+              }else{
+                self.iEvents.push(anEvent);
+              }
             }
           });
 
@@ -362,7 +373,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
       // empty current threads
       self.iEvents = [];
       self.dataSvc.loadEvents().then(snapshot => {
-        self.itemsSvc.reversedItems<IEvent>(self.mappingsService.getEvents(snapshot)).forEach(function (anEvent) {
+        self.itemsSvc.reversedItems<IEvent>(self.mappingsService.getEvents(snapshot)).forEach(anEvent => {
           if (anEvent.name.toLowerCase().includes(self.queryText.toLowerCase()) || anEvent.description.toLowerCase().includes(self.queryText.toLowerCase()))
             self.iEvents.push(anEvent);
         });
