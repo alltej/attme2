@@ -56,7 +56,9 @@
         "promise-polyfill": "6.0.2",
         "rxjs": "5.4.0",
         "sw-toolbox": "3.6.0",
-        "zone.js": "0.8.12"
+        "zone.js": "0.8.12",
+        "cordova-browser": "^4.1.0",
+        "cordova-plugin-app-version": "^0.1.9"
     },
     "devDependencies": {
         "@ionic/app-scripts": "2.1.3",
@@ -88,10 +90,12 @@
                 "CAMERA_USAGE_DESCRIPTION": " ",
                 "PHOTOLIBRARY_USAGE_DESCRIPTION": " "
             },
-            "com-sarriaroman-photoviewer": {}
+            "com-sarriaroman-photoviewer": {},
+            "cordova-plugin-app-version": {}
         },
         "platforms": [
             "android",
+            "browser",
             "ios"
         ]
     }
