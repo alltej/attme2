@@ -69,7 +69,7 @@ export class MyApp {
   }
 
   onLoad(page: any) {
-    //console.log(`MyApp:onLoad::${page}`)
+    console.log(`MyApp:onLoad::${page}`)
     this.nav.setRoot(page);
     this.menuCtrl.close();
   }

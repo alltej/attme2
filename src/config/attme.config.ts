@@ -1,4 +1,6 @@
 export const attmeConfig = {
-  recentPreviousNumDays: 3,
-  numDaysAfterEventAttendanceEnabled : 3
+  eventRecentPriorNumDays: 3,
+  recentPreviousNumDays: 5,
+  numDaysAfterEventAttendanceEnabled : 3,
+  eventRecentFutureNumDaysMax : 365
 };

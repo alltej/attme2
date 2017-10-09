@@ -40,16 +40,17 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
               public toastCtrl: ToastController,
               public eventSvc: EventProvider,
               private userLikeSvc: UserLikesProvider,
-              public sqliteSvc: SqliteService,
+              //public sqliteSvc: SqliteService,
               public mappingsService: MappingProvider,
               public itemsSvc: ItemsProvider,
               public  authSvc: AuthProvider,
               public dataSvc: DataProvider,
               public events: Events) {
     super();
+    console.log("EventListPage::constructor")
     this.searchControl = new FormControl();
 
-    let currentDate = Date.now() + -attmeConfig.recentPreviousNumDays*24*3600*1000; // date n days ago in milliseconds UTC;
+    let currentDate = Date.now() + -attmeConfig.eventRecentPriorNumDays*24*3600*1000; // date n days ago in milliseconds UTC;
     let futureDateMax = Date.now() + +60*24*3600*1000; // date n days ago in milliseconds UTC
     this.whenStartFilter = new Date(currentDate).toISOString();
     this.whenEndFilter = new Date(futureDateMax).toISOString();
@@ -75,7 +76,12 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
     self.events.subscribe('network:connected', self.networkConnected);
     self.events.subscribe('events:add', self.addNewThreads);
 
-    self.checkFirebase();
+
+    this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
+      this.loading = false;
+      self.checkFirebase();
+    });
+
     // this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
     //   this.loading = false;
     //   this.setFilteredItems();
@@ -93,12 +99,12 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
         } else {
           self.internetConnected = false;
           self.dataSvc.goOffline();
-          self.loadSqliteEvents();
+          //self.loadSqliteEvents();
         }
       }, 1000);
     } else {
       //console.log('Firebase connection found (threads.ts) - attempt: ' + self.firebaseConnectionAttempts);
-      self.dataSvc.getStatisticsRef().on('child_changed', self.onEventAdded);
+      //self.dataSvc.getStatisticsRef().on('child_changed', self.onEventAdded);
       if (self.authSvc.getLoggedInUser() === null) {
         //console.log('getLoggedInUser is null')
       } else {
@@ -107,42 +113,42 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
     }
   }
 
-  loadSqliteEvents() {
-    let self = this;
-
-    if (self.iEvents.length > 0)
-      return;
-
-    self.iEvents = [];
-    //console.log('Loading from db..');
-    self.sqliteSvc.getEvents().then((data) => {
-      //console.log('Found in db: ' + data.rows.length + ' threads');
-      if (data.rows.length > 0) {
-        for (var i = 0; i < data.rows.length; i++) {
-          let anEvent: IEvent = {
-            key: data.rows.item(i).key,
-            name: data.rows.item(i).name,
-            description: data.rows.item(i).description,
-            when: data.rows.item(i).when,
-            where: data.rows.item(i).where,
-            attendeesCount: data.rows.item(i).attendeesCount,
-            likes: data.rows.item(i).likes,
-            comments: data.rows.item(i).comments,
-            isLiked: false, //TODO
-            //tags: []
-          };
-
-          self.iEvents.push(anEvent);
-          //console.log('Event added from db:' + anEvent.key);
-          //console.log(anEvent);
-        }
-        self.loading = false;
-      }
-    }, (error) => {
-      //console.log('Error: ' + JSON.stringify(error));
-      self.loading = true;
-    });
-  }
+  // loadSqliteEvents() {
+  //   let self = this;
+  //
+  //   if (self.iEvents.length > 0)
+  //     return;
+  //
+  //   self.iEvents = [];
+  //   //console.log('Loading from db..');
+  //   self.sqliteSvc.getEvents().then((data) => {
+  //     //console.log('Found in db: ' + data.rows.length + ' threads');
+  //     if (data.rows.length > 0) {
+  //       for (var i = 0; i < data.rows.length; i++) {
+  //         let anEvent: IEvent = {
+  //           key: data.rows.item(i).key,
+  //           name: data.rows.item(i).name,
+  //           description: data.rows.item(i).description,
+  //           when: data.rows.item(i).when,
+  //           where: data.rows.item(i).where,
+  //           attendeesCount: data.rows.item(i).attendeesCount,
+  //           likes: data.rows.item(i).likes,
+  //           comments: data.rows.item(i).comments,
+  //           isLiked: false, //TODO
+  //           //tags: []
+  //         };
+  //
+  //         self.iEvents.push(anEvent);
+  //         //console.log('Event added from db:' + anEvent.key);
+  //         //console.log(anEvent);
+  //       }
+  //       self.loading = false;
+  //     }
+  //   }, (error) => {
+  //     //console.log('Error: ' + JSON.stringify(error));
+  //     self.loading = true;
+  //   });
+  // }
 
   public networkConnected = (connection) => {
     let self = this;
@@ -157,8 +163,8 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
       // save current threads..
       setTimeout(function () {
         //console.log(self.iEvents.length);
-        self.sqliteSvc.saveEvents(self.iEvents);
-        self.loadSqliteEvents();
+        // self.sqliteSvc.saveEvents(self.iEvents);
+        // self.loadSqliteEvents();
       }, 1000);
     }
   }
@@ -245,8 +251,8 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
 
     if (self.segment === 'current') {
 
-      let currentDate = Date.now() + -attmeConfig.recentPreviousNumDays*24*3600*1000; // date n days ago in milliseconds UTC;
-      let futureDateMax = Date.now() + +60*24*3600*1000; // date n days ago in milliseconds UTC
+      let currentDate = Date.now() + -attmeConfig.eventRecentPriorNumDays*24*3600*1000; // date n days ago in milliseconds UTC;
+      let futureDateMax = Date.now() + attmeConfig.eventRecentFutureNumDaysMax*24*3600*1000; // date n days ago in milliseconds UTC
       this.whenStartFilter = new Date(currentDate).toISOString();
       this.whenEndFilter = new Date(futureDateMax).toISOString();
 
@@ -259,17 +265,18 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
             .getEvents(snapshot).forEach(anEvent => {
             self.iEvents.push(anEvent);
           });
-        this.iEvents.sort(function(a, b) {
-          return new Date(a.when).getTime() - new Date(b.when).getTime()
-        });
+          this.iEvents.sort(function(a, b) {
+            return new Date(a.when).getTime() - new Date(b.when).getTime()
+          });
 
-        self.events.publish('events:viewed');
-        self.loading = false;
-      });
+          self.events.publish('events:viewed');
+          self.loading = false;
+        });
     } else {
 
       let daysTo:number;// = this.week*7
 
+      //TODO: simplify
       if (this.weekNumber == 0) {
         let startFrom: number = self.pageSize + self.weekNumber;
         let daysFrom:number = startFrom*7
@@ -281,7 +288,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
       }
 
       if (this.weekNumber > 52) {
-        console.log('You have reach the max number of weeks')
+        //console.log('You have reach the max number of weeks')
         //console.log(`NEW self.start::${self.weekNumber}`)
         //this.scrollToTop();
         return;
@@ -293,33 +300,33 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
         .once('value', snapshot=> {
           self.mappingsService
             .getEvents(snapshot).forEach(anEvent => {
-              //NOTE: Need to add this extra check before adding object to array bec of unknown duplication
-              if(!self.iEvents.filter(elem => {
-                  return elem.key === anEvent.key;
-                }).length) {
-                self.iEvents.push(anEvent);
-              }
+            //NOTE: Need to add this extra check before adding object to array bec of unknown duplication
+            if(!self.iEvents.filter(elem => {
+                return elem.key === anEvent.key;
+              }).length) {
+              self.iEvents.push(anEvent);
+            }
           });
 
-        this.iEvents.sort(function(a, b) {
-          return  new Date(b.when).getTime() - new Date(a.when).getTime()
+          this.iEvents.sort(function(a, b) {
+            return  new Date(b.when).getTime() - new Date(a.when).getTime()
+          });
+
+          //console.log(`startAt::${this.whenStartFilter}::endAt::${this.whenEndFilter}`)
+          self.weekNumber += (self.pageSize + 1);
+          self.events.publish('events:viewed');
+
+          let startFrom: number = self.pageSize + self.weekNumber;
+
+          let daysFrom:number = startFrom*7
+          daysTo = (this.weekNumber*7)-6
+          let startDate = Date.now() - daysFrom*24*3600*1000; // date n days ago in milliseconds UTC
+          let endDateDate = Date.now() - (daysTo)*24*3600*1000; // date n days ago in milliseconds UTC
+          this.whenStartFilter = new Date(startDate).toISOString().substring(0, 10);
+          this.whenEndFilter = new Date(endDateDate).toISOString().substring(0, 10);
+
+          self.loading = false;
         });
-
-        //console.log(`startAt::${this.whenStartFilter}::endAt::${this.whenEndFilter}`)
-        self.weekNumber += (self.pageSize + 1);
-        self.events.publish('events:viewed');
-
-        let startFrom: number = self.pageSize + self.weekNumber;
-
-        let daysFrom:number = startFrom*7
-        daysTo = (this.weekNumber*7)-6
-        let startDate = Date.now() - daysFrom*24*3600*1000; // date n days ago in milliseconds UTC
-        let endDateDate = Date.now() - (daysTo)*24*3600*1000; // date n days ago in milliseconds UTC
-        this.whenStartFilter = new Date(startDate).toISOString().substring(0, 10);
-        this.whenEndFilter = new Date(endDateDate).toISOString().substring(0, 10);
-
-        self.loading = false;
-      });
     }
   }
 
@@ -330,54 +337,6 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
       position: 'top'
     });
     toast.present();
-  }
-
-  private setFilteredItems() {
-    // console.log(this.relationship)
-    // console.log("hello")
-    let selectedEvents: Observable<any[]>; //= this.eventSvc.getEvents();
-    if (this.segment == "past"){
-      selectedEvents = this.eventSvc.getPastEvents();
-    }else{
-      selectedEvents = this.eventSvc.getRecentEvents();
-    }
-
-    if (!(this.queryText == null || this.queryText == '')){
-      //console.log(`search term::${this.searchTerm}`)
-      selectedEvents = selectedEvents.map((events) =>
-        events.filter(event => event.name.toLowerCase().indexOf(this.queryText.toLowerCase()) !== -1 || event.description.toLowerCase().indexOf(this.queryText.toLowerCase()) !== -1))
-    }
-
-    selectedEvents
-      .takeUntil(this.componentDestroyed$)
-      .map((items) => {
-        return items.map(item => {
-          this.userLikeSvc.isLiked(item.$key)
-            .takeUntil(this.componentDestroyed$)
-            .map((ul) => {
-              return ul;
-            })
-            .subscribe(ul => {
-              if (ul.on != null) {
-                //console.log('likeIt:true')
-                item.isLiked = true;
-              }
-              else {
-                //console.log('likeIt:false')
-                item.isLiked = false;
-              }
-            });
-          return item;
-        })
-      })
-      .subscribe((items: any[]) => {
-        //this.events = items.reverse();
-        if (this.segment == "past"){
-          this.iEvents = items.reverse();
-        }else{
-          this.iEvents = items;
-        }
-      })
   }
 
   onNewEvent(){
@@ -397,13 +356,6 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   onSearchInput(){
-    // if (!(this.searchTerm == null || this.searchTerm == '')){
-    //   //console.log(`search term::${this.searchTerm}`)
-    //   selectedEvents = selectedEvents.map((events) =>
-    //     events.filter(event => event.name.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || event.description.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1))
-    // }
-
-
     let self = this;
     if (self.queryText.trim().length !== 0) {
       //self.segment = 'current';

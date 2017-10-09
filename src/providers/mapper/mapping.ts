@@ -58,23 +58,6 @@ export class MappingProvider {
     return comment;
   }
 
-  getEvent(snapshot: any, key: string): IEvent {
-
-    let anEvent: IEvent = {
-      key: key,
-      name: snapshot.name,
-      description: snapshot.description,
-      when: snapshot.when,
-      where: snapshot.where,
-      likes: snapshot.likes,
-      comments: snapshot.comments,
-      attendeesCount: snapshot.attendeesCount,
-      isLiked: false //TODO
-    };
-
-    return anEvent;
-  }
-
   getEvents(snapshot: any): Array<IEvent> {
     //console.log(`mapping::getEvents::${snapshot.val()}`)
     let iEvents: Array<IEvent> = [];
@@ -100,5 +83,22 @@ export class MappingProvider {
     });
 
     return iEvents;
+  }
+
+  getEvent(snapshot: any, key: string): IEvent {
+
+    let anEvent: IEvent = {
+      key: key,
+      name: snapshot.name,
+      description: snapshot.description,
+      when: snapshot.when,
+      where: snapshot.where,
+      likes: snapshot.likes,
+      comments: snapshot.comments,
+      attendeesCount: snapshot.attendeesCount,
+      isLiked: false //TODO
+    };
+
+    return anEvent;
   }
 }

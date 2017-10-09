@@ -1,6 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import firebase from 'firebase';
-import {AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable} from "angularfire2/database";
+import {AngularFireDatabase, FirebaseListObservable} from "angularfire2/database";
 import {attmeConfig} from "../../config/attme.config";
 
 @Injectable()

@@ -21,7 +21,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   ngOnInit() {
-    //console.log('member-list::ngOnInit')
+    console.log('member-list::ngOnInit')
     this.membersSvc.getMembers()
       .takeUntil(this.componentDestroyed$)
       .map( (members) => {
