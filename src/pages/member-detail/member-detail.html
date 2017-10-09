@@ -28,6 +28,13 @@
     <!--<ion-list-header>-->
     <!--Basic Info-->
     <!--</ion-list-header>-->
+    <!--<ion-item>-->
+      <!--<ion-thumbnail item-left>-->
+        <!--&lt;!&ndash;<img src="{{userProfile.image}}">&ndash;&gt;-->
+        <!--<user-avatar [user]="user" *ngIf="userDataLoaded"></user-avatar>-->
+      <!--</ion-thumbnail>-->
+      <!--<p>{{firebaseAccount.email}}</p>-->
+    <!--</ion-item>    -->
     <ion-item>
       <ion-thumbnail item-left>
         <!--<img src="{{member?.photoUrl}}">-->
@@ -35,8 +42,9 @@
         <!--<img src="{{avatar}}">-->
         <!--</div>-->
         <!--<forum-user-avatar [user]="user" *ngIf="userDataLoaded"></forum-user-avatar>-->
-        <div (click)="openImageOptions()">
-          <img src="{{avatar}}">
+        <!--<member-avatar [member]="member" *ngIf="userDataLoaded" (click)="openImageOptions()"></member-avatar>-->
+        <div (click)="openImageOptions()" *ngIf="userDataLoaded">
+          <img src="{{member.photoUrl}}">
         </div>
       </ion-thumbnail>
     </ion-item>
