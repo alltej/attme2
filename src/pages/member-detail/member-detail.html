@@ -4,30 +4,42 @@
   <ion-navbar color="hcolor">
     <ion-title>{{ member?.firstName }} {{ member?.lastName }}</ion-title>
   </ion-navbar>
-
+  <!--<ion-buttons right>-->
+    <!--<button ion-button (click)="openImageOptions()">-->
+      <!--<ion-icon name="camera"></ion-icon>-->
+    <!--</button>-->
+    <!--&lt;!&ndash;<button ion-button (click)="reload()">&ndash;&gt;-->
+    <!--&lt;!&ndash;<ion-icon name="refresh"></ion-icon>&ndash;&gt;-->
+    <!--&lt;!&ndash;</button>&ndash;&gt;-->
+  <!--</ion-buttons>-->
 </ion-header>
 
 <ion-content padding>
+  <div *ngIf="!userDataLoaded">
+    <img src="assets/images/ring.gif" style="display:block; margin:auto" />
+  </div>
+  <!--<ion-list-header>-->
+  <!--Member Detail-->
+  <!--</ion-list-header>-->
+  <ion-list no-border >
     <ion-list-header>
       Member Detail
     </ion-list-header>
-  <ion-list no-border >
-
-  <!--<ion-list-header>-->
+    <!--<ion-list-header>-->
     <!--Basic Info-->
-  <!--</ion-list-header>-->
-  <ion-item>
-    <ion-thumbnail item-left>
-      <!--<img src="{{member?.photoUrl}}">-->
-      <!--<div (click)="editimage()">-->
+    <!--</ion-list-header>-->
+    <ion-item>
+      <ion-thumbnail item-left>
+        <!--<img src="{{member?.photoUrl}}">-->
+        <!--<div (click)="editimage()">-->
         <!--<img src="{{avatar}}">-->
-      <!--</div>-->
-      <!--<forum-user-avatar [user]="user" *ngIf="userDataLoaded"></forum-user-avatar>-->
-      <div (click)="editimage()">
-      <img src="{{avatar}}">
-    </div>
-    </ion-thumbnail>
-  </ion-item>
+        <!--</div>-->
+        <!--<forum-user-avatar [user]="user" *ngIf="userDataLoaded"></forum-user-avatar>-->
+        <div (click)="openImageOptions()">
+          <img src="{{avatar}}">
+        </div>
+      </ion-thumbnail>
+    </ion-item>
     <ion-item (click)="!isUserProfileExists&&updateName()">
       <ion-grid>
         <ion-row>
@@ -49,7 +61,7 @@
     <ion-item (click)="updateDOB()">
       <!--<ion-label class="dob-label">Date of Birth</ion-label>-->
       <!--<ion-datetime displayFormat="MMM D, YYYY" pickerFormat="D MMM YYYY"-->
-                    <!--[(ngModel)]="birthDate" (ionChange)="updateDOB(birthDate)"></ion-datetime>-->
+      <!--[(ngModel)]="birthDate" (ionChange)="updateDOB(birthDate)"></ion-datetime>-->
       <ion-grid>
         <ion-row>
           <ion-col col-6>
@@ -118,74 +130,74 @@
 
   </ion-list>
 
-  <ion-list *ngIf="userDataLoaded">
+  <!--<ion-list *ngIf="userDataLoaded">-->
 
-    <ion-list-header>
-      Activity
-    </ion-list-header>
+    <!--<ion-list-header>-->
+      <!--Activity-->
+    <!--</ion-list-header>-->
 
-    <ion-item>
-      # Threads
-      <ion-icon name='text' item-left></ion-icon>
-      <ion-badge item-right>{{userStatistics.totalAttendance}}</ion-badge>
-    </ion-item>
+    <!--<ion-item>-->
+      <!--# Threads-->
+      <!--<ion-icon name='text' item-left></ion-icon>-->
+      <!--<ion-badge item-right>{{userStatistics.totalAttendance}}</ion-badge>-->
+    <!--</ion-item>-->
 
-    <ion-item>
-      # Comments
-      <ion-icon name='quote' item-left></ion-icon>
-      <ion-badge item-right>{{userStatistics.totalComments}}</ion-badge>
-    </ion-item>
-    <ion-item>
-      # Favorites
-      <ion-icon name='heart' item-left></ion-icon>
-      <ion-badge item-right>{{userProfile.totalCircles}}</ion-badge>
-    </ion-item>
+    <!--<ion-item>-->
+      <!--# Comments-->
+      <!--<ion-icon name='quote' item-left></ion-icon>-->
+      <!--<ion-badge item-right>{{userStatistics.totalComments}}</ion-badge>-->
+    <!--</ion-item>-->
+    <!--<ion-item>-->
+      <!--# Favorites-->
+      <!--<ion-icon name='heart' item-left></ion-icon>-->
+      <!--<ion-badge item-right>{{memberDetail.totalCircles}}</ion-badge>-->
+    <!--</ion-item>-->
 
-  </ion-list>
+  <!--</ion-list>-->
   <!--<ion-grid>-->
-    <!--<ion-row>-->
-      <!--<ion-col col-6>-->
-        <!--Name-->
-      <!--</ion-col>-->
-      <!--<ion-col col-6 *ngIf="member?.firstName || member?.lastName">-->
-        <!--{{member?.firstName}} {{member?.lastName}}-->
-      <!--</ion-col>-->
-      <!--<ion-col col-6 class="placeholder-profile" *ngIf="!member?.firstName">-->
-            <!--<span>-->
-              <!--Tap here to edit.-->
-            <!--</span>-->
-      <!--</ion-col>-->
-    <!--</ion-row>-->
-    <!--<ion-row>-->
-      <!--<ion-col text-center>-->
-        <!--<h2>{{ member?.firstName }} {{ member?.lastName }}</h2>-->
-        <!--<div class="subtitle">{{ member?.email }}</div>-->
-        <!--<div class="subtitle">{{ member.$key }}</div>-->
-      <!--</ion-col>-->
-    <!--</ion-row>-->
-    <!--<ion-row>-->
-      <!--<ion-col text-center>-->
-        <!--<p>MemberID: {{ member?.memberId }}</p>-->
-      <!--</ion-col>-->
-    <!--</ion-row>-->
-    <!--<ion-row>-->
-      <!--<ion-col>-->
-        <!--<button-->
-          <!--ion-button-->
-          <!--outline-->
-          <!--block-->
-          <!--(click)="onEditMember()">Edit</button>-->
-      <!--</ion-col>-->
-    <!--</ion-row>-->
-    <!--<ion-row>-->
-      <!--<ion-col>-->
-        <!--<button-->
-          <!--*ngIf="!isUserProfileExists"-->
-          <!--ion-button-->
-          <!--outline-->
-          <!--block-->
-          <!--(click)="onCreateInvite()">Invite</button>-->
-      <!--</ion-col>-->
-    <!--</ion-row>-->
+  <!--<ion-row>-->
+  <!--<ion-col col-6>-->
+  <!--Name-->
+  <!--</ion-col>-->
+  <!--<ion-col col-6 *ngIf="member?.firstName || member?.lastName">-->
+  <!--{{member?.firstName}} {{member?.lastName}}-->
+  <!--</ion-col>-->
+  <!--<ion-col col-6 class="placeholder-profile" *ngIf="!member?.firstName">-->
+  <!--<span>-->
+  <!--Tap here to edit.-->
+  <!--</span>-->
+  <!--</ion-col>-->
+  <!--</ion-row>-->
+  <!--<ion-row>-->
+  <!--<ion-col text-center>-->
+  <!--<h2>{{ member?.firstName }} {{ member?.lastName }}</h2>-->
+  <!--<div class="subtitle">{{ member?.email }}</div>-->
+  <!--<div class="subtitle">{{ member.$key }}</div>-->
+  <!--</ion-col>-->
+  <!--</ion-row>-->
+  <!--<ion-row>-->
+  <!--<ion-col text-center>-->
+  <!--<p>MemberID: {{ member?.memberId }}</p>-->
+  <!--</ion-col>-->
+  <!--</ion-row>-->
+  <!--<ion-row>-->
+  <!--<ion-col>-->
+  <!--<button-->
+  <!--ion-button-->
+  <!--outline-->
+  <!--block-->
+  <!--(click)="onEditMember()">Edit</button>-->
+  <!--</ion-col>-->
+  <!--</ion-row>-->
+  <!--<ion-row>-->
+  <!--<ion-col>-->
+  <!--<button-->
+  <!--*ngIf="!isUserProfileExists"-->
+  <!--ion-button-->
+  <!--outline-->
+  <!--block-->
+  <!--(click)="onCreateInvite()">Invite</button>-->
+  <!--</ion-col>-->
+  <!--</ion-row>-->
   <!--</ion-grid>-->
 </ion-content>

@@ -47,7 +47,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
               public dataSvc: DataProvider,
               public events: Events) {
     super();
-    console.log("EventListPage::constructor")
+    //console.log("EventListPage::constructor")
     this.searchControl = new FormControl();
 
     let currentDate = Date.now() + -attmeConfig.eventRecentPriorNumDays*24*3600*1000; // date n days ago in milliseconds UTC;

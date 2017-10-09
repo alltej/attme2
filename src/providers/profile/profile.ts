@@ -18,9 +18,9 @@ export class ProfileProvider {
     });
   }
 
-  getUsers(): firebase.database.Reference {
-    return firebase.database().ref(`/userProfile`);
-  }
+  // getUsers(): firebase.database.Reference {
+  //   return firebase.database().ref(`/userProfile`);
+  // }
 
   getUserProfileData(userUid: string) {
     return this.usersRef.child(userUid).once('value');
@@ -125,4 +125,14 @@ export class ProfileProvider {
       photoUrl: url
     });
   }
+
+  findMemberId2(memberKey: string) {
+    //console.log(`findMemberId2::${memberKey}`)
+    return this.usersRef.orderByChild('memberKey').equalTo(memberKey).limitToFirst(1);
+  }
+
+
+  // getThreadCommentsRef(threadKey: string) {
+  //   return this.commentsRef.orderByChild('thread').equalTo(threadKey);
+  // }
 }

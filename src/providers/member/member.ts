@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import {AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable} from "angularfire2/database";
 import {AuthProvider} from "../auth/auth";
+import firebase from 'firebase';
 
 @Injectable()
 export class MemberProvider {
 
+  membersRef: any = firebase.database().ref('members');
   public memberKey: string;
 
   constructor(private af:AngularFireDatabase,
@@ -75,9 +77,11 @@ export class MemberProvider {
     });
   }
 
-  getMember(memberKey: string):FirebaseObjectObservable<any> {
-    return this.af.object(`/members/${memberKey}`);
-  }
+
+
+  // getMember(memberKey: string):FirebaseObjectObservable<any> {
+  //   return this.af.object(`/members/${memberKey}`);
+  // }
 
   confirmMember(memberKey: string) {
     //console.log('confirm:' + memberKey);
@@ -153,5 +157,13 @@ export class MemberProvider {
     return this.af.object(`/members/${memberKey}`).update({
       birthDate: birthDate
     });
+  }
+
+  // getUserProfileData(userUid: string) {
+  //   return this.usersRef.child(userUid).once('value');
+  // }
+
+  getMemberData(memberKey: any) {
+    return this.membersRef.child(memberKey).once('value');
   }
 }
