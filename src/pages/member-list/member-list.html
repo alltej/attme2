@@ -1,20 +1,22 @@
 <ion-header>
 
-  <ion-navbar color="hcolor">
+  <ion-navbar color="hcolor" align-title="center">
     <ion-buttons left>
       <button ion-button icon-only menuToggle>
         <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
     <ion-title>Members</ion-title>
-    <ion-buttons right="">
+    <ion-buttons right>
       <button ion-button icon-only (click)="onCreateMember()">
         <ion-icon name="add"></ion-icon>
       </button>
     </ion-buttons>
 
   </ion-navbar>
-
+  <ion-toolbar no-border-top>
+    <ion-searchbar [(ngModel)]="queryText" [formControl]="searchControl" (ionInput)="onSearchInput()"></ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
 

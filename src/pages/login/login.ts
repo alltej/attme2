@@ -4,7 +4,8 @@ import {
   Loading,
   LoadingController,
   NavController,
-  AlertController } from 'ionic-angular';
+  AlertController
+} from 'ionic-angular';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { EmailValidator } from '../../validators/email';
 import { AuthProvider } from '../../providers/auth/auth';
@@ -19,15 +20,29 @@ import { AuthProvider } from '../../providers/auth/auth';
 export class LoginPage {
   public loginForm: FormGroup;
   loading: Loading;
+  public appVersionNumber: string;
 
-  constructor(public navCtrl: NavController, public loadingCtrl: LoadingController,
-              public alertCtrl: AlertController, public authProvider: AuthProvider,
-              public formBuilder: FormBuilder) {
+  constructor(
+    public navCtrl: NavController,
+    public loadingCtrl: LoadingController,
+    public alertCtrl: AlertController,
+    public authProvider: AuthProvider,
+    public formBuilder: FormBuilder) {
 
     this.loginForm = formBuilder.group({
       email: ['', Validators.compose([Validators.required, EmailValidator.isValid])],
       password: ['', Validators.compose([Validators.minLength(6), Validators.required])]
     });
+    this.appVersionNumber = "1.0.12";
+    // if (this.platform.is('mobileweb') || this.platform.is('core')) {
+    //   // This will only print when running on desktop
+    //   //console.log("I'm a regular browser!");
+    //   this.appVersionNumber = "1.0.9999";
+    // }else{
+    //   this.appVersion.getVersionNumber().then(result => {
+    //     this.appVersionNumber = result;
+    //   });
+    // }
   }
 
   loginUser(): void {

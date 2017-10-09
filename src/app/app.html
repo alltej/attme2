@@ -61,7 +61,16 @@
         <!--<ion-icon name="people"></ion-icon>-->
         <!--Demo-->
       <!--</button>-->
+      <button
+        ion-item
+        icon-left
+        (click)="onLoad('AboutPage')"
+        *ngIf="isAuthenticated">
+        <ion-icon name="information-circle"></ion-icon>
+        About
+      </button>
     </ion-list>
+
   </ion-content>
 </ion-menu>
 
