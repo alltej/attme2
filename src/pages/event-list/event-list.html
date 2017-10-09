@@ -49,14 +49,6 @@
         <pre><span>{{anEvent?.description}}</span></pre>
       </ion-item>
 
-      <!--<ion-item small (click)="goToEventDetail(event?.$key)">-->
-      <!--<pre>{{event?.description}}</pre>-->
-      <!--</ion-item>-->
-
-      <!--<ion-card-content (click)="goToEventDetail(event?.$key)">-->
-      <!--<pre>{{event?.description}}</pre>-->
-      <!--</ion-card-content>-->
-
       <ion-row>
         <ion-col>
           <button
@@ -65,7 +57,7 @@
             clear
             small
             *ngIf="!anEvent?.isLiked"
-            (click)="goToEventDetail(anEvent?.$key)">
+            (click)="goToEventDetail(anEvent?.key)">
             <ion-icon name="heart-outline"></ion-icon>
             <label>{{anEvent?.likes}} Likes</label>
           </button>
@@ -76,7 +68,7 @@
             small
             color="danger"
             *ngIf="anEvent?.isLiked"
-            (click)="goToEventDetail(anEvent?.$key)">
+            (click)="goToEventDetail(anEvent?.key)">
             <ion-icon name="heart"></ion-icon>
             <label>{{anEvent?.likes}} Likes</label>
           </button>
@@ -97,7 +89,7 @@
           <button ion-button
                   icon-left clear small
                   color="secondary"
-                  (click)="goToEventAttendees(anEvent?.$key)">
+                  (click)="goToEventAttendees(anEvent?.key)">
             <!--<ion-icon name="people" *ngIf="getAttendanceCount(event.id)>0"></ion-icon>-->
             <ion-icon name="people"></ion-icon>
             <label>{{anEvent?.attendeesCount}}</label>

@@ -30,7 +30,7 @@ export class EventDetailPage extends BaseClass implements OnInit{
   }
 
   ngOnInit(): void {
-
+    //console.log(`EventDetailPage::ngOnInit::${this.eventId}`)
     this.eventSvc.getEventDetail(this.eventId)
       .subscribe((item: any)=>{
         this.selEvent = item.val();
