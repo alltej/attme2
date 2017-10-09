@@ -68,7 +68,7 @@ export class MappingProvider {
 
     Object.keys(snapshot.val()).map((key: any) => {
       let anEvent: any = list[key];
-      //console.log(`mapping::getEvents::key::${key}:name:${anEvent.when}`)
+      //console.log(`mapping::getEvents::key::${key}:name:${anEvent}`)
       iEvents.push({
         key: key,
         name: anEvent.name,
@@ -77,7 +77,7 @@ export class MappingProvider {
         where: anEvent.where,
         likes: anEvent.likes,
         comments: anEvent.comments,
-        attendeesCount: snapshot.attendeesCount,
+        attendeesCount: anEvent.attendeesCount,
         isLiked: false //TODO
       });
     });

@@ -371,13 +371,14 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
     if (self.queryText.trim().length !== 0) {
       //self.segment = 'current';
       // empty current threads
-      self.iEvents = [];
-      self.dataSvc.loadEvents().then(snapshot => {
-        self.itemsSvc.reversedItems<IEvent>(self.mappingsService.getEvents(snapshot)).forEach(anEvent => {
-          if (anEvent.name.toLowerCase().includes(self.queryText.toLowerCase()) || anEvent.description.toLowerCase().includes(self.queryText.toLowerCase()))
-            self.iEvents.push(anEvent);
-        });
-      });
+      this.loadEvents(false);
+      // self.iEvents = [];
+      // self.dataSvc.loadEvents().then(snapshot => {
+      //   self.itemsSvc.reversedItems<IEvent>(self.mappingsService.getEvents(snapshot)).forEach(anEvent => {
+      //     if (anEvent.name.toLowerCase().includes(self.queryText.toLowerCase()) || anEvent.description.toLowerCase().includes(self.queryText.toLowerCase()))
+      //       self.iEvents.push(anEvent);
+      //   });
+      // });
     } else { // text cleared..
       this.loadEvents(true);
     }
