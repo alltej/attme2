@@ -55,6 +55,9 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
     this.whenStartFilter = new Date(currentDate).toISOString();
     this.whenEndFilter = new Date(futureDateMax).toISOString();
 
+    this.events.subscribe('reloadPage1', (fromStart) => {
+      this.loadEvents(fromStart);
+    });
   }
 
   onAddLike(eventKey: string){
@@ -359,11 +362,17 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   goToEventDetail(eventId){
-    this.navCtrl.push('event-detail', { 'eventId': eventId });
+
+      this.navCtrl.push('event-detail', { 'parentPage': this, 'eventId': eventId });
+
+    // this.events.subscribe('reloadPage1',() => {
+    //   this.navCtrl.push('event-detail', { 'parentPage': this, 'eventId': eventId });
+    // });
+
   }
 
   goToEventAttendees(eventId) {
-    this.navCtrl.push('event-attendees', { 'eventId': eventId });
+    this.navCtrl.push('event-attendees', { 'parentPage': this,'eventId': eventId });
   }
 
   onSearchInput(){

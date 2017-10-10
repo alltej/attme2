@@ -26,6 +26,7 @@ export class EventCreatePage {
     let when = new Date(eventDate).toISOString().slice(0,10)
     this.eventSvc.createEvent(name, description, when, location)
       .then( newEvent => {
+        this.navParams.get("parentPage").loadEvents(true);
         this.navCtrl.pop();
       });
   }

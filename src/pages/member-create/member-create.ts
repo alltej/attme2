@@ -20,8 +20,13 @@ export class MemberCreatePage {
     //console.log('ionViewDidLoad MemberCreatePage');
   }
 
-  createMember(firstName: String, lastName: String, memberId: String, email: String) {
-    this.memberSvc.addMember(firstName, lastName, memberId, email);
-    this.navCtrl.popToRoot();
+  createMember(firstName: string, lastName: string, memberId: string, email: string) {
+    this.memberSvc.createMember(firstName, lastName, memberId, email)
+      .then( newEvent => {
+        this.navParams.get("parentPage").loadMembers();
+        this.navCtrl.pop();
+    });
   }
+
+
 }

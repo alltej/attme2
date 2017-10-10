@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
+import {AlertController, Events, IonicPage, NavController, NavParams} from 'ionic-angular';
 import { EventProvider } from '../../providers/event/event';
 import {UserLikesProvider} from "../../providers/user-likes/user-likes";
 import {BaseClass} from "../BasePage";
@@ -24,7 +24,8 @@ export class EventDetailPage extends BaseClass implements OnInit{
               public alertCtrl: AlertController,
               public navParams: NavParams,
               public eventSvc: EventProvider,
-              private userLikeSvc: UserLikesProvider) {
+              private userLikeSvc: UserLikesProvider,
+              public events: Events) {
     super();
     this.eventId = this.navParams.get('eventId');
   }
@@ -49,16 +50,16 @@ export class EventDetailPage extends BaseClass implements OnInit{
   }
 
   onAddLike(eventId: string){
-    //console.log(eventId)
     this.userLikeSvc.addLike(eventId);
-    //this.reloadEvents();
+    //console.log(`AA::onAddLike::publish`)
+    this.events.publish('reloadPage1', true);
+    //console.log(`BB::onAddLike::publish`)
   }
 
   onRemoveLike(eventId: string){
     //console.log(eventId)
     this.userLikeSvc.removeLike(eventId);
     this.isLiked = false;
-    //this.reloadEvents();
   }
 
   onUpdateDate(){
@@ -79,6 +80,7 @@ export class EventDetailPage extends BaseClass implements OnInit{
           text: 'Save',
           handler: data => {
             this.eventSvc.updateEventDate(this.selEvent.eventId, data.newDate).then( () =>{
+              this.reloadParent()
             }).catch(error => {
               //console.log('ERROR: '+error.message);
             });
@@ -106,6 +108,7 @@ export class EventDetailPage extends BaseClass implements OnInit{
           text: 'Save',
           handler: data => {
             this.eventSvc.updateEventName(this.selEvent.eventId, data.newName).then( () =>{
+              this.reloadParent()
             }).catch(error => {
               //console.log('ERROR: '+error.message);
             });
@@ -133,6 +136,7 @@ export class EventDetailPage extends BaseClass implements OnInit{
           text: 'Save',
           handler: data => {
             this.eventSvc.updateEventLocation(this.selEvent.eventId, data.newLocation).then( () =>{
+              this.reloadParent()
             }).catch(error => {
               //console.log('ERROR: '+error.message);
             });
@@ -160,6 +164,7 @@ export class EventDetailPage extends BaseClass implements OnInit{
           text: 'Save',
           handler: data => {
             this.eventSvc.updateEventDescription(this.selEvent.eventId, data.newDescription).then( () =>{
+              this.reloadParent()
             }).catch(error => {
               //console.log('ERROR: '+error.message);
             });
@@ -168,5 +173,9 @@ export class EventDetailPage extends BaseClass implements OnInit{
       ]
     });
     alert.present();
+  }
+
+  private reloadParent(){
+    this.navParams.get("parentPage").loadEvents(true);
   }
 }

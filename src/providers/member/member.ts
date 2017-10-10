@@ -45,6 +45,16 @@ export class MemberProvider {
     membersRef.push(data);
   }
 
+  createMember(firstName: string, lastName: string, memberId: string, email: string): firebase.Promise<any> {
+    //console.log(description)
+    return this.af.list(`/members`).push({
+      firstName: firstName,
+      lastName: lastName,
+      memberId: memberId,
+      email: email
+    });
+  }
+
   updateName(memberKey: string, firstName, lastName): firebase.Promise<void> {
     return this.af.object(`/members/${memberKey}`).update({
       firstName: firstName,

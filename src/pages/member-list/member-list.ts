@@ -88,7 +88,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
     });
   }
 
-  private loadMembers() {
+  public loadMembers() {
     this.loading = true;
     this.membersRx  =
       this.membersSvc.getMembers()
