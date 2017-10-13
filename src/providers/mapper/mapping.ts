@@ -3,6 +3,7 @@ import {ItemsProvider} from "./items-provider";
 import {IComment} from "../../models/comment.interface";
 import {IEvent} from "../../models/event.interface";
 import {IMember} from "../../models/member.interface";
+import {IOrganization} from "../../models/user.interface";
 
 
 
@@ -115,20 +116,40 @@ export class MappingProvider {
 
     Object.keys(snapshot.val()).map((key: any) => {
       let aMember: any = list[key];
-      //console.log(`mapping::getEvents::key::${key}:name:${anEvent}`)
       iMembers.push({
-        uid: key,
-        memberKey: key,
+        uid: aMember.uid,
+        memberKey: aMember.memberKey,
         email: aMember.email,
         birthDate: aMember.birthDate,
         firstName: aMember.firstName,
         lastName: aMember.lastName,
-        memberId: aMember.memberKey,
+        memberId: aMember.memberId,
         photoUrl: aMember.photoUrl,
         isMyCircle: false //TODO
       });
     });
 
     return iMembers;
+  }
+
+
+  getOrganizations(snapshot: any): Array<IOrganization> {
+    console.log(`mapping::getEvents::${snapshot.val()}`)
+    let orgs: Array<IOrganization> = [];
+    if (snapshot.val() == null)
+      return orgs;
+
+    let list = snapshot.val();
+
+    Object.keys(snapshot.val()).map((key: any) => {
+      let org: any = list[key];
+      //console.log(`mapping::getOrganizations::key::${key}:name:${org}`)
+      orgs.push({
+        oid: key,
+        name: org.name
+      });
+    });
+
+    return orgs;
   }
 }

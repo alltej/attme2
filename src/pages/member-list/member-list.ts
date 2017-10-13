@@ -9,8 +9,11 @@ import {DataProvider} from "../../providers/data/data";
 import {IMember} from "../../models/member.interface";
 import {ItemsProvider} from "../../providers/mapper/items-provider";
 import {MappingProvider} from "../../providers/mapper/mapping";
+import {UserData} from "../../providers/data/user-data";
 
-@IonicPage()
+@IonicPage({
+  segment: 'members-list'
+})
 @Component({
   selector: 'page-member-list',
   templateUrl: 'member-list.html',
@@ -36,6 +39,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
     public mappingsService: MappingProvider,
     public itemsSvc: ItemsProvider,
     private userCircleSvc: UserCircleProvider,
+    private userData: UserData,
     public events: Events) {
     super();
 
@@ -46,7 +50,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
     //console.log('member-list::ngOnInit')
 
     this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
-      this.loadMembers();
+      this.loadMembers2();
       this.loading = false;
     });
 
@@ -55,7 +59,6 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
   private loadMembers2() {
     let self = this;
     self.loading = true;
-
 
     let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     let alphaArray = str.split("");
@@ -67,18 +70,19 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
     let startAt = "A"; //alphaArray[startFrom];
     let endAt = "Z"; //alphaArray[self.start + self.pageSize];
 
-    console.log(`startAt:${startAt}`)
-    console.log(`endAt:${endAt}`)
+    //console.log(`startAt:${startAt}`)
+    //console.log(`endAt:${endAt}`)
     //TODO: simplify
-    this.dataSvc.getMembersRef()
+    this.dataSvc.getOrgsRef()
+      .child(`${self.userData.getSelectedOrganization()}/members`)
       .orderByChild('firstName')
       .startAt(startAt)
-      .endAt(endAt).once('value', snapshot=> {
+      .endAt(endAt)
+      .once('value', snapshot=> {
         self.mappingsService.getMembers(snapshot)
           .forEach(aMember => {
-            //console.log(aMember)
             if (aMember.photoUrl == null) {
-              aMember.photoUrl = "assets/images/profile-default.png" //"assets/img/avatar-luke.png"
+              //aMember.photoUrl = "assets/images/profile-default.png" //"assets/img/avatar-luke.png"
             }
             self.iMembers.push(aMember);
           });
@@ -91,7 +95,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
   public loadMembers() {
     this.loading = true;
     this.membersRx  =
-      this.membersSvc.getMembers()
+      this.membersSvc.getMembers2(this.userData.getSelectedOrganization())
         .takeUntil(this.componentDestroyed$);
 
     if (!(this.queryText == null || this.queryText == '')){
@@ -102,7 +106,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
     this.membersRx.map((members) => {
         return members.map(member => {
           if (member.photoUrl == null) {
-            member.photoUrl = "assets/images/profile-default.png" //"assets/img/avatar-luke.png"
+            //member.photoUrl = "assets/images/profile-default.png" //"assets/img/avatar-luke.png"
           }
           //console.log(member.photoUrl);
           this.userCircleSvc.isMyCircle(member.$key)
@@ -122,8 +126,8 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   onLoadMember(selectedMember:any){
-    //console.log(selectedMember);
-    this.navCtrl.push('member-detail', {memberKey: selectedMember.$key});
+    console.log(selectedMember);
+    this.navCtrl.push('MemberDetailPage', {memberKey: selectedMember.memberKey});
   }
 
   onAddToCircle(selectedMember: any){

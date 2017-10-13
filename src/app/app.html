@@ -5,6 +5,16 @@
     </ion-toolbar>
   </ion-header>
   <ion-content>
+    <!--<ion-list>-->
+      <!--<ion-list-header>-->
+        <!--Organizations-->
+      <!--</ion-list-header>-->
+      <!--<button ion-item menuClose *ngFor="let p of userOrganizations" (click)="onSelectOrganization(p)">-->
+        <!--<ion-icon item-start ></ion-icon>-->
+        <!--{{p.name}}-->
+      <!--</button>-->
+    <!--</ion-list>-->
+
     <ion-list>
       <button
         ion-item
@@ -29,6 +39,14 @@
         *ngIf="isAuthenticated">
         <ion-icon name="person"></ion-icon>
         My Profile
+      </button>
+      <button
+        ion-item
+        icon-left
+        (click)="onLoad('UserOrgsPage')"
+        *ngIf="isAuthenticated">
+        <ion-icon name="person"></ion-icon>
+        My Organizations
       </button>
       <button
         ion-item
@@ -65,6 +83,15 @@
         ion-item
         icon-left
         (click)="onLoad('AboutPage')"
+        *ngIf="isAuthenticated">
+        <ion-icon name="information-circle"></ion-icon>
+        About
+      </button>
+
+      <button
+        ion-item
+        icon-left
+        (click)="onLoad('TestAvatarPage')"
         *ngIf="isAuthenticated">
         <ion-icon name="information-circle"></ion-icon>
         About

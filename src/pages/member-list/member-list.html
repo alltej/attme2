@@ -22,11 +22,23 @@
 
 <ion-content padding>
   <ion-list>
-    <ion-item *ngFor="let member of members">
+    <ion-item *ngFor="let member of iMembers">
+      <!--<ion-avatar item-start>-->
+        <!--<ion-text-avatar>F</ion-text-avatar>-->
+      <!--</ion-avatar>      -->
       <ion-avatar item-start (click)="onLoadMember(member)">
         <!--<img src="assets/img/avatar-luke.png">-->
         <!--<img src="{{member?.photoUrl}}">-->
-        <img [src]="member?.photoUrl">
+
+        <div *ngIf="(member?.photoUrl==null); else photoTemplate">
+          <ion-text-avatar>AZ</ion-text-avatar>
+        </div>
+
+        <ng-template #photoTemplate>
+          <img [src]="member?.photoUrl">
+        </ng-template>
+
+
       </ion-avatar>
       <!--<h2>{{member?.photoUrl}}</h2>-->
       <h2>{{member?.firstName}} {{member?.lastName}}</h2>

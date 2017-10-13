@@ -3,6 +3,7 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
+import { IonTextAvatar } from 'ionic-text-avatar';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -29,6 +30,8 @@ import {MappingProvider} from "../providers/mapper/mapping";
 import { StorageProvider } from '../providers/storage/storage';
 import {PhotoViewer} from "@ionic-native/photo-viewer";
 import { DataProvider } from '../providers/data/data';
+import {UserData} from "../providers/data/user-data";
+
 
 //import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 
@@ -86,7 +89,8 @@ export class MyErrorHandler implements ErrorHandler {
     MappingProvider,
     StorageProvider,
     PhotoViewer,
-    DataProvider
+    DataProvider,
+    UserData
   ]
 })
 export class AppModule {}

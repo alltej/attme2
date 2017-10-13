@@ -33,8 +33,10 @@
         "angularfire2": "^4.0.0-rc.1",
         "com-sarriaroman-photoviewer": "^1.1.10",
         "cordova-android": "^6.2.3",
+        "cordova-browser": "^4.1.0",
         "cordova-ios": "^4.4.0",
         "cordova-plugin-add-swift-support": "^1.6.1",
+        "cordova-plugin-app-version": "^0.1.9",
         "cordova-plugin-camera": "~2.4.1",
         "cordova-plugin-compat": "^1.1.0",
         "cordova-plugin-console": "^1.0.5",
@@ -52,13 +54,12 @@
         "ionic": "^3.12.0",
         "ionic-angular": "3.6.0",
         "ionic-plugin-keyboard": "^2.2.1",
+        "ionic-text-avatar": "^1.1.0",
         "ionicons": "3.0.0",
         "promise-polyfill": "6.0.2",
         "rxjs": "5.4.0",
         "sw-toolbox": "3.6.0",
-        "zone.js": "0.8.12",
-        "cordova-browser": "^4.1.0",
-        "cordova-plugin-app-version": "^0.1.9"
+        "zone.js": "0.8.12"
     },
     "devDependencies": {
         "@ionic/app-scripts": "2.1.3",

@@ -3,11 +3,13 @@ import 'rxjs/add/operator/map';
 import {AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable} from "angularfire2/database";
 import {AuthProvider} from "../auth/auth";
 import firebase from 'firebase';
+import {INewMember} from "../../models/member.interface";
 
 @Injectable()
 export class MemberProvider {
 
   membersRef: any = firebase.database().ref('members');
+  orgRef: any = firebase.database().ref('organizations');
   public memberKey: string;
 
   constructor(private af:AngularFireDatabase,
@@ -16,6 +18,14 @@ export class MemberProvider {
 
   getMembers(): FirebaseListObservable<any[]> {
     return this.af.list('/members',{
+      query: {
+        orderByChild: 'firstName'
+      }
+    });
+  }
+
+  getMembers2(ooid: string): FirebaseListObservable<any[]> {
+    return this.af.list(`/organizations/${ooid}/members`,{
       query: {
         orderByChild: 'firstName'
       }
@@ -47,11 +57,50 @@ export class MemberProvider {
 
   createMember(firstName: string, lastName: string, memberId: string, email: string): firebase.Promise<any> {
     //console.log(description)
-    return this.af.list(`/members`).push({
+    return this.af.list(`/members`).push(
+      {
       firstName: firstName,
       lastName: lastName,
       memberId: memberId,
       email: email
+    });
+  }
+
+  createMember3(ooid: string, newMember: INewMember): firebase.Promise<any> {
+    try {
+      this.orgRef.child(`${ooid}/members`).child(newMember.memberKey).set(newMember);
+
+      return this.orgRef.child(`${ooid}/stats/members`).once('value')
+        .then((snapshot) => {
+          let count = snapshot == null ? 0 : snapshot.val();
+          this.orgRef.child(`${ooid}/stats/members`).set(count + 1);
+        });
+    } catch (e) {
+      //console.log(e)
+    }
+  }
+
+  createMember2(ooid: string , firstName: string, lastName: string, memberId: string, email: string) {
+    console.log(`createMember2`)
+    this.af.object(`/organizations/${ooid}/members`).$ref.transaction(currentValue => {
+      if (currentValue === null) {
+        return{
+          firstName: firstName,
+          lastName: lastName,
+          memberId: memberId,
+          email: email
+        };
+      }
+    })
+    .then( result => {
+      if (result.committed) {
+        this.af.object(`/organizations/${ooid}/stats/members`).$ref.transaction(tagValue => {
+          return tagValue ? tagValue + 1 : 1;
+        });
+      }
+    })
+    .catch( error => {
+      // handle error
     });
   }
 
@@ -175,5 +224,10 @@ export class MemberProvider {
 
   getMemberData(memberKey: any) {
     return this.membersRef.child(memberKey).once('value');
+  }
+
+  getMemberData2(ooid: string, memberKey: string) {
+    console.log(`getMemberData2::ooid=${memberKey}::memberKey=${memberKey}`);
+    return this.orgRef.child(ooid).child(`members/${memberKey}`).once('value');
   }
 }

@@ -9,3 +9,13 @@ export interface IMember {
   photoUrl: string;
   isMyCircle: boolean;
 }
+
+export interface INewMember {
+  uid: string;
+  memberKey: string;
+  email: string;
+  birthDate: string;
+  firstName: string;
+  lastName: string;
+  memberId: string
+}

@@ -12,6 +12,7 @@ import {AuthProvider} from "../../providers/auth/auth";
 import {MappingProvider} from "../../providers/mapper/mapping";
 import {ItemsProvider} from "../../providers/mapper/items-provider";
 import {attmeConfig} from "../../config/attme.config";
+import {UserData} from "../../providers/data/user-data";
 
 @IonicPage()
 @Component({
@@ -45,6 +46,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
               public itemsSvc: ItemsProvider,
               public  authSvc: AuthProvider,
               public dataSvc: DataProvider,
+              private userData: UserData,
               public events: Events) {
     super();
     //console.log("EventListPage::constructor")
@@ -71,7 +73,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-
+    console.log(this.userData.getSelectedOrganization());
     let self = this;
     self.segment = "current";
     self.weekNumber = 0;

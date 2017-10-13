@@ -1,0 +1,41 @@
+<ion-header>
+
+  <ion-navbar color="hcolor" align-title="center">
+    <ion-buttons left>
+      <button ion-button icon-only menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>My Organizations</ion-title>
+    <ion-buttons right>
+      <button ion-button icon-only (click)="onCreateMember()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
+
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+    <ion-item *ngFor="let o of userOrganizations" (click)="onSelectOrganization(o)">
+     <!--<ion-avatar item-start>-->
+        <!--<ion-text-avatar color="secondary">A</ion-text-avatar>-->
+      <!--</ion-avatar>-->
+      <h2>{{o.name}}</h2>
+      <div item-content>
+        <button
+          ion-button
+          clear
+          small
+          *ngIf="(o.oid==selectedOid)">
+          <ion-icon name="heart-outline"></ion-icon>
+        </button>
+      </div>
+    </ion-item>
+
+  </ion-list>
+
+</ion-content>

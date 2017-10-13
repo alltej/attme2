@@ -11,10 +11,10 @@ import { Camera, CameraOptions } from 'ionic-native';
 import {StorageProvider} from "../../providers/storage/storage";
 import {IMember} from "../../models/member.interface";
 import {ProfileProvider} from "../../providers/profile/profile";
+import {UserData} from "../../providers/data/user-data";
 
 @IonicPage({
-  name: 'member-detail',
-  segment: 'member-detail/:memberKey'
+  segment: ':memberKey'
 })
 @Component({
   selector: 'page-member-detail',
@@ -40,13 +40,14 @@ export class MemberDetailPage extends BaseClass implements OnInit{
               private profileSvc: ProfileProvider,
               private memberInviteSvc: MemberInviteProvider,
               private storageSvc: StorageProvider,
+              private userData: UserData,
               public zone: NgZone) {
     super();
     this.memberKey = this.navParams.get('memberKey');
   }
 
   ngOnInit(): void {
-    //console.log(this.memberKey)
+    console.log(this.memberKey)
     this.loadMemberDetails2();
   }
 
@@ -56,7 +57,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
 
   private loadMemberDetails2(){
     this.userDataLoaded = false;
-    this.memberSvc.getMemberData(this.memberKey).then(snapShot => {
+    this.memberSvc.getMemberData2(this.userData.getSelectedOrganization(),this.memberKey).then(snapShot => {
       let userData: any = snapShot.val();
       // console.log(userData.$key)
       // console.log(userData)
@@ -65,7 +66,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
           firstName: userData.firstName,
           lastName: userData.lastName,
           birthDate: userData.birthDate,
-          uid: userData.memberKey,
+          uid: userData.uid,
           memberKey: userData.memberKey,
           email: userData.email,
           memberId: userData.memberId,
