@@ -32,6 +32,8 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
 
   private membersRx: Observable<any[]>;
   private letter: string;
+  private ooid: string;
+  private aoid: string;
   constructor(
     private navCtrl: NavController,
     private membersSvc: MemberProvider,
@@ -43,7 +45,10 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
     public events: Events) {
     super();
 
+
     this.searchControl = new FormControl();
+    this.ooid = this.userData.getSelectedOrganization();
+    this.aoid = this.userData.getSelectOrgMemberKey();
   }
 
   ngOnInit() {
@@ -132,7 +137,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
 
   onAddToCircle(selectedMember: any){
     //console.log(`onAddToCircle${selectedMember.$key}`);
-    this.userCircleSvc.addToMyCircle(selectedMember.$key);
+    this.userCircleSvc.addToMyCircle(selectedMember.memberKey);
   }
 
   onRemoveFromCircle(selectedMember: any){

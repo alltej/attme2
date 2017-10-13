@@ -3,20 +3,26 @@ import 'rxjs/add/operator/map';
 import {AngularFireDatabase} from "angularfire2/database";
 import {AuthProvider} from "../auth/auth";
 import {ProfileProvider} from "../profile/profile";
+import {DataProvider} from "../data/data";
 
 @Injectable()
 export class UserLikesProvider {
+  //private currentUid: string;
 
   constructor(private af:AngularFireDatabase,
               private authSvc:AuthProvider,
+              private dataSvc:DataProvider,
               private profileSvc:ProfileProvider,
               ) {
+    // if (this.authSvc.getLoggedInUser() != null) {
+    //   this.currentUid = this.authSvc.getLoggedInUser().uid;
+    // }
   }
 
-  addLike(eventKey: string) {
-    let currentUid = this.authSvc.getLoggedInUser().uid;
-    let url = `/userLikes/${currentUid}/${eventKey}`;
-    this.af.object(url).$ref.transaction(currentValue => {
+  addLike(ooid: string, eventKey: string) {
+    //let currentUid = this.authSvc.getLoggedInUser().uid;
+    this.af.object(`/users/${this.authSvc.getLoggedInUser().uid}/likes/${ooid}/${eventKey}`)
+      .$ref.transaction(currentValue => {
       if (currentValue === null) {
         return{on : new Date().toISOString()};
       }
@@ -24,10 +30,12 @@ export class UserLikesProvider {
       .then( result => {
         if (result.committed) {
           let un = "";
-          this.profileSvc.getUserProfile().once('value').then( userProfileValue => {
+          this.profileSvc.usersRef
+            .child(`${this.authSvc.getLoggedInUser().uid}/profile`).once('value').then( userProfileValue => {
             un =  userProfileValue.val().lastName + " " + userProfileValue.val().firstName.charAt(0)
           }).then(sf => {
-            this.af.object(`/events/${eventKey}/likedBy/${currentUid}`).$ref.transaction(currentValue => {
+            this.af.object(`/organizations/${ooid}/events/${eventKey}/likedBy/${this.authSvc.getLoggedInUser().uid}`)
+              .$ref.transaction(currentValue => {
               if (currentValue === null) {
                 return{
                   on : new Date().toISOString(),
@@ -36,7 +44,7 @@ export class UserLikesProvider {
               }
             }).then(data => {
               if (data.committed) {
-                let tagObs = this.af.object(`/events/${eventKey}/likes`);
+                let tagObs = this.af.object(`/organizations/${ooid}/events/${eventKey}/stats/likes`);
                 tagObs.$ref.transaction(tagValue => {
                   return tagValue ? tagValue + 1 : 1;
                 });
@@ -50,18 +58,16 @@ export class UserLikesProvider {
       });
   }
 
-  removeLike(eventKey: string) {
-    let likeCountRef = this.af.object(`/events/${eventKey}/likes`);
+  removeLike(ooid: string, eventKey: string) {
+    let likeCountRef = this.af.object(`/organizations/${ooid}/events/${eventKey}/stats/likes`);
     let likeCount = 0;
     likeCountRef.$ref.transaction(tagValue => {
       likeCount = tagValue ? tagValue - 1 : 0;
       return likeCount;
     }).then(result => {
       if (result.committed) {
-        let currentUid = this.authSvc.getLoggedInUser().uid;
-        this.af.object(`/events/${eventKey}/likedBy/${currentUid}`).remove()
-
-        this.af.object(`/userLikes/${currentUid}/${eventKey}`).remove();
+        this.af.object(`/organizations/${ooid}/events/${eventKey}/likedBy/${this.authSvc.getLoggedInUser().uid}`).remove()
+        this.af.object(`/users/${this.authSvc.getLoggedInUser().uid}/likes/${ooid}/${eventKey}`).remove();
         if (likeCount == 0){
           likeCountRef.remove();
         }
@@ -69,7 +75,7 @@ export class UserLikesProvider {
     });
   }
 
-  isLiked(eventKey: string) {
-    return this.af.object(`/userLikes/${this.authSvc.getLoggedInUser().uid}/${eventKey}`);
+  isLiked(ooid: string, eventKey: string) {
+    return this.af.object(`/users/${this.authSvc.getLoggedInUser().uid}/likes/${ooid}/${eventKey}`);
   }
 }

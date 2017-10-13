@@ -42,7 +42,7 @@
   <ion-list>
     <ion-card *ngFor="let anEvent of iEvents" >
 
-      <ion-item (click)="goToEventDetail(anEvent?.key)">
+      <ion-item (click)="goToEventDetail(anEvent.key)">
         <h2>{{anEvent?.name}}</h2>
         <p>When: {{anEvent?.when}}</p>
         <p>Where: {{anEvent?.where}}</p>

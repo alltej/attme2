@@ -23,7 +23,7 @@ export class UserCircleProvider {
 
   addToMyCircle(memberKey:string){
     const userId = this.authService.getLoggedInUser().uid;
-    let afRef = this.af.object(`/userCircles/${userId}/${memberKey}`)
+    let afRef = this.af.object(`/users/${this.authService.getLoggedInUser().uid}/circles/${this.ooid}/members/${memberKey}`)
     afRef.set(true);
   }
 

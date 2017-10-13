@@ -65,7 +65,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
     });
 
 
-    this.eventSvc.getEventDetail(this.eventId).take(1)
+    this.eventSvc.getEventDetail(this.ooid, this.eventId).take(1)
       .subscribe( (snapshot)=> {
         if (snapshot.val() == null) return null;
         let eventDate = new Date(snapshot.val().when);

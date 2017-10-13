@@ -44,7 +44,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
               //public sqliteSvc: SqliteService,
               public mappingsService: MappingProvider,
               public itemsSvc: ItemsProvider,
-              public  authSvc: AuthProvider,
+              private  authSvc: AuthProvider,
               public dataSvc: DataProvider,
               private userData: UserData,
               public events: Events) {
@@ -62,13 +62,13 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
     });
   }
 
-  onAddLike(eventKey: string){
-    this.userLikeSvc.addLike(eventKey);
+  onAddLike(ooid : string, eventKey: string){
+    this.userLikeSvc.addLike(ooid, eventKey);
     //this.reloadEvents();
   }
 
-  onRemoveLike(eventKey: string){
-    this.userLikeSvc.removeLike(eventKey);
+  onRemoveLike(ooid : string, eventKey: string){
+    this.userLikeSvc.removeLike(ooid, eventKey);
     //this.reloadEvents();
   }
 
@@ -366,7 +366,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   goToEventDetail(eventId){
-
+    console.log(`goToEventDetail::${eventId}`);
       this.navCtrl.push('event-detail', { 'parentPage': this, 'eventId': eventId });
 
     // this.events.subscribe('reloadPage1',() => {

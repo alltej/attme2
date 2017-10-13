@@ -4,6 +4,7 @@ import { EventProvider } from '../../providers/event/event';
 import {UserLikesProvider} from "../../providers/user-likes/user-likes";
 import {BaseClass} from "../BasePage";
 import {FirebaseListObservable} from "angularfire2/database";
+import {UserData} from "../../providers/data/user-data";
 
 @IonicPage({
   name: 'event-detail',
@@ -19,28 +20,33 @@ export class EventDetailPage extends BaseClass implements OnInit{
   public isLiked: boolean = false;
   private likedBy: any;
   likedByList: FirebaseListObservable<any[]>;
+  private ooid: string;
+  private aoid: string;
 
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
               public navParams: NavParams,
               public eventSvc: EventProvider,
               private userLikeSvc: UserLikesProvider,
+              private userData: UserData,
               public events: Events) {
     super();
     this.eventId = this.navParams.get('eventId');
+    this.ooid = this.userData.getSelectedOrganization();
+    this.aoid = this.userData.getSelectOrgMemberKey();
   }
 
   ngOnInit(): void {
     //console.log(`EventDetailPage::ngOnInit::${this.eventId}`)
-    this.eventSvc.getEventDetail(this.eventId)
+    this.eventSvc.getEventDetail(this.ooid, this.eventId)
       .subscribe((item: any)=>{
         this.selEvent = item.val();
         this.selEvent.eventId = this.eventId;
       });
 
-    this.likedByList = this.eventSvc.getEventLikes(this.eventId);
+    this.likedByList = this.eventSvc.getEventLikes(this.ooid, this.eventId);
     //console.log(item)
-    this.userLikeSvc.isLiked(this.eventId)
+    this.userLikeSvc.isLiked(this.ooid, this.eventId)
       .subscribe(ul =>{
         if (ul.on != null) {
           //console.log('likeIt:true')
@@ -49,16 +55,17 @@ export class EventDetailPage extends BaseClass implements OnInit{
       });
   }
 
-  onAddLike(eventId: string){
-    this.userLikeSvc.addLike(eventId);
-    //console.log(`AA::onAddLike::publish`)
+  onAddLike(eventKey: string){
+    //console.log(`AA::onAddLike::${eventKey}`)
+    this.userLikeSvc.addLike(this.ooid, eventKey);
+
     this.events.publish('reloadPage1', true);
     //console.log(`BB::onAddLike::publish`)
   }
 
-  onRemoveLike(eventId: string){
+  onRemoveLike(eventKey: string){
     //console.log(eventId)
-    this.userLikeSvc.removeLike(eventId);
+    this.userLikeSvc.removeLike(this.ooid, eventKey);
     this.isLiked = false;
   }
 

@@ -44,8 +44,8 @@ export class EventProvider implements OnDestroy {
     });
   }
 
-  getEventLikes(eventId: string) {
-    return this.af.list(`/events/${eventId}/likedBy`,{
+  getEventLikes(ooid: string, eventId: string) {
+    return this.af.list(`/organizations/${ooid}/events/${eventId}/likedBy`,{
       query: {
         orderByKey: true,
         limitToLast: 20
@@ -53,8 +53,8 @@ export class EventProvider implements OnDestroy {
     });
   }
 
-  getEventDetail(eventId:string) {
-    return this.af.object(`/events/${eventId}`, { preserveSnapshot: true });
+  getEventDetail(ooid: string, eventId:string) {
+    return this.af.object(`/organizations/${ooid}/events/${eventId}`, { preserveSnapshot: true });
   }
 
 

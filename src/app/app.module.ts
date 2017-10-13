@@ -45,6 +45,7 @@ declare var window;
 
 export class MyErrorHandler implements ErrorHandler {
   handleError(err: any): void {
+    console.log(err)
     window.Ionic.handleNewError(err);
   }
 }

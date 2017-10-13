@@ -129,7 +129,7 @@ export class ProfilePage implements OnInit
           text: 'Save',
           handler: data => {
             //console.log(data)
-            this.profileSvc.updateName(data.firstName, data.lastName);
+            this.profileSvc.updateName(this.authSvc.getLoggedInUser().uid, data.firstName, data.lastName);
             //TODO: Need to update member data on update of user profile
             //this.memberSvc.updateName(this.userProfile.memberKey, data.firstName, data.lastName);
             this.reload();
@@ -160,7 +160,7 @@ export class ProfilePage implements OnInit
           handler: data => {
             //let newEmail = data.newEmail;
 
-            this.profileSvc.updateDOB(data.birthDate).then( () =>{
+            this.profileSvc.updateDOB(this.authSvc.getLoggedInUser().uid, data.birthDate).then( () =>{
             }).catch(error => {
               //console.log('ERROR: '+error.message);
             });

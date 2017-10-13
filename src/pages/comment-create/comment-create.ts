@@ -6,6 +6,7 @@ import {AuthProvider} from "../../providers/auth/auth";
 import {IUser} from "../../models/user.interface";
 import {IComment} from "../../models/comment.interface";
 import {ProfileProvider} from "../../providers/profile/profile";
+import {DataProvider} from "../../providers/data/data";
 
 
 @IonicPage({
@@ -30,6 +31,7 @@ export class CommentCreatePage implements OnInit{
               public fb: FormBuilder,
               public authService: AuthProvider,
               public profileSvc: ProfileProvider,
+              private dataSvc: DataProvider,
               public commentsSvc: EventCommentsProvider) {
   }
 
@@ -65,8 +67,9 @@ export class CommentCreatePage implements OnInit{
 
       let uid = this.authService.getLoggedInUser().uid;
       //console.log(`uid::${uid}`)
-      //const userId = this.authService.getActiveUser().uid;
-      this.profileSvc.getUserProfile().once('value').then(snapshot => {
+
+      const userId = this.authService.getLoggedInUser().uid
+      this.dataSvc.usersRef.child(`${userId}/profile`).once('value').then(snapshot => {
         let username  =  snapshot.val().lastName + " " + snapshot.val().firstName.charAt(0)
         //console.log(`username::${username}`)
 

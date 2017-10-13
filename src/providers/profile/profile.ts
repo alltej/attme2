@@ -4,7 +4,7 @@ import {MemberProvider} from "../member/member";
 
 @Injectable()
 export class ProfileProvider {
-  public userProfile:firebase.database.Reference;
+  //public userProfile:firebase.database.Reference;
   public currentUser:firebase.User;
 
   usersRef: any = firebase.database().ref('users');
@@ -13,7 +13,7 @@ export class ProfileProvider {
     firebase.auth().onAuthStateChanged( user => {
       if (user){
         this.currentUser = user;
-        this.userProfile = firebase.database().ref(`/userProfile/${user.uid}`);
+        //this.userProfile = firebase.database().ref(`/userProfile/${user.uid}`);
       }
     });
   }
@@ -26,34 +26,35 @@ export class ProfileProvider {
     return this.usersRef.child(userUid).once('value');
   }
 
-  getUserProfile(): firebase.database.Reference {
-    return this.userProfile;
-  }
+  // getUserProfile(): firebase.database.Reference {
+  //   return this.usersRef;
+  // }
 
-  updateName(firstName: string, lastName: string): firebase.Promise<void> {
-    return this.userProfile.update({
+  updateName(uid:string, firstName: string, lastName: string): firebase.Promise<void> {
+    return this.usersRef.child(`${uid}/profile`).update({
       firstName: firstName,
       lastName: lastName,
+      name: firstName + " " + lastName
     });
   }
 
-  updateDOB(birthDate: string): firebase.Promise<any> {
+  updateDOB(uid:string, birthDate: string): firebase.Promise<any> {
     //console.log(`profile::updateDOB::${birthDate}`)
-    return this.userProfile.update({
+    return this.usersRef.child(`${uid}/profile`).update({
       birthDate: birthDate,
     });
   }
 
-  updateEmail(newEmail: string, password: string): firebase.Promise<any> {
-    const credential =  firebase.auth.EmailAuthProvider
-      .credential(this.currentUser.email, password);
-
-    return this.currentUser.reauthenticateWithCredential(credential).then( user => {
-      this.currentUser.updateEmail(newEmail).then( user => {
-        this.userProfile.update({ email: newEmail });
-      });
-    });
-  }
+  // updateEmail(newEmail: string, password: string): firebase.Promise<any> {
+  //   const credential =  firebase.auth.EmailAuthProvider
+  //     .credential(this.currentUser.email, password);
+  //
+  //   return this.currentUser.reauthenticateWithCredential(credential).then( user => {
+  //     this.currentUser.updateEmail(newEmail).then( user => {
+  //       this.userProfile.update({ email: newEmail });
+  //     });
+  //   });
+  // }
 
   updatePassword(newPassword: string, oldPassword: string): firebase.Promise<any> {
     const credential =  firebase.auth.EmailAuthProvider
