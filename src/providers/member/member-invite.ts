@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {firebaseConfig} from "../../config/firebase.config";
 import * as firebase from 'firebase';
+import {IMember} from "../../models/member.interface";
 
 @Injectable()
 export class MemberInviteProvider {
@@ -11,19 +12,23 @@ export class MemberInviteProvider {
   constructor() {
     let secondaryApp = firebase.initializeApp(firebaseConfig, "Secondary");
     this.fireAuth = secondaryApp.auth();
-    this.userProfileRef = secondaryApp.database().ref('/userProfile');
+    this.userProfileRef = secondaryApp.database().ref('/users');
 
   }
 
-  createUserInvite(memberKey:string,lastName:string, firstName:string, email:string){
-    this.fireAuth.createUserWithEmailAndPassword(email, 'Welcome.1')
+  createUserInvite(ooid:string, orgName: string, member: IMember){
+    this.fireAuth.createUserWithEmailAndPassword(member.email, 'Welcome.1')
       .then(
         (newUser) => {
-          this.userProfileRef.child(newUser.uid).set({
-            memberKey:memberKey,
-            lastName:lastName,
-            firstName:firstName,
-            email: email
+          this.userProfileRef.child(newUser.uid)
+            .child("profile").set({
+              lastName:member.lastName,
+              firstName:member.firstName,
+              email: member.email,
+              organizations : {
+                  ooid : {name: orgName, role: 1}
+              },
+              verified: false
           });
 
           //let user:any = firebase.auth().currentUser;

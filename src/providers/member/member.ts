@@ -4,143 +4,58 @@ import {AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable} f
 import {AuthProvider} from "../auth/auth";
 import firebase from 'firebase';
 import {INewMember} from "../../models/member.interface";
+import {DataProvider} from "../data/data";
 
 @Injectable()
 export class MemberProvider {
 
-  membersRef: any = firebase.database().ref('members');
-  orgRef: any = firebase.database().ref('organizations');
   public memberKey: string;
 
   constructor(private af:AngularFireDatabase,
-              private authService: AuthProvider,) {
+              private authService: AuthProvider,
+              private dataSvc: DataProvider) {
   }
 
-  getMembers(): FirebaseListObservable<any[]> {
-    return this.af.list('/members',{
+  getMembersForEvent(ooid: string, eventKey: string): FirebaseListObservable<any[]> {
+    return  this.af.list(`/organizations/${ooid}/members`,{
       query: {
         orderByChild: 'firstName'
       }
-    });
-  }
-
-  getMembers2(ooid: string): FirebaseListObservable<any[]> {
-    return this.af.list(`/organizations/${ooid}/members`,{
-      query: {
-        orderByChild: 'firstName'
-      }
-    });
-  }
-
-  getMembersForEvent(eventKey: string): FirebaseListObservable<any[]> {
-    return  this.af.list('/members',{
-      query: {
-        orderByChild: 'firstName'
-      }
-    });
-  }
-
-  updateMember($key: string, firstName, lastName, memberId,email) {
-    let data = this.getMemberJson(firstName, lastName, memberId, email);
-    let memberRef = this.af.object(`/members/${$key}`);
-    memberRef.update(data)
-    //.then(_ => console.log('update!'))
-    ;
-  }
-
-  addMember(firstName, lastName, memberId, email) {
-    let data = this.getMemberJson(firstName, lastName, memberId, email);
-
-    let membersRef = this.af.list(`/members`);
-    membersRef.push(data);
-  }
-
-  createMember(firstName: string, lastName: string, memberId: string, email: string): firebase.Promise<any> {
-    //console.log(description)
-    return this.af.list(`/members`).push(
-      {
-      firstName: firstName,
-      lastName: lastName,
-      memberId: memberId,
-      email: email
     });
   }
 
   createMember3(ooid: string, newMember: INewMember): firebase.Promise<any> {
     try {
-      this.orgRef.child(`${ooid}/members`).child(newMember.memberKey).set(newMember);
+      this.dataSvc.getOrgsRef().child(`${ooid}/members`).child(newMember.memberKey).set(newMember);
 
-      return this.orgRef.child(`${ooid}/stats/members`).once('value')
+      return this.dataSvc.getOrgsRef().child(`${ooid}/stats/members`).once('value')
         .then((snapshot) => {
           let count = snapshot == null ? 0 : snapshot.val();
-          this.orgRef.child(`${ooid}/stats/members`).set(count + 1);
+          this.dataSvc.getOrgsRef().child(`${ooid}/stats/members`).set(count + 1);
         });
     } catch (e) {
       //console.log(e)
     }
   }
 
-  createMember2(ooid: string , firstName: string, lastName: string, memberId: string, email: string) {
-    console.log(`createMember2`)
-    this.af.object(`/organizations/${ooid}/members`).$ref.transaction(currentValue => {
-      if (currentValue === null) {
-        return{
-          firstName: firstName,
-          lastName: lastName,
-          memberId: memberId,
-          email: email
-        };
-      }
-    })
-    .then( result => {
-      if (result.committed) {
-        this.af.object(`/organizations/${ooid}/stats/members`).$ref.transaction(tagValue => {
-          return tagValue ? tagValue + 1 : 1;
-        });
-      }
-    })
-    .catch( error => {
-      // handle error
+  updateName(ooid: string, memberKey: string, firstName, lastName): firebase.Promise<void> {
+    return this.dataSvc.getOrgsRef()
+      .child(ooid)
+      .child(`/members/${memberKey}`)
+      .update({
+        firstName: firstName,
+        lastName: lastName,
     });
   }
 
-  updateName(memberKey: string, firstName, lastName): firebase.Promise<void> {
-    return this.af.object(`/members/${memberKey}`).update({
-      firstName: firstName,
-      lastName: lastName,
-    });
+  updatePhotoUrl(ooid: string, memberKey: string, photoUrl:string): firebase.Promise<void> {
+    return this.dataSvc.getOrgsRef()
+      .child(ooid)
+      .child(`/members/${memberKey}`)
+      .update({
+        photoUrl: photoUrl
+      });
   }
-
-  updatePhotoUrl(memberKey: string, photoUrl:string): firebase.Promise<void> {
-    return this.af.object(`/members/${memberKey}`).update({
-      photoUrl: photoUrl
-    });
-  }
-
-  private getMemberJson(firstName, lastName, memberId, email) {
-    return {
-      firstName: firstName,
-      lastName: lastName,
-      memberId: memberId,
-      email: email
-    };
-  }
-
-  findMemberId(memberKey: string) {
-    return this.af.list(`/userProfile/`, {
-      query: {
-        orderByChild: 'memberKey',
-        equalTo: memberKey,
-        limitToFirst: 1
-      }
-    });
-  }
-
-
-
-  // getMember(memberKey: string):FirebaseObjectObservable<any> {
-  //   return this.af.object(`/members/${memberKey}`);
-  // }
 
   confirmMember(memberKey: string) {
     //console.log('confirm:' + memberKey);
@@ -173,61 +88,35 @@ export class MemberProvider {
       });
   }
 
-  isVerified() {
-
-    const userKey = this.authService.getLoggedInUser().uid;
-    let url = `/userMember/${userKey}`;
-    let exists:boolean=false;
-    const userMemberRef = this.af.object(url, { preserveSnapshot: true });
-
-    userMemberRef.subscribe(data => {
-      if(data.val()==null) {
-        exists = false;
-      } else {
-        exists = true;
-      }
-    });
-    return exists;
+  updateEmail(ooid: string, memberKey: string, newEmail: string): firebase.Promise<void> {
+    return this.dataSvc.getOrgsRef()
+      .child(ooid)
+      .child(`/members/${memberKey}`)
+      .update({
+        email: newEmail
+      });
   }
 
-  public getMemberKeyByUserKey() {
-    const userKey = this.authService.getLoggedInUser().uid;
-    let url = `/userMember/${userKey}`;
-    return this.af.object(url, { preserveSnapshot: true });
+  updateMemberId(ooid: string, memberKey: string, memberId: string): firebase.Promise<void> {
+    return this.dataSvc.getOrgsRef()
+      .child(ooid)
+      .child(`/members/${memberKey}`)
+      .update({
+        memberId: memberId
+      });
   }
 
-  updateEmail(memberKey: string, newEmail: string) {
-    //console.log(`U THERE?${memberKey}, ${newEmail}`);
-    let url = `/members/${memberKey}`;
-    return this.af.object(url).update({
-      email: newEmail
-    });
-  }
-
-  updateMemberId(memberKey: string, memberId: string): firebase.Promise<void> {
-    //console.log(`U THERE?${memberKey}, ${memberId}`);
-    let url = `/members/${memberKey}`;
-    return this.af.object(url).update({
-      memberId: memberId
-    });
-  }
-
-  updateDOB(memberKey: string, birthDate: Date) {
-    return this.af.object(`/members/${memberKey}`).update({
-      birthDate: birthDate
-    });
-  }
-
-  // getUserProfileData(userUid: string) {
-  //   return this.usersRef.child(userUid).once('value');
-  // }
-
-  getMemberData(memberKey: any) {
-    return this.membersRef.child(memberKey).once('value');
+  updateDOB(ooid: string, memberKey: string, birthDate: Date): firebase.Promise<void> {
+    return this.dataSvc.getOrgsRef()
+      .child(ooid)
+      .child(`/members/${memberKey}`)
+      .update({
+        birthDate: birthDate
+      });
   }
 
   getMemberData2(ooid: string, memberKey: string) {
     console.log(`getMemberData2::ooid=${memberKey}::memberKey=${memberKey}`);
-    return this.orgRef.child(ooid).child(`members/${memberKey}`).once('value');
+    return this.dataSvc.getOrgsRef().child(ooid).child(`members/${memberKey}`).once('value');
   }
 }

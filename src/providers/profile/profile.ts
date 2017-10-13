@@ -7,7 +7,7 @@ export class ProfileProvider {
   public userProfile:firebase.database.Reference;
   public currentUser:firebase.User;
 
-  usersRef: any = firebase.database().ref('userProfile');
+  usersRef: any = firebase.database().ref('users');
 
   constructor(private memberSvc: MemberProvider) {
     firebase.auth().onAuthStateChanged( user => {
@@ -68,30 +68,30 @@ export class ProfileProvider {
     });
   }
 
-  updateimage(imageUrl) {
-    var promise = new Promise((resolve, reject) => {
-      this.currentUser.updateProfile({
-        displayName: this.currentUser.displayName,
-        photoURL: imageUrl
-      }).then(() => {
-        this.userProfile.update({
-          displayName: this.currentUser.displayName,
-          photoURL: imageUrl,
-          //uid: this.currentUser.uid
-        }).then(() => {
-          resolve({ success: true });
-        }).catch((err) => {
-          reject(err);
-        })
-      }).then( () =>{
-          this.memberSvc.updatePhotoUrl(this.currentUser.uid, imageUrl);
-        })
-        .catch((err) => {
-        reject(err);
-      })
-    })
-    return promise;
-  }
+  // updateimage(imageUrl) {
+  //   var promise = new Promise((resolve, reject) => {
+  //     this.currentUser.updateProfile({
+  //       displayName: this.currentUser.displayName,
+  //       photoURL: imageUrl
+  //     }).then(() => {
+  //       this.userProfile.update({
+  //         displayName: this.currentUser.displayName,
+  //         photoURL: imageUrl,
+  //         //uid: this.currentUser.uid
+  //       }).then(() => {
+  //         resolve({ success: true });
+  //       }).catch((err) => {
+  //         reject(err);
+  //       })
+  //     }).then( () =>{
+  //         this.memberSvc.updatePhotoUrl(this.currentUser.uid, imageUrl);
+  //       })
+  //       .catch((err) => {
+  //       reject(err);
+  //     })
+  //   })
+  //   return promise;
+  // }
 
 
   // uploadImage(image: string): any {
@@ -126,7 +126,7 @@ export class ProfileProvider {
     });
   }
 
-  findMemberId2(memberKey: string) {
+  findMemberId2(ooid: string, memberKey: string) {
     //console.log(`findMemberId2::${memberKey}`)
     return this.usersRef.orderByChild('memberKey').equalTo(memberKey).limitToFirst(1);
   }

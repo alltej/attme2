@@ -29,6 +29,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
   avatar: string = "assets/images/profile-default.png";
   userDataLoaded: boolean = false;
   member :IMember;
+  private ooid: string;
 
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
@@ -47,34 +48,37 @@ export class MemberDetailPage extends BaseClass implements OnInit{
   }
 
   ngOnInit(): void {
-    console.log(this.memberKey)
+    //console.log(this.memberKey)
+    this.ooid = this.userData.getSelectedOrganization();
     this.loadMemberDetails2();
   }
 
   getUserImage() {
-    return this.storageSvc.getStorageRef().child('members/' + this.memberKey + '/profile.png').getDownloadURL();
+    return this.storageSvc.getStorageRef()
+      .child(this.ooid)
+      .child('members/' + this.memberKey + '/profile.png').getDownloadURL();
   }
 
   private loadMemberDetails2(){
     this.userDataLoaded = false;
-    this.memberSvc.getMemberData2(this.userData.getSelectedOrganization(),this.memberKey).then(snapShot => {
-      let userData: any = snapShot.val();
-      // console.log(userData.$key)
-      // console.log(userData)
-      this.getUserImage().then(url => {
-        this.member = {
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          birthDate: userData.birthDate,
-          uid: userData.uid,
-          memberKey: userData.memberKey,
-          email: userData.email,
-          memberId: userData.memberId,
-          photoUrl: url,
-          isMyCircle: false
-        };
+    this.memberSvc.getMemberData2(this.ooid,this.memberKey)
+      .then(snapShot => {
+        let userData: any = snapShot.val();
+        // console.log(userData)
+        this.getUserImage().then(url => {
+          this.member = {
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            birthDate: userData.birthDate,
+            uid: userData.uid,
+            memberKey: userData.memberKey,
+            email: userData.email,
+            memberId: userData.memberId,
+            photoUrl: url,
+            isMyCircle: false,
+          };
 
-        this.userDataLoaded = true;
+          this.userDataLoaded = true;
 
       }).catch(error => {
         //console.log(error.code);
@@ -94,21 +98,26 @@ export class MemberDetailPage extends BaseClass implements OnInit{
         this.userDataLoaded = true;
       });
 
+      if (this.member != null) {
+        this.enableEditEmail = this.member.uid != null || (this.member.email == null);
+      }
+        this.isUserProfileExists = this.member.uid != null;
       //console.log("aaaa11")
-      this.profileSvc.findMemberId2(this.memberKey).on('value', (snapshot) =>
-        {
-          let data = snapshot.val();
-          //console.log(data)
-          if (data){
-            //console.log("bbb22")
-            this.isUserProfileExists = true;
-          }
-          //console.log(`this.member::${this.member}`)
-          if (this.member != null) {
-            this.enableEditEmail = !this.isUserProfileExists || (this.member.email == null);
-          }
-          //this.enableEditEmail = !this.isUserProfileExists || (this.member.email == null);
-        })
+      // this.profileSvc.findMemberId2(this.ooid, this.memberKey)
+      //   .on('value', (snapshot) =>
+      //   {
+      //     let data = snapshot.val();
+      //     //console.log(data)
+      //     if (data){
+      //       //console.log("bbb22")
+      //       this.isUserProfileExists = true;
+      //     }
+      //     //console.log(`this.member::${this.member}`)
+      //     if (this.member != null) {
+      //       this.enableEditEmail = !this.isUserProfileExists || (this.member.email == null);
+      //     }
+      //     //this.enableEditEmail = !this.isUserProfileExists || (this.member.email == null);
+      //   })
 
     })
 
@@ -171,7 +180,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
         {
           text: 'Save',
           handler: data => {
-            this.memberSvc.updateName(this.memberKey, data.firstName, data.lastName)
+            this.memberSvc.updateName(this.ooid, this.memberKey, data.firstName, data.lastName)
               .then( () =>{
               this.reload()
             }).catch(error => {
@@ -201,7 +210,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
           text: 'Save',
           handler: data => {
 
-            this.memberSvc.updateEmail(this.memberKey, data.newEmail)
+            this.memberSvc.updateEmail(this.ooid, this.memberKey, data.newEmail)
               .then( () =>{
                 this.reload()
             }).catch(error => {
@@ -234,7 +243,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
           handler: data => {
             //let newEmail = data.newEmail;
 
-            this.memberSvc.updateDOB(this.memberKey, data.birthDate)
+            this.memberSvc.updateDOB(this.ooid, this.memberKey, data.birthDate)
               .then( () =>{
                 this.reload()
               }).catch(error => {
@@ -263,7 +272,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
         {
           text: 'Save',
           handler: data => {
-            this.memberSvc.updateMemberId(this.memberKey, data.newMemberId)
+            this.memberSvc.updateMemberId(this.ooid, this.memberKey, data.newMemberId)
               .then( () =>{
                 this.reload()
               }).catch(error => {
@@ -277,34 +286,9 @@ export class MemberDetailPage extends BaseClass implements OnInit{
   }
 
   onCreateInvite() {
-    this.memberInviteSvc.createUserInvite(this.memberKey, this.member.lastName, this.member.firstName, this.member.email);
-
+    this.memberInviteSvc
+      .createUserInvite(this.ooid, "TODO Org", this.member);
   }
-
-  editimage() {
-    let statusalert = this.alertCtrl.create({
-      buttons: ['OK']
-    });
-    this.profileImageSvc.uploadMemberImage(this.memberKey)
-      .then((url: any) => {
-      this.memberSvc.updatePhotoUrl(this.memberKey, url)
-        .then((res: any) => {
-        if (res.success) {
-          statusalert.setTitle('Updated');
-          statusalert.setSubTitle('Your profile pic has been changed successfully!!');
-          statusalert.present();
-          this.zone.run(() => {
-            this.avatar = url;
-          })
-        }
-      }).catch((err) => {
-          statusalert.setTitle('Failed');
-          statusalert.setSubTitle('Your profile pic was not changed');
-          statusalert.present();
-        })
-    })
-  }
-
 
   openImageOptions() {
 
@@ -390,7 +374,9 @@ export class MemberDetailPage extends BaseClass implements OnInit{
       cacheControl: 'no-cache',
     };
 
-    let uploadTask = this.storageSvc.getStorageRef().child('members/' + this.memberKey + '/profile.png').put(file, metadata);
+    let uploadTask = this.storageSvc.getStorageRef()
+      .child(this.ooid)
+      .child('members/' + this.memberKey + '/profile.png').put(file, metadata);
 
     // Listen for state changes, errors, and completion of the upload.
     uploadTask.on('state_changed',
@@ -417,7 +403,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
         loader.dismiss().then(() => {
           // Upload completed successfully, now we can get the download URL
           let downloadURL = uploadTask.snapshot.downloadURL;
-          this.memberSvc.updatePhotoUrl(this.memberKey, downloadURL)
+          this.memberSvc.updatePhotoUrl(this.ooid, this.memberKey, downloadURL)
           this.reload();
         });
       });

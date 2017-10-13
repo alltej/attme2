@@ -8,6 +8,7 @@ import {StorageProvider} from "../../providers/storage/storage";
 import {IUser} from "../../models/user.interface";
 import {IUserProfile} from "../../models/user-profile.interface";
 import { Camera, CameraOptions } from 'ionic-native';
+import {UserData} from "../../providers/data/user-data";
 
 @IonicPage({
   name: 'profile'
@@ -26,6 +27,8 @@ export class ProfilePage implements OnInit
   firebaseAccount: any = {};
   avatar: string = "assets/images/profile-default.png";
   displayName: string;
+  private ooid: string;
+  private aoMemberKey: string;
 
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
@@ -36,9 +39,12 @@ export class ProfilePage implements OnInit
               public authSvc: AuthProvider,
               public memberSvc: MemberProvider,
               public storageSvc: StorageProvider,
+              private userData: UserData,
               public zone: NgZone,) {}
 
   ngOnInit(): void {
+    this.ooid = this.userData.getSelectedOrganization();
+    this.aoMemberKey = this.userData.getSelectOrgMemberKey();
     this.loadUserProfile();
   }
 
@@ -53,7 +59,6 @@ export class ProfilePage implements OnInit
             firstName: userData.firstName,
             lastName: userData.lastName,
             birthDate: userData.birthDate,
-            memberKey: userData.memberKey,
             image: url,
           };
           //this.birthDate = userData.birthDate;
@@ -71,7 +76,6 @@ export class ProfilePage implements OnInit
             firstName: userData.firstName,
             lastName: userData.lastName,
             birthDate: userData.birthDate,
-            memberKey: userData.memberKey,
             image: 'assets/images/profile.png',
 
           };
@@ -126,7 +130,8 @@ export class ProfilePage implements OnInit
           handler: data => {
             //console.log(data)
             this.profileSvc.updateName(data.firstName, data.lastName);
-            this.memberSvc.updateName(this.userProfile.memberKey, data.firstName, data.lastName);
+            //TODO: Need to update member data on update of user profile
+            //this.memberSvc.updateName(this.userProfile.memberKey, data.firstName, data.lastName);
             this.reload();
           }
         }
@@ -280,7 +285,7 @@ export class ProfilePage implements OnInit
 
           this.profileSvc.setUserImage(uid,downloadURL)
             .then( () => {
-              this.memberSvc.updatePhotoUrl(this.userProfile.memberKey, downloadURL)
+              this.memberSvc.updatePhotoUrl(this.ooid, this.aoMemberKey, downloadURL)
             }).catch( error => {
               console.log(error)
           })
@@ -341,31 +346,31 @@ export class ProfilePage implements OnInit
     this.loadUserProfile();
   }
 
-  editimage() {
-    let statusalert = this.alertCtrl.create({
-      buttons: ['okay']
-    });
-    this.profileImageSvc.uploadimage().then((url: any) => {
-      this.profileSvc.updateimage(url).then((res: any) => {
-        if (res.success) {
-          statusalert.setTitle('Updated');
-          statusalert.setSubTitle('Your profile pic has been changed successfully!!');
-          statusalert.present();
-          this.zone.run(() => {
-            this.avatar = url;
-          })
-        }
-      }).then( () =>{
-        //console.log(`ProfilePage::${this.userProfile.memberKey}`)
-        this.memberSvc.updatePhotoUrl(this.userProfile.memberKey, this.avatar)
-      })
-        .catch((err) => {
-          statusalert.setTitle('Failed');
-          statusalert.setSubTitle('Your profile pic was not changed');
-          statusalert.present();
-        })
-    })
-  }
+  // editimage() {
+  //   let statusalert = this.alertCtrl.create({
+  //     buttons: ['okay']
+  //   });
+  //   this.profileImageSvc.uploadimage().then((url: any) => {
+  //     this.profileSvc.updateimage(url).then((res: any) => {
+  //       if (res.success) {
+  //         statusalert.setTitle('Updated');
+  //         statusalert.setSubTitle('Your profile pic has been changed successfully!!');
+  //         statusalert.present();
+  //         this.zone.run(() => {
+  //           this.avatar = url;
+  //         })
+  //       }
+  //     }).then( () =>{
+  //       //console.log(`ProfilePage::${this.userProfile.memberKey}`)
+  //       this.memberSvc.updatePhotoUrl(this.ooid, this.aoMemberKey, this.avatar)
+  //     })
+  //       .catch((err) => {
+  //         statusalert.setTitle('Failed');
+  //         statusalert.setSubTitle('Your profile pic was not changed');
+  //         statusalert.present();
+  //       })
+  //   })
+  // }
 
 
 }

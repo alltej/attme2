@@ -22,8 +22,15 @@ export class UserData {
   };
 
   getSelectedOrganization(): string {
-    return "-KwCMJMRwy57wGWfVfry";
-    //return this._selectedOrganization;
+    if (this._selectedOrganization == null) {
+      return "-KwCMJMRwy57wGWfVfry";
+    }
+    return this._selectedOrganization;
+  };
+
+  //TODO: Programmatically Update the MemberKey of the Current Organization
+  getSelectOrgMemberKey(): string {
+    return "-KwLvxN26_mAzB5NMLpM";
   };
 
   // //public userOrganizations: Array<IOrganization> = [];

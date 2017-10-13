@@ -261,7 +261,9 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
       this.whenStartFilter = new Date(currentDate).toISOString();
       this.whenEndFilter = new Date(futureDateMax).toISOString();
 
-      this.dataSvc.getEventsRef()
+      this.dataSvc.getOrgsRef()
+        .child(self.userData.getSelectedOrganization())
+        .child('events')
         .orderByChild('when')
         .startAt(this.whenStartFilter)
         .endAt(this.whenEndFilter)

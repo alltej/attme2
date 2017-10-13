@@ -92,38 +92,38 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
     });
   }
 
-  public loadMembers() {
-    this.loading = true;
-    this.membersRx  =
-      this.membersSvc.getMembers2(this.userData.getSelectedOrganization())
-        .takeUntil(this.componentDestroyed$);
-
-    if (!(this.queryText == null || this.queryText == '')){
-      this.membersRx = this.membersRx.map((members) =>
-        members.filter(member => member.lastName.toLowerCase().includes(this.queryText.toLowerCase()) || member.firstName.toLowerCase().includes(this.queryText.toLowerCase())))
-    }
-
-    this.membersRx.map((members) => {
-        return members.map(member => {
-          if (member.photoUrl == null) {
-            //member.photoUrl = "assets/images/profile-default.png" //"assets/img/avatar-luke.png"
-          }
-          //console.log(member.photoUrl);
-          this.userCircleSvc.isMyCircle(member.$key)
-            .takeUntil(this.componentDestroyed$)
-            .map((ul) => {
-              return ul;
-            })
-            .subscribe(data => {
-              member.isMyCircle = data.$value ? true : false;
-            });
-          return member;
-        })
-      })
-      .subscribe((items: any[]) => {
-        this.members = items;
-      });
-  }
+  // public loadMembers() {
+  //   this.loading = true;
+  //   this.membersRx  =
+  //     this.membersSvc.getMembers2(this.userData.getSelectedOrganization())
+  //       .takeUntil(this.componentDestroyed$);
+  //
+  //   if (!(this.queryText == null || this.queryText == '')){
+  //     this.membersRx = this.membersRx.map((members) =>
+  //       members.filter(member => member.lastName.toLowerCase().includes(this.queryText.toLowerCase()) || member.firstName.toLowerCase().includes(this.queryText.toLowerCase())))
+  //   }
+  //
+  //   this.membersRx.map((members) => {
+  //       return members.map(member => {
+  //         if (member.photoUrl == null) {
+  //           //member.photoUrl = "assets/images/profile-default.png" //"assets/img/avatar-luke.png"
+  //         }
+  //         //console.log(member.photoUrl);
+  //         this.userCircleSvc.isMyCircle(member.$key)
+  //           .takeUntil(this.componentDestroyed$)
+  //           .map((ul) => {
+  //             return ul;
+  //           })
+  //           .subscribe(data => {
+  //             member.isMyCircle = data.$value ? true : false;
+  //           });
+  //         return member;
+  //       })
+  //     })
+  //     .subscribe((items: any[]) => {
+  //       this.members = items;
+  //     });
+  // }
 
   onLoadMember(selectedMember:any){
     console.log(selectedMember);
@@ -169,6 +169,6 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
 
   onSearchInput(){
     let self = this;
-    self.loadMembers();
+    self.loadMembers2();
   }
 }

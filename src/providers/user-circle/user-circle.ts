@@ -3,6 +3,7 @@ import {Injectable} from "@angular/core";
 import {AngularFireDatabase} from 'angularfire2/database';
 import {AuthProvider} from "../auth/auth";
 import {Subscription} from "rxjs/Subscription";
+import {UserData} from "../data/user-data";
 
 
 @Injectable()
@@ -10,9 +11,14 @@ export class UserCircleProvider {
 
   userId:string;
   public circlesSub: Subscription;
+  private ooid: string;
+  private aoid: string;
   constructor(private af:AngularFireDatabase,
-              private authService:AuthProvider) {
+              private authService:AuthProvider,
+              private userData: UserData) {
     this.userId = this.authService.getLoggedInUser().uid;
+    this.ooid = this.userData.getSelectedOrganization();
+    this.aoid = this.userData.getSelectOrgMemberKey();
   }
 
   addToMyCircle(memberKey:string){
@@ -24,7 +30,7 @@ export class UserCircleProvider {
   getMyCircles1(){
     let circleKeys = [];
     this.circlesSub = this.af
-      .list(`/userCircles/${this.authService.getLoggedInUser().uid}`, { preserveSnapshot: true})
+      .list(`/users/${this.authService.getLoggedInUser().uid}/circles/${this.ooid}/members`, { preserveSnapshot: true})
       .take(1)
       .subscribe(itemKeys=>{
         itemKeys.forEach(itemKey => {

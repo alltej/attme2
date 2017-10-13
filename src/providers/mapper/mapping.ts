@@ -79,7 +79,7 @@ export class MappingProvider {
         where: anEvent.where,
         likes: anEvent.likes,
         comments: anEvent.comments,
-        attendeesCount: anEvent.attendeesCount,
+        attendees: anEvent.attendeesCount,
         isLiked: false //TODO
       });
     });
@@ -97,7 +97,7 @@ export class MappingProvider {
       where: snapshot.where,
       likes: snapshot.likes,
       comments: snapshot.comments,
-      attendeesCount: snapshot.attendeesCount,
+      attendees: snapshot.attendees,
       isLiked: false //TODO
     };
 

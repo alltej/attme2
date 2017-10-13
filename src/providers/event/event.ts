@@ -2,6 +2,8 @@ import {Injectable, OnDestroy} from '@angular/core';
 import firebase from 'firebase';
 import {AngularFireDatabase, FirebaseListObservable} from "angularfire2/database";
 import {attmeConfig} from "../../config/attme.config";
+import {IEvent} from "../../models/event.interface";
+import {DataProvider} from "../data/data";
 
 @Injectable()
 export class EventProvider implements OnDestroy {
@@ -12,7 +14,8 @@ export class EventProvider implements OnDestroy {
   private startAtFilter: string;
   private endAtFilter: string;
 
-  constructor(private af:AngularFireDatabase) {
+  constructor(private af:AngularFireDatabase,
+              private dataSvc: DataProvider) {
   }
 
   getRecentEvents(): FirebaseListObservable<any[]> {
@@ -91,4 +94,32 @@ export class EventProvider implements OnDestroy {
       description: newDescription
     });
   }
+
+  createEvent2(ooid: string, newEvent: IEvent): firebase.Promise<any> {
+      try {
+        this.dataSvc.getOrgsRef().child(`${ooid}/events`).child(newEvent.key).set(newEvent);
+
+        return this.dataSvc.getOrgsRef().child(`${ooid}/stats/events`).once('value')
+          .then((snapshot) => {
+            let count = snapshot == null ? 0 : snapshot.val();
+            this.dataSvc.getOrgsRef().child(`${ooid}/stats/events`).set(count + 1);
+          });
+      } catch (e) {
+        //console.log(e)
+      }
+  }
+
+  // createMember3(ooid: string, newMember: INewMember): firebase.Promise<any> {
+  //   try {
+  //     this.orgRef.child(`${ooid}/members`).child(newMember.memberKey).set(newMember);
+  //
+  //     return this.orgRef.child(`${ooid}/stats/members`).once('value')
+  //       .then((snapshot) => {
+  //         let count = snapshot == null ? 0 : snapshot.val();
+  //         this.orgRef.child(`${ooid}/stats/members`).set(count + 1);
+  //       });
+  //   } catch (e) {
+  //     //console.log(e)
+  //   }
+  // }
 }

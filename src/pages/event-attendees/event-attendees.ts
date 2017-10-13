@@ -9,6 +9,7 @@ import {AttendanceProvider} from "../../providers/event/attendance";
 import {BaseClass} from "../BasePage";
 import {EventProvider} from "../../providers/event/event";
 import {attmeConfig} from "../../config/attme.config";
+import {UserData} from "../../providers/data/user-data";
 
 @IonicPage({
   name: 'event-attendees',
@@ -31,6 +32,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   private membersRx: Observable<any[]>;
   private members: any[] = [];
   private isAttendanceEnabled: boolean  = false;
+  private ooid: string;
 
   constructor(public navCtrl: NavController,
               private membersSvc: MemberProvider,
@@ -38,6 +40,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
               public navParams: NavParams,
               private alertCtrl: AlertController,
               private userSvc: UserCircleProvider,
+              private userData: UserData,
               private  eventSvc: EventProvider) {
     super();
 
@@ -50,6 +53,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.ooid = this.userData.getSelectedOrganization();
     this.relationship = "circles";
     this.userCircles = this.userSvc.getMyCircles1();
 //this.userCircles
@@ -84,7 +88,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   }
 
   setFilteredItems(){
-    this.membersRx =  this.membersSvc.getMembersForEvent(this.eventId)
+    this.membersRx =  this.membersSvc.getMembersForEvent(this.ooid, this.eventId)
       .takeUntil(this.componentDestroyed$);
     if (!(this.searchTerm == null || this.searchTerm == '')){
       this.membersRx = this.membersRx.map((members) =>

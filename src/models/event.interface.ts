@@ -9,7 +9,7 @@ export interface IEvent {
   //tags: string[];
   likes: number;
   comments: number;
-  attendeesCount: number;
+  attendees: number;
   isLiked:boolean;
   //attendees: Attendee[];
 }
