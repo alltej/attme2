@@ -6,6 +6,7 @@ import {Observable} from "rxjs/Observable";
 import {EventCommentsProvider} from "../../providers/event/event-comments";
 import {AuthProvider} from "../../providers/auth/auth";
 import {MappingProvider} from "../../providers/mapper/mapping";
+import {UserData} from "../../providers/data/user-data";
 
 @IonicPage({
   name: 'event-comments',
@@ -31,6 +32,7 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
         public toastCtrl: ToastController,
         public mappingsService: MappingProvider,
         public navCtrl: NavController,
+        public userData: UserData,
         public navParams: NavParams) {
     super();
 
@@ -39,6 +41,7 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.eventId = this.navParams.get('eventId');
     this.commentsLoaded = false;
+    //TODO: Get event name from param
     this.commentsSvc.getEvent(this.eventId)
       .then(snapshot => {
         if (snapshot.val() == null) return null;
@@ -46,13 +49,21 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
 
         this.eventName = eventData.name;
       })
-
-    this.commentsSvc.getEventCommentsRef(this.eventId).once('value', snapshot =>  {
-      this.comments = this.mappingsService.getComments(snapshot);
-      this.commentsLoaded = true;
+//.child(self.userData.getSelectedOrganization())
+    this.commentsSvc.getEventCommentsRef(this.userData.getSelectedOrganization(),this.eventId)
+      .once('value', snapshot =>  {
+        this.comments = this.mappingsService.getComments(snapshot);
+        this.commentsLoaded = true;
       }, error => {
-      //console.log(error)
-    });
+        //console.log(error)
+      });
+    // this.commentsSvc.getEventCommentsRef(this.eventId).once('value', snapshot =>  {
+    //   this.comments = this.mappingsService.getComments(snapshot);
+    //   this.commentsLoaded = true;
+    //   }, error => {
+    //   //console.log(error)
+    // });
+    this.commentsLoaded = true;
   }
 
   ionViewDidLoad() {

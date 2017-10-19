@@ -1,4 +1,4 @@
-<ion-tabs>
+<ion-tabs #forumTabs [selectedIndex]="0" (click)="clicked()">
   <ion-tab [root]="tab1" tabIcon="book" tabTitle="Events"></ion-tab>
   <ion-tab [root]="tab2" tabIcon="list-box" tabTitle="Members"></ion-tab>
 </ion-tabs>

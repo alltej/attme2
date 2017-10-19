@@ -7,6 +7,7 @@ import {IUser} from "../../models/user.interface";
 import {IComment} from "../../models/comment.interface";
 import {ProfileProvider} from "../../providers/profile/profile";
 import {DataProvider} from "../../providers/data/data";
+import {UserData} from "../../providers/data/user-data";
 
 
 @IonicPage({
@@ -32,6 +33,7 @@ export class CommentCreatePage implements OnInit{
               public authService: AuthProvider,
               public profileSvc: ProfileProvider,
               private dataSvc: DataProvider,
+              private userData: UserData,
               public commentsSvc: EventCommentsProvider) {
   }
 
@@ -66,14 +68,19 @@ export class CommentCreatePage implements OnInit{
       loader.present();
 
       let uid = this.authService.getLoggedInUser().uid;
-      //console.log(`uid::${uid}`)
+      console.log(`uid::${uid}`)
 
+      //TODO: Get this user data from UserData service
+      //TODO: Need to have name node in users/uid/profile
       const userId = this.authService.getLoggedInUser().uid
       this.dataSvc.usersRef.child(`${userId}/profile`).once('value').then(snapshot => {
-        let username  =  snapshot.val().lastName + " " + snapshot.val().firstName.charAt(0)
+        let username: string = "FT";
+        if (snapshot.val()) {
+          //username  =  snapshot.val().lastname + " " + snapshot.val().firstname.charAt(0)
+        }
         //console.log(`username::${username}`)
 
-        let commentRef = this.commentsSvc.getCommentsRef().push();
+        let commentRef = this.commentsSvc.getEventCommentsRef(this.userData.ooid, this.eventId).push();
         let commentkey: string = commentRef.key;
         let user: IUser = { uid: uid, username: username };
 
@@ -87,7 +94,7 @@ export class CommentCreatePage implements OnInit{
           votesDown: null
         };
 
-        this.commentsSvc.submitComment(this.eventId, newComment)
+        this.commentsSvc.submitComment(this.userData.ooid, this.eventId, newComment)
           .then(snapshot => {
           loader.dismiss()
               .then(() => {
@@ -101,6 +108,9 @@ export class CommentCreatePage implements OnInit{
             console.error(error);
             loader.dismiss();
           });
+      }).catch( error =>{
+        // console.log(error)
+        // loader.dismiss()
       });
     }
   }

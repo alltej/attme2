@@ -45,15 +45,18 @@ export class ProfilePage implements OnInit
   ngOnInit(): void {
     this.ooid = this.userData.getSelectedOrganization();
     this.aoMemberKey = this.userData.getSelectOrgMemberKey();
+
+    console.log(`ooid==${this.ooid}::aoid::${this.aoMemberKey}`)
     this.loadUserProfile();
   }
 
   private loadUserProfile() {
     this.userDataLoaded = false;
     this.firebaseAccount = this.authSvc.getLoggedInUser();
+        console.log(`this.firebaseAccount==${this.firebaseAccount}`)
     this.getUserData().then(snapShot => {
         let userData: any = snapShot.val();
-        //console.log(userData)
+        console.log(`userData==${userData}`)
         this.getUserImage().then(url => {
           this.userProfile = {
             firstName: userData.firstName,
@@ -71,7 +74,7 @@ export class ProfilePage implements OnInit
           this.userDataLoaded = true;
 
         }).catch(error => {
-          //console.log(error.code);
+          console.log(error.code);
           this.userProfile = {
             firstName: userData.firstName,
             lastName: userData.lastName,

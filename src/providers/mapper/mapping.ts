@@ -3,7 +3,7 @@ import {ItemsProvider} from "./items-provider";
 import {IComment} from "../../models/comment.interface";
 import {IEvent} from "../../models/event.interface";
 import {IMember} from "../../models/member.interface";
-import {IOrganization} from "../../models/user.interface";
+import {IOrganization, IUserOrgs} from "../../models/user.interface";
 
 
 
@@ -79,8 +79,9 @@ export class MappingProvider {
         where: anEvent.where,
         likes: anEvent.likes,
         comments: anEvent.comments,
-        attendees: anEvent.attendeesCount,
-        isLiked: false //TODO
+        attendees: anEvent.attendees,
+        isLiked: false, //TODO,
+        likedBy: anEvent.likedBy
       });
     });
 
@@ -98,7 +99,8 @@ export class MappingProvider {
       likes: snapshot.likes,
       comments: snapshot.comments,
       attendees: snapshot.attendees,
-      isLiked: false //TODO
+      isLiked: false, //TODO
+      likedBy: snapshot.likedBy
     };
 
     return anEvent;
@@ -133,9 +135,9 @@ export class MappingProvider {
   }
 
 
-  getOrganizations(snapshot: any): Array<IOrganization> {
+  getUserOrgs(snapshot: any): Array<IUserOrgs> {
     console.log(`mapping::getEvents::${snapshot.val()}`)
-    let orgs: Array<IOrganization> = [];
+    let orgs: Array<IUserOrgs> = [];
     if (snapshot.val() == null)
       return orgs;
 
@@ -143,10 +145,11 @@ export class MappingProvider {
 
     Object.keys(snapshot.val()).map((key: any) => {
       let org: any = list[key];
-      //console.log(`mapping::getOrganizations::key::${key}:name:${org}`)
+      console.log(`mapping::getOrganizations::key::${key}:name:${org}`)
       orgs.push({
         oid: key,
-        name: org.name
+        name: org.profile.name,
+        role: org.profile.role
       });
     });
 

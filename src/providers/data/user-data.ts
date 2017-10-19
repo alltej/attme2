@@ -11,10 +11,13 @@ export class UserData {
   HAS_LOGGED_IN = 'hasLoggedIn';
   HAS_SEEN_TUTORIAL = 'hasSeenTutorial';
   private _organizations: Array<IOrganization>;
+  public  ooid: string
 
   constructor(
     public events: Events
-  ) {}
+  ) {
+    this.ooid = this.getSelectedOrganization();
+  }
 
 
   setSelectedOrganization(sessionName: string): void {

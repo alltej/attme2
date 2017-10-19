@@ -6,6 +6,7 @@ import {AuthProvider} from "../auth/auth";
 
 import * as firebase from 'firebase';
 import {IComment} from "../../models/comment.interface";
+import {DataProvider} from "../data/data";
 
 @Injectable()
 export class EventCommentsProvider{
@@ -15,12 +16,21 @@ export class EventCommentsProvider{
 
   constructor(
     private authService: AuthProvider,
-    private af:AngularFireDatabase) {  }
+    private af:AngularFireDatabase,
+    private dataSvc: DataProvider
+    ) {  }
 
 
-  getEventCommentsRef(eventId: string)  {
+  // getEventCommentsRef(ooid: string, eventId: string)  {
+  //   //console.log(`getEventCommentsRef::${eventId}`)
+  //   //return this.commentsRef.orderByChild('event').equalTo(eventId);
+  //   return this.dataSvc.getEventCommentsRef(ooid, eventId).orderByChild('dateCreated')
+  // }
+
+  getEventCommentsRef(ooid: string, eventId: string)  {
     //console.log(`getEventCommentsRef::${eventId}`)
-    return this.commentsRef.orderByChild('event').equalTo(eventId);
+    //return this.commentsRef.orderByChild('event').equalTo(eventId);
+    return this.dataSvc.getEventCommentsRef(ooid, eventId);//.orderByChild('dateCreated')
   }
 
   getEvent(eventId: string) {
@@ -31,17 +41,19 @@ export class EventCommentsProvider{
     return this.commentsRef;
   }
 
-  submitComment(eventId: string, comment: IComment) {
+  submitComment(ooid: string, eventId: string, comment: IComment) {
     // let commentRef = this.commentsRef.push();
     // let commentkey: string = commentRef.key;
-    //console.log(`submitComment::${eventId}`)
-    this.commentsRef.child(comment.key).set(comment);
+    //console.log(`submitComment::${eventId}`
+    this.dataSvc.getEventCommentsRef(ooid, eventId).set(comment);
 
-    return this.eventsRef.child(eventId + '/comments').once('value')
+    //this.commentsRef.child(comment.key).set(comment);
+
+    return this.dataSvc.getEventsRef(ooid).child(`${eventId}/stats/comments`).once('value')
       .then((snapshot) => {
         let numberOfComments = snapshot == null ? 0 : snapshot.val();
         //console.log(`numberOfComments::${numberOfComments}`)
-        this.eventsRef.child(eventId + '/comments').set(numberOfComments + 1);
+        this.dataSvc.getEventsRef(ooid).child(`${eventId}/stats/comments`).set(numberOfComments + 1);
       });
   }
 }

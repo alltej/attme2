@@ -5,7 +5,7 @@ import {EventProvider} from "../../providers/event/event";
 import {UserLikesProvider} from "../../providers/user-likes/user-likes";
 import {BaseClass} from "../BasePage";
 import {Observable} from "rxjs/Observable";
-import {IEvent} from "../../models/event.interface";
+import {IEvent, ILikedBy} from "../../models/event.interface";
 import {DataProvider} from "../../providers/data/data";
 import {SqliteService} from "../../providers/sqlite-service/sqlite-service";
 import {AuthProvider} from "../../providers/auth/auth";
@@ -80,7 +80,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
 
     self.events.subscribe('network:connected', self.networkConnected);
     self.events.subscribe('events:add', self.addNewThreads);
-
+    self.events.subscribe('events:liked', self.loadEvents);
 
     this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
       this.loading = false;
@@ -109,7 +109,9 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
       }, 1000);
     } else {
       //console.log('Firebase connection found (threads.ts) - attempt: ' + self.firebaseConnectionAttempts);
-      //self.dataSvc.getStatisticsRef().on('child_changed', self.onEventAdded);
+      //    let newItemRef = this.dataSvc.getOrgsRef().child(`${this.userData.getSelectedOrganization()}/events`).push();
+
+      self.dataSvc.getOrgsRef().child(`${this.userData.getSelectedOrganization()}/stats/events`).on('child_changed', self.onEventAdded);
       if (self.authSvc.getLoggedInUser() === null) {
         //console.log('getLoggedInUser is null')
       } else {
@@ -176,10 +178,12 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
 
   public onEventAdded = (childSnapshot, prevChildKey) => {
     let priority = childSnapshot.val(); // priority..
+    console.log(`priority=${priority}`)
     let self = this;
     self.events.publish('event:created');
     // fetch new thread..
-    self.dataSvc.getEventsRef().orderByPriority().equalTo(priority).once('value').then(dataSnapshot => {
+    self.dataSvc.getEventsRef(self.userData.getSelectedOrganization())
+      .orderByPriority().equalTo(priority).once('value').then(dataSnapshot => {
       let key = Object.keys(dataSnapshot.val())[0];
       let newThread: IEvent = self.mappingsService.getEvent(dataSnapshot.val()[key], key);
       self.newIEvents.push(newThread);
@@ -270,6 +274,18 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
         .once('value', snapshot => {
           self.mappingsService
             .getEvents(snapshot).forEach(anEvent => {
+              //anEvent.likedBy.
+            if (anEvent.likedBy != null) {
+              let userLikes: Array<string> = Object.keys(anEvent.likedBy);
+              //console.log(userLikes)
+              //TODO: refactor to not use the indexOf
+              if (userLikes.length>0 && userLikes.indexOf(self.authSvc.getLoggedInUser().uid) > -1) {
+                anEvent.isLiked = true
+              }
+            }
+              // if (anEvent.likedBy.keys()) {
+              //
+              // }
             if (self.queryText.trim().length !== 0) {
               if (anEvent.name.toLowerCase().includes(self.queryText.toLowerCase()) || anEvent.description.toLowerCase().includes(self.queryText.toLowerCase()))
                 self.iEvents.push(anEvent);
@@ -305,7 +321,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
         //this.scrollToTop();
         return;
       }
-      this.dataSvc.getEventsRef()
+      this.dataSvc.getEventsRef(self.userData.getSelectedOrganization())
         .orderByChild('when')
         .startAt(this.whenStartFilter)
         .endAt(this.whenEndFilter)

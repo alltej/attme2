@@ -6,6 +6,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 //import * as firebase from 'firebase/app';
 import * as firebase from 'firebase';
 import {Observable} from "rxjs/Observable";
+import {DataProvider} from "../data/data";
 
 @Injectable()
 export class AuthProvider {
@@ -15,7 +16,8 @@ export class AuthProvider {
   private authState: Observable<firebase.User>
   private currentUser: firebase.User = null;
 
-  constructor(public afAuth: AngularFireAuth) {
+  constructor(public afAuth: AngularFireAuth,
+              private dataSvc: DataProvider) {
     this.fireAuth = firebase.auth();
     this.userProfileRef = firebase.database().ref('/userProfile');
 
@@ -39,7 +41,10 @@ export class AuthProvider {
 
   signupUser(email: string, password: string): firebase.Promise<any> {
     return this.afAuth.auth.createUserWithEmailAndPassword(email, password).then( newUser => {
-      this.userProfileRef.child(newUser.uid).set({
+      // this.userProfileRef.child(`${newUser.uid}`).set({
+      //   email: email
+      // });
+      this.dataSvc.usersRef.child(`${newUser.uid}/profile`).set({
         email: email
       });
     });

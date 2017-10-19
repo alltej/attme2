@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {EventProvider} from "../../providers/event/event";
 import {UserData} from "../../providers/data/user-data";
 import {DataProvider} from "../../providers/data/data";
-import {IEvent} from "../../models/event.interface";
+import {IEvent, INewEvent} from "../../models/event.interface";
 
 @IonicPage({
   name: 'event-create'
@@ -33,19 +33,13 @@ export class EventCreatePage {
     let newItemKey: string = newItemRef.key;
 
     let when = new Date(eventDate).toISOString().slice(0,10)
-    let newItem: IEvent = {
+    let newItem: INewEvent = {
       key: newItemKey,
       description: description,
       name: name,
       when: when,
       where:location,
-      likes: null,
-      comments: null,
-      attendees: null,
-      isLiked:null,
     };
-
-
 
     this.eventSvc.createEvent2(this.userData.getSelectedOrganization(), newItem)
       .then( newEvent => {

@@ -2,7 +2,7 @@ import {Injectable, OnDestroy} from '@angular/core';
 import firebase from 'firebase';
 import {AngularFireDatabase, FirebaseListObservable} from "angularfire2/database";
 import {attmeConfig} from "../../config/attme.config";
-import {IEvent} from "../../models/event.interface";
+import {IEvent, INewEvent} from "../../models/event.interface";
 import {DataProvider} from "../data/data";
 
 @Injectable()
@@ -95,7 +95,7 @@ export class EventProvider implements OnDestroy {
     });
   }
 
-  createEvent2(ooid: string, newEvent: IEvent): firebase.Promise<any> {
+  createEvent2(ooid: string, newEvent: INewEvent): firebase.Promise<any> {
       try {
         this.dataSvc.getOrgsRef().child(`${ooid}/events`).child(newEvent.key).set(newEvent);
 

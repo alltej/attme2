@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {DataProvider} from "../../providers/data/data";
-import {IOrganization} from "../../models/user.interface";
+import {IOrganization, IUserOrgs} from "../../models/user.interface";
 import {AuthProvider} from "../../providers/auth/auth";
 import {MappingProvider} from "../../providers/mapper/mapping";
 import {UserData} from "../../providers/data/user-data";
@@ -14,7 +14,7 @@ import {UserData} from "../../providers/data/user-data";
 export class UserOrgsPage implements OnInit{
 
   //public iMembers: Array<IMember> = [];
-  public userOrganizations: Array<IOrganization> = [];
+  public userOrganizations: Array<IUserOrgs> = [];
   public selectedOid: string;
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -34,7 +34,10 @@ export class UserOrgsPage implements OnInit{
       .then( snapshot => {
         if (snapshot.val())
           console.log(snapshot)
-          self.userOrganizations = this.mappingSvc.getOrganizations(snapshot);
+          //self.userOrganizations = this.mappingSvc.getUserOrgs(snapshot);
+          this.mappingSvc.getUserOrgs(snapshot).forEach( oo => {
+            self.userOrganizations.push(oo)
+          });
         }).catch(error =>{
           console.log(error)
     });
