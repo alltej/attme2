@@ -25,16 +25,17 @@ export class UserAvatarComponent implements OnInit {
   }
 
   ngOnInit() {
-    let firebaseConnected: boolean = this.dataService.isFirebaseConnected();
-    if (this.user.uid === 'default' || !firebaseConnected) {
-      this.imageUrl = 'assets/images/profile.png';
-      this.imageLoaded = true;
+    let self = this;
+    let firebaseConnected: boolean = self.dataService.isFirebaseConnected();
+    if (self.user.uid === 'default' || !firebaseConnected) {
+      self.imageUrl = 'assets/images/profile.png';
+      self.imageLoaded = true;
     } else {
-      this.storageSvc.getStorageRef().child('images/' + this.user.uid + '/profile.png').getDownloadURL()
+      self.storageSvc.getStorageRef().child('images/' + self.user.uid + '/profile.png').getDownloadURL()
         .then(url=> {
-          //this.imageUrl = url.split('?')[0] + '?alt=media' + '&t=' + (new Date().getTime());
-          this.imageUrl = url;
-          this.imageLoaded = true;
+          //self.imageUrl = url.split('?')[0] + '?alt=media' + '&t=' + (new Date().getTime());
+          self.imageUrl = url;
+          self.imageLoaded = true;
       });
     }
   }

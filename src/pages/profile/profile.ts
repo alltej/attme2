@@ -35,12 +35,10 @@ export class ProfilePage implements OnInit
               public loadingCtrl: LoadingController,
               public actionSheeCtrl: ActionSheetController,
               public profileSvc: ProfileProvider,
-              private profileImageSvc: ProfileImageProvider,
               public authSvc: AuthProvider,
               public memberSvc: MemberProvider,
               public storageSvc: StorageProvider,
-              private userData: UserData,
-              public zone: NgZone,) {}
+              private userData: UserData) {}
 
   ngOnInit(): void {
     this.ooid = this.userData.getSelectedOrganization();
@@ -53,14 +51,14 @@ export class ProfilePage implements OnInit
   private loadUserProfile() {
     this.userDataLoaded = false;
     this.firebaseAccount = this.authSvc.getLoggedInUser();
-        console.log(`this.firebaseAccount==${this.firebaseAccount}`)
+    console.log(`this.firebaseAccount==${this.firebaseAccount}`)
     this.getUserData().then(snapShot => {
         let userData: any = snapShot.val();
         console.log(`userData==${userData}`)
         this.getUserImage().then(url => {
           this.userProfile = {
-            firstName: userData.firstName,
-            lastName: userData.lastName,
+            firstname: userData.firstname,
+            lastname: userData.lastname,
             birthDate: userData.birthDate,
             image: url,
           };
@@ -76,8 +74,8 @@ export class ProfilePage implements OnInit
         }).catch(error => {
           console.log(error.code);
           this.userProfile = {
-            firstName: userData.firstName,
-            lastName: userData.lastName,
+            firstname: userData.firstname,
+            lastname: userData.lastname,
             birthDate: userData.birthDate,
             image: 'assets/images/profile.png',
 
@@ -100,7 +98,7 @@ export class ProfilePage implements OnInit
   }
 
   getUserImage() {
-    return this.storageSvc.getStorageRef().child('images/' + this.firebaseAccount.uid + '/profile.png').getDownloadURL();
+    return this.storageSvc.getStorageRef().child('/users/' + this.firebaseAccount.uid + '/profile.png').getDownloadURL();
   }
 
   logOut(): void {
@@ -116,12 +114,12 @@ export class ProfilePage implements OnInit
         {
           name: 'firstName',
           placeholder: 'Your first name',
-          value: this.userProfile.firstName
+          value: this.userProfile.firstname
         },
         {
           name: 'lastName',
           placeholder: 'Your last name',
-          value: this.userProfile.lastName
+          value: this.userProfile.lastname
         },
       ],
       buttons: [
@@ -132,7 +130,7 @@ export class ProfilePage implements OnInit
           text: 'Save',
           handler: data => {
             //console.log(data)
-            this.profileSvc.updateName(this.authSvc.getLoggedInUser().uid, data.firstName, data.lastName);
+            this.profileSvc.updateName(this.authSvc.getLoggedInUser().uid, data.firstname, data.lastname);
             //TODO: Need to update member data on update of user profile
             //this.memberSvc.updateName(this.userProfile.memberKey, data.firstName, data.lastName);
             this.reload();

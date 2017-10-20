@@ -22,7 +22,7 @@ export class MappingProvider {
 
     Object.keys(snapshot.val()).map((key: any) => {
       let comment: any = list[key];
-      //console.log(comment.votes);
+      //console.log(`comment==${comment}`);
       this.itemsService.groupByBoolean(comment.votes, true);
 
       comments.push({
@@ -77,9 +77,9 @@ export class MappingProvider {
         description: anEvent.description,
         when: anEvent.when,
         where: anEvent.where,
-        likes: anEvent.likes,
-        comments: anEvent.comments,
-        attendees: anEvent.attendees,
+        likes: (anEvent.stats != null)?anEvent.stats.likes:0,
+        comments: (anEvent.stats != null)?anEvent.stats.comments:0, //anEvent.stats.comments,
+        attendees: (anEvent.stats != null)?anEvent.stats.attendees:0, //anEvent.stats.attendees,
         isLiked: false, //TODO,
         likedBy: anEvent.likedBy
       });
@@ -123,8 +123,8 @@ export class MappingProvider {
         memberKey: aMember.memberKey,
         email: aMember.email,
         birthDate: aMember.birthDate,
-        firstName: aMember.firstName,
-        lastName: aMember.lastName,
+        firstName: aMember.firstname,
+        lastName: aMember.lastname,
         memberId: aMember.memberId,
         photoUrl: aMember.photoUrl,
         isMyCircle: false //TODO

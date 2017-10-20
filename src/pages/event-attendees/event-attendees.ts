@@ -92,7 +92,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
       .takeUntil(this.componentDestroyed$);
     if (!(this.searchTerm == null || this.searchTerm == '')){
       this.membersRx = this.membersRx.map((members) =>
-        members.filter(member => member.lastName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1))
+        members.filter(member => member.lastname.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1 || member.firstname.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1))
     }
     if (this.relationship == "circles"){
       this.membersRx = this.membersRx

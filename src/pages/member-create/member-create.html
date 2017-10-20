@@ -9,13 +9,13 @@
 <ion-content padding>
   <ion-item>
     <ion-label stacked>Firstname</ion-label>
-    <ion-input [(ngModel)]="firstName" type="text" placeholder="Firstname">
+    <ion-input [(ngModel)]="firstname" type="text" placeholder="Firstname">
     </ion-input>
   </ion-item>
 
   <ion-item>
     <ion-label stacked>Lastname</ion-label>
-    <ion-input [(ngModel)]="lastName" type="text" placeholder="Lastname">
+    <ion-input [(ngModel)]="lastname" type="text" placeholder="Lastname">
     </ion-input>
   </ion-item>
 
@@ -31,7 +31,7 @@
     </ion-input>
   </ion-item>
 
-  <button ion-button block (click)="createMember(firstName, lastName, memberId, email)">
+  <button ion-button block (click)="createMember(firstname, lastname, memberId, email)">
     Create Member
   </button>
 </ion-content>

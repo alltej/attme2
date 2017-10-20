@@ -45,7 +45,7 @@ export class EventCommentsProvider{
     // let commentRef = this.commentsRef.push();
     // let commentkey: string = commentRef.key;
     //console.log(`submitComment::${eventId}`
-    this.dataSvc.getEventCommentsRef(ooid, eventId).set(comment);
+    this.dataSvc.getEventCommentsRef(ooid, eventId).child(comment.key).set(comment);
 
     //this.commentsRef.child(comment.key).set(comment);
 

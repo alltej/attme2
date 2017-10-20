@@ -51,10 +51,10 @@
           <ion-col col-6>
             Name
           </ion-col>
-          <ion-col col-6 *ngIf="userProfile?.firstName || userProfile?.lastName">
-            {{userProfile?.firstName}} {{userProfile?.lastName}}
+          <ion-col col-6 *ngIf="userProfile?.firstname || userProfile?.lastname">
+            {{userProfile?.firstname}} {{userProfile?.lastname}}
           </ion-col>
-          <ion-col col-6 class="placeholder-profile" *ngIf="!userProfile?.firstName">
+          <ion-col col-6 class="placeholder-profile" *ngIf="!userProfile?.firstname">
             <span>
               Tap here to edit.
             </span>

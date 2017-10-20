@@ -18,9 +18,9 @@
         <ion-item>
           <ion-avatar item-left>
             <!--<user-avatar [user]="comment.user"></user-avatar>-->
-            <user-avatar [user]="comment.user"></user-avatar>
+            <!--<user-avatar [user]="comment.user"></user-avatar>-->
           </ion-avatar>
-          <h2>{{comment.user.username}}</h2>
+          <h2>{{comment.user?.username}}</h2>
           <p>{{comment.dateCreated | date:'medium'}}</p>
         </ion-item>
 

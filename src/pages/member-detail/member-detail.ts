@@ -67,8 +67,8 @@ export class MemberDetailPage extends BaseClass implements OnInit{
         // console.log(userData)
         this.getUserImage().then(url => {
           this.member = {
-            firstName: userData.firstName,
-            lastName: userData.lastName,
+            firstName: userData.firstname,
+            lastName: userData.lastname,
             birthDate: userData.birthDate,
             uid: userData.uid,
             memberKey: userData.memberKey,
@@ -84,8 +84,8 @@ export class MemberDetailPage extends BaseClass implements OnInit{
         //console.log(error.code);
         //TODO
         this.member = {
-          firstName: userData.firstName,
-          lastName: userData.lastName,
+          firstName: userData.firstname,
+          lastName: userData.lastname,
           birthDate: userData.birthDate,
           uid: userData.memberKey,
           memberKey: userData.memberKey,
@@ -180,7 +180,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
         {
           text: 'Save',
           handler: data => {
-            this.memberSvc.updateName(this.ooid, this.memberKey, data.firstName, data.lastName)
+            this.memberSvc.updateName(this.ooid, this.memberKey, data.firstname, data.lastname)
               .then( () =>{
               this.reload()
             }).catch(error => {

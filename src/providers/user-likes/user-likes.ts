@@ -31,11 +31,11 @@ export class UserLikesProvider {
         if (result.committed) {
           console.log("zzzzzz")
           let un = "";
-          this.profileSvc.usersRef
+          this.dataSvc.usersRef
             .child(`${this.authSvc.getLoggedInUser().uid}/profile`)
             .once('value')
             .then( userProfileValue => {
-              un =  userProfileValue.val().lastName + " " + userProfileValue.val().firstName.charAt(0)
+              un =  userProfileValue.val().lastname + " " + userProfileValue.val().firstname.charAt(0)
           }).then(sf => {
             this.af.object(`/organizations/${ooid}/events/${eventKey}/likedBy/${this.authSvc.getLoggedInUser().uid}`)
               .$ref.transaction(currentValue => {
