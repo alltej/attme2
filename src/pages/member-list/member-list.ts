@@ -79,7 +79,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
     //console.log(`endAt:${endAt}`)
     //TODO: simplify
     this.dataSvc.getOrgsRef()
-      .child(`${self.userData.getSelectedOrganization()}/members`)
+      .child(`${this.ooid}/members`)
       .orderByChild('firstName')
       .startAt(startAt)
       .endAt(endAt)

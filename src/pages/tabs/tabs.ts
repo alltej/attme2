@@ -2,9 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {Events, IonicPage, NavController, Tabs} from 'ionic-angular';
 import {AuthProvider} from "../../providers/auth/auth";
 
-@IonicPage({
-  name: 'tabs'
-})
+@IonicPage()
 @Component({
   selector: 'page-tabs',
   templateUrl: 'tabs.html',
@@ -12,8 +10,8 @@ import {AuthProvider} from "../../providers/auth/auth";
 export class TabsPage implements OnInit {
   @ViewChild('forumTabs') tabRef: Tabs;
 
-  tab1: any;
-  tab2: any;
+  tab1: any= 'EventListPage';
+  tab2: any= 'MemberListPage';
 
   public newThreads: string = '';
   public selectedTab: number = -1;
@@ -21,10 +19,6 @@ export class TabsPage implements OnInit {
   constructor(public navCtrl: NavController,
               public authService: AuthProvider,
               public events: Events) {
-    // this tells the tabs component which Pages
-    // should be each tab's root Page
-    this.tab1 = 'EventListPage';
-    this.tab2 = 'MemberListPage';
   }
 
   ngOnInit() {

@@ -10,9 +10,7 @@ import {IUserProfile} from "../../models/user-profile.interface";
 import { Camera, CameraOptions } from 'ionic-native';
 import {UserData} from "../../providers/data/user-data";
 
-@IonicPage({
-  name: 'profile'
-})
+@IonicPage()
 @Component({
   selector: 'page-profile',
   templateUrl: 'profile.html',
@@ -24,7 +22,7 @@ export class ProfilePage implements OnInit
   //birthDate:string;
   user: IUser;
   userDataLoaded: boolean = false;
-  firebaseAccount: any = {};
+
   avatar: string = "assets/images/profile-default.png";
   displayName: string;
   private ooid: string;
@@ -50,61 +48,70 @@ export class ProfilePage implements OnInit
 
   private loadUserProfile() {
     this.userDataLoaded = false;
-    this.firebaseAccount = this.authSvc.getLoggedInUser();
-    console.log(`this.firebaseAccount==${this.firebaseAccount}`)
-    this.getUserData().then(snapShot => {
+    let currentUser: any = {};
+    currentUser = this.authSvc.getLoggedInUser();
+    console.log(`currentUser.uid==${currentUser.uid}`)
+    //return this.profileSvc.getUserProfileData(this.authSvc.getLoggedInUser().uid);
+    this.profileSvc.getUserProfileData(currentUser.uid)
+      .then(snapShot => {
         let userData: any = snapShot.val();
-        console.log(`userData==${userData}`)
-        this.getUserImage().then(url => {
+        let test:boolean = true;
+        if (test){
           this.userProfile = {
-            firstname: userData.firstname,
-            lastname: userData.lastname,
-            birthDate: userData.birthDate,
-            image: url,
-          };
-          //this.birthDate = userData.birthDate;
-
-          this.user = {
-            uid : this.firebaseAccount.uid,
-            username : this.firebaseAccount.email //userData.username
-          };
-
-          this.userDataLoaded = true;
-
-        }).catch(error => {
-          console.log(error.code);
-          this.userProfile = {
-            firstname: userData.firstname,
-            lastname: userData.lastname,
-            birthDate: userData.birthDate,
+            firstname: (userData.profile!=null)?userData.profile.firstname:"",
+            lastname: (userData.profile!=null)?userData.profile.lastname:"",
+            birthDate: (userData.profile!=null)?userData.profile.birthDate:"",
             image: 'assets/images/profile.png',
 
           };
 
           this.user = {
-            uid : this.firebaseAccount.uid,
-            username : this.firebaseAccount.email //userData.username
+            uid : currentUser.uid,
+            username : currentUser.email //userData.username
           };
           //this.birthDate = userData.birthDate;
           this.userDataLoaded = true;
-        });
+        }
+        else{
+          //console.log(`userData==${userData}`)
+          this.storageSvc.getStorageRef().child('/users/' + currentUser.uid + '/profile.png').getDownloadURL()
+            .then(url => {
+              this.userProfile = {
+                firstname: userData.profile.firstname,
+                lastname: userData.profile.lastname,
+                birthDate: userData.profile.birthDate,
+                image: url,
+              };
+              //this.birthDate = userData.birthDate;
+
+              this.user = {
+                uid : currentUser.uid,
+                username : currentUser.email //userData.username
+              };
+
+              this.userDataLoaded = true;
+
+            }).catch(error => {
+            console.log(error.code);
+            this.userProfile = {
+              firstname: (userData.profile!=null)?userData.profile.firstname:"",
+              lastname: (userData.profile!=null)?userData.profile.lastname:"",
+              birthDate: (userData.profile!=null)?userData.profile.birthDate:"",
+              image: 'assets/images/profile.png',
+
+            };
+
+            this.user = {
+              uid : currentUser.uid,
+              username : currentUser.email //userData.username
+            };
+            //this.birthDate = userData.birthDate;
+            this.userDataLoaded = true;
+          });
+        }
+
       })
 
-  }
-
-  getUserData() {
-    this.firebaseAccount = this.authSvc.getLoggedInUser();
-    return this.profileSvc.getUserProfileData(this.authSvc.getLoggedInUser().uid);
-  }
-
-  getUserImage() {
-    return this.storageSvc.getStorageRef().child('/users/' + this.firebaseAccount.uid + '/profile.png').getDownloadURL();
-  }
-
-  logOut(): void {
-    this.authSvc.logoutUser().then(() => {
-      this.navCtrl.setRoot('login');
-    });
   }
 
   updateName(){
@@ -256,7 +263,7 @@ export class ProfilePage implements OnInit
       cacheControl: 'no-cache',
     };
 
-    let uploadTask = this.storageSvc.getStorageRef().child('images/' + uid + '/profile.png').put(file, metadata);
+    let uploadTask = this.storageSvc.getStorageRef().child('users/' + uid + '/profile.png').put(file, metadata);
 
     // Listen for state changes, errors, and completion of the upload.
     uploadTask.on('state_changed',

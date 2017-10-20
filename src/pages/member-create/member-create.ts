@@ -13,23 +13,26 @@ import {DataProvider} from "../../providers/data/data";
   templateUrl: 'member-create.html',
 })
 export class MemberCreatePage implements OnInit{
+  private ooid: string;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private userData: UserData,
               private dataSvc: DataProvider,
               private memberSvc: MemberProvider) {
+
   }
 
   ngOnInit(): void {
     console.log(this.userData.getSelectedOrganization())
+
   }
   ionViewDidLoad() {
     //console.log('ionViewDidLoad MemberCreatePage');
   }
 
   createMember(firstName: string, lastName: string, memberId: string, email: string) {
-    let newItemRef = this.dataSvc.getOrgsRef().child(`${this.userData.getSelectedOrganization()}/members`).push();
+    let newItemRef = this.dataSvc.getOrgsRef().child(`${this.ooid}/members`).push();
     let newItemKey: string = newItemRef.key;
 
     let newMember: INewMember = {
@@ -42,7 +45,7 @@ export class MemberCreatePage implements OnInit{
       memberId: memberId
     };
 
-    this.memberSvc.createMember3(this.userData.getSelectedOrganization(),newMember)
+    this.memberSvc.createMember3(this.ooid,newMember)
       .then( newEvent => {
         this.navParams.get("parentPage").loadMembers2();
         this.navCtrl.pop();

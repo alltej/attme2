@@ -17,7 +17,7 @@ export class ProfileProvider {
   }
 
   getUserProfileData(uid: string) {
-    return this.dataSvc.usersRef.child(`${uid}/profile`).once('value');
+    return this.dataSvc.usersRef.child(`${uid}`).once('value');
   }
 
   updateName(uid:string, firstName: string, lastName: string): firebase.Promise<void> {

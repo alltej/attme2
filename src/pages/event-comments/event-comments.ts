@@ -25,6 +25,7 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
   comments: IComment[];
 
   private membersRx: Observable<any[]>;
+  private ooid: string;
   constructor(
         public commentsSvc: EventCommentsProvider,
         public authSvc: AuthProvider,
@@ -35,7 +36,7 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
         public userData: UserData,
         public navParams: NavParams) {
     super();
-
+    this.ooid = this.userData.getSelectedOrganization();
   }
 
   ngOnInit(): void {
@@ -50,7 +51,7 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
         this.eventName = eventData.name;
       })
 //.child(self.userData.getSelectedOrganization())
-    this.commentsSvc.getEventCommentsRef(this.userData.getSelectedOrganization(),this.eventId)
+    this.commentsSvc.getEventCommentsRef(this.ooid,this.eventId)
       .once('value', snapshot =>  {
         this.comments = this.mappingsService.getComments(snapshot);
         this.commentsLoaded = true;
@@ -78,7 +79,7 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
   createComment() {
     //console.log('createComment')
     //CommentCreatePage
-    let modalPage = this.modalCtrl.create('comment-create', {
+    let modalPage = this.modalCtrl.create('CommentCreatePage', {
       eventId: this.eventId
     });
 

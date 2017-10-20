@@ -10,9 +10,7 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { EmailValidator } from '../../validators/email';
 import { AuthProvider } from '../../providers/auth/auth';
 
-@IonicPage({
-  name: 'login'
-})
+@IonicPage()
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html',
@@ -30,8 +28,8 @@ export class LoginPage {
     public formBuilder: FormBuilder) {
 
     this.loginForm = formBuilder.group({
-      email: ['', Validators.compose([Validators.required, EmailValidator.isValid])],
-      password: ['', Validators.compose([Validators.minLength(6), Validators.required])]
+      email: ['abc5@test.com', Validators.compose([Validators.required, EmailValidator.isValid])],
+      password: ['testpswd1', Validators.compose([Validators.minLength(6), Validators.required])]
     });
     this.appVersionNumber = "1.0.12";
     // if (this.platform.is('mobileweb') || this.platform.is('core')) {
@@ -52,7 +50,7 @@ export class LoginPage {
       this.authProvider.loginUser(this.loginForm.value.email, this.loginForm.value.password)
         .then( authData => {
           this.loading.dismiss().then( () => {
-            this.navCtrl.setRoot('tabs');
+            this.navCtrl.setRoot('TabsPage');
           });
         }, error => {
           this.loading.dismiss().then( () => {

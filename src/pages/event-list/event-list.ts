@@ -36,6 +36,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
 
   private whenStartFilter: string;
   private whenEndFilter: string;
+  private ooid: string;
 
   constructor(public navCtrl: NavController,
               public toastCtrl: ToastController,
@@ -49,7 +50,9 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
               private userData: UserData,
               public events: Events) {
     super();
-    //console.log("EventListPage::constructor")
+
+    this.ooid = this.userData.getSelectedOrganization();
+
     this.searchControl = new FormControl();
 
     let currentDate = Date.now() + -attmeConfig.eventRecentPriorNumDays*24*3600*1000; // date n days ago in milliseconds UTC;
@@ -111,7 +114,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
       //console.log('Firebase connection found (threads.ts) - attempt: ' + self.firebaseConnectionAttempts);
       //    let newItemRef = this.dataSvc.getOrgsRef().child(`${this.userData.getSelectedOrganization()}/events`).push();
 
-      self.dataSvc.getOrgsRef().child(`${this.userData.getSelectedOrganization()}/stats/events`).on('child_changed', self.onEventAdded);
+      self.dataSvc.getOrgsRef().child(`${this.ooid}/stats/events`).on('child_changed', self.onEventAdded);
       if (self.authSvc.getLoggedInUser() === null) {
         //console.log('getLoggedInUser is null')
       } else {
@@ -182,7 +185,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
     let self = this;
     self.events.publish('event:created');
     // fetch new thread..
-    self.dataSvc.getEventsRef(self.userData.getSelectedOrganization())
+    self.dataSvc.getEventsRef(this.ooid)
       .orderByPriority().equalTo(priority).once('value').then(dataSnapshot => {
       let key = Object.keys(dataSnapshot.val())[0];
       let newThread: IEvent = self.mappingsService.getEvent(dataSnapshot.val()[key], key);
@@ -266,7 +269,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
       this.whenEndFilter = new Date(futureDateMax).toISOString();
 
       this.dataSvc.getOrgsRef()
-        .child(self.userData.getSelectedOrganization())
+        .child(this.ooid)
         .child('events')
         .orderByChild('when')
         .startAt(this.whenStartFilter)
@@ -321,7 +324,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
         //this.scrollToTop();
         return;
       }
-      this.dataSvc.getEventsRef(self.userData.getSelectedOrganization())
+      this.dataSvc.getEventsRef(this.ooid)
         .orderByChild('when')
         .startAt(this.whenStartFilter)
         .endAt(this.whenEndFilter)
@@ -392,7 +395,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   goToEventAttendees(eventId) {
-    this.navCtrl.push('event-attendees', { 'parentPage': this,'eventId': eventId });
+    this.navCtrl.push('EventAttendeesPage', { 'parentPage': this,'eventId': eventId });
   }
 
   onSearchInput(){

@@ -24,6 +24,7 @@ export class CommentCreatePage implements OnInit{
   comment: AbstractControl;
   eventId: string;
   loaded: boolean = false;
+  private ooid: string;
 
   constructor(public nav: NavController,
               public navParams: NavParams,
@@ -40,6 +41,8 @@ export class CommentCreatePage implements OnInit{
   ngOnInit() {
     //console.log(`CommentCreatePage::ngOnInit`);
     this.eventId = this.navParams.get('eventId');
+    this.ooid = this.userData.getSelectedOrganization();
+
     //console.log(this.eventId)
     this.createCommentForm = this.fb.group({
       'comment': ['', Validators.compose([Validators.required, Validators.minLength(10)])]
@@ -80,7 +83,7 @@ export class CommentCreatePage implements OnInit{
         }
         //console.log(`username::${username}`)
 
-        let commentRef = this.commentsSvc.getEventCommentsRef(this.userData.ooid, this.eventId).push();
+        let commentRef = this.commentsSvc.getEventCommentsRef(this.ooid, this.eventId).push();
         let commentkey: string = commentRef.key;
         let user: IUser = { uid: uid, username: username };
 

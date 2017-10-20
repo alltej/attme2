@@ -136,7 +136,7 @@ export class MappingProvider {
 
 
   getUserOrgs(snapshot: any): Array<IUserOrgs> {
-    console.log(`mapping::getEvents::${snapshot.val()}`)
+    //console.log(`mapping::getEvents::${snapshot.val()}`)
     let orgs: Array<IUserOrgs> = [];
     if (snapshot.val() == null)
       return orgs;
@@ -145,11 +145,11 @@ export class MappingProvider {
 
     Object.keys(snapshot.val()).map((key: any) => {
       let org: any = list[key];
-      console.log(`mapping::getOrganizations::key::${key}:name:${org}`)
+      //console.log(`mapping::getOrganizations::key::${key}:name:${org}`)
       orgs.push({
         oid: key,
-        name: org.profile.name,
-        role: org.profile.role
+        name: org.name,
+        role: org.role
       });
     });
 

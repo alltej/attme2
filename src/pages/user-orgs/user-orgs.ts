@@ -15,7 +15,7 @@ export class UserOrgsPage implements OnInit{
 
   //public iMembers: Array<IMember> = [];
   public userOrganizations: Array<IUserOrgs> = [];
-  public selectedOid: string;
+  public ooid: string;
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private authSvc: AuthProvider,
@@ -28,8 +28,7 @@ export class UserOrgsPage implements OnInit{
 
   ngOnInit(): void {
     let self = this;
-    this.selectedOid = self.userData.getSelectedOrganization();
-
+    this.ooid = this.userData.getSelectedOrganization();
     this.dataSvc.getUserOrgs(self.authSvc.getLoggedInUser().uid)
       .then( snapshot => {
         if (snapshot.val())
@@ -50,7 +49,7 @@ export class UserOrgsPage implements OnInit{
   onSelectOrganization(o: IOrganization) {
     console.log(o)
     this.userData.setSelectedOrganization(o.oid);
-    this.selectedOid = this.userData.getSelectedOrganization();
-    console.log(this.selectedOid)
+    this.ooid = o.oid;
+    console.log(this.ooid)
   }
 }

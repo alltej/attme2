@@ -5,6 +5,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { IonTextAvatar } from 'ionic-text-avatar';
 
+import firebase from 'firebase';
+
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { AuthProvider } from '../providers/auth/auth';
@@ -31,7 +33,8 @@ import { StorageProvider } from '../providers/storage/storage';
 import {PhotoViewer} from "@ionic-native/photo-viewer";
 import { DataProvider } from '../providers/data/data';
 import {UserData} from "../providers/data/user-data";
-
+import {Network} from "@ionic-native/network";
+import { NativeStorage } from '@ionic-native/native-storage';
 
 //import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 
@@ -42,6 +45,8 @@ import {UserData} from "../providers/data/user-data";
 // };
 
 declare var window;
+
+firebase.initializeApp(firebaseConfig);
 
 export class MyErrorHandler implements ErrorHandler {
   handleError(err: any): void {
@@ -71,9 +76,11 @@ export class MyErrorHandler implements ErrorHandler {
   providers: [
     StatusBar,
     SplashScreen,
+    Network,
     File,
     FilePath,
     FileChooser,
+    NativeStorage,
     //{provide: ErrorHandler, useClass: IonicErrorHandler},
     {provide: ErrorHandler, useClass: MyErrorHandler },
     AuthProvider,

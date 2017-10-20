@@ -12,7 +12,6 @@ import {attmeConfig} from "../../config/attme.config";
 import {UserData} from "../../providers/data/user-data";
 
 @IonicPage({
-  name: 'event-attendees',
   segment: ':eventId/event-attendees'
 })
 @Component({
@@ -47,13 +46,13 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
 
     this.searchControl = new FormControl();
     this.eventId = this.navParams.get('eventId');
+    this.ooid = this.userData.getSelectedOrganization();
     //console.log(`EventAttendeesPage::constructor::${this.currentEventKey}`);
     //this.eventDate = eventSvc.getEventDetail(this.currentEventKey);
 
   }
 
   ngOnInit(): void {
-    this.ooid = this.userData.getSelectedOrganization();
     this.relationship = "circles";
     this.userCircles = this.userSvc.getMyCircles1();
 //this.userCircles

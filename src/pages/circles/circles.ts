@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-@IonicPage({
-  name: 'circles'
-})
+@IonicPage()
 @Component({
   selector: 'page-circles',
   templateUrl: 'circles.html',

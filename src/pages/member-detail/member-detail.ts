@@ -37,8 +37,6 @@ export class MemberDetailPage extends BaseClass implements OnInit{
               public actionSheeCtrl: ActionSheetController,
               public navParams: NavParams,
               private memberSvc: MemberProvider,
-              private profileImageSvc: ProfileImageProvider,
-              private profileSvc: ProfileProvider,
               private memberInviteSvc: MemberInviteProvider,
               private storageSvc: StorageProvider,
               private userData: UserData,
@@ -64,6 +62,8 @@ export class MemberDetailPage extends BaseClass implements OnInit{
     this.memberSvc.getMemberData2(this.ooid,this.memberKey)
       .then(snapShot => {
         let userData: any = snapShot.val();
+        if (userData == null)
+          return null;
         // console.log(userData)
         this.getUserImage().then(url => {
           this.member = {

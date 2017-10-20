@@ -14,6 +14,7 @@ import {IEvent, INewEvent} from "../../models/event.interface";
 })
 export class EventCreatePage {
   private eventDate: string;
+  private ooid: string;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -21,6 +22,7 @@ export class EventCreatePage {
               private userData: UserData,
               private dataSvc: DataProvider) {
     this.eventDate = new Date().toISOString();
+    this.ooid = this.userData.getSelectedOrganization();
   }
 
   ionViewDidLoad() {
@@ -41,7 +43,7 @@ export class EventCreatePage {
       where:location,
     };
 
-    this.eventSvc.createEvent2(this.userData.getSelectedOrganization(), newItem)
+    this.eventSvc.createEvent2(this.ooid, newItem)
       .then( newEvent => {
         this.navParams.get("parentPage").loadEvents(true);
         this.navCtrl.pop();

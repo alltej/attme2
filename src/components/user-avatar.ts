@@ -31,7 +31,7 @@ export class UserAvatarComponent implements OnInit {
       self.imageUrl = 'assets/images/profile.png';
       self.imageLoaded = true;
     } else {
-      self.storageSvc.getStorageRef().child('images/' + self.user.uid + '/profile.png').getDownloadURL()
+      self.storageSvc.getStorageRef().child('users/' + self.user.uid + '/profile.png').getDownloadURL()
         .then(url=> {
           //self.imageUrl = url.split('?')[0] + '?alt=media' + '&t=' + (new Date().getTime());
           self.imageUrl = url;

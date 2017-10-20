@@ -2,33 +2,34 @@ import { Injectable } from '@angular/core';
 
 import { Events } from 'ionic-angular';
 import {IOrganization} from "../../models/user.interface";
+import {NativeStorage} from "@ionic-native/native-storage";
 
 
 @Injectable()
 export class UserData {
   _favorites: string[] = [];
   _selectedOrganization: string;
-  HAS_LOGGED_IN = 'hasLoggedIn';
-  HAS_SEEN_TUTORIAL = 'hasSeenTutorial';
   private _organizations: Array<IOrganization>;
   public  ooid: string
 
   constructor(
-    public events: Events
-  ) {
-    this.ooid = this.getSelectedOrganization();
+    public events: Events) {
   }
 
 
   setSelectedOrganization(sessionName: string): void {
     this._selectedOrganization=sessionName;
+    //this.storage.setItem('ooid', sessionName);
   };
 
   getSelectedOrganization(): string {
-    if (this._selectedOrganization == null) {
-      return "-KwCMJMRwy57wGWfVfry";
-    }
-    return this._selectedOrganization;
+    //return Promise.resolve("-KwCMJMRwy57wGWfVfry");
+    return "-KwCMJMRwy57wGWfVfry"
+
+    //
+    // return this.storage.getItem('ooid').then((value) => {
+    //   return value;
+    // });
   };
 
   //TODO: Programmatically Update the MemberKey of the Current Organization

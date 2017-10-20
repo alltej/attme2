@@ -18,7 +18,8 @@ export class UserCircleProvider {
               private userData: UserData) {
     this.userId = this.authService.getLoggedInUser().uid;
     this.ooid = this.userData.getSelectedOrganization();
-    this.aoid = this.userData.getSelectOrgMemberKey();
+    //this.ooid = this.userData.getSelectedOrganization();
+    //this.aoid = this.userData.getSelectOrgMemberKey();
   }
 
   addToMyCircle(memberKey:string){

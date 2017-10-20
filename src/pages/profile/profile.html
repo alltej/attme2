@@ -43,7 +43,7 @@
         <!--<img src="{{userProfile.image}}">-->
         <user-avatar [user]="user" *ngIf="userDataLoaded"></user-avatar>
       </ion-thumbnail>
-      <p>{{firebaseAccount.email}}</p>
+      <p>{{currentUser?.email}}</p>
     </ion-item>
     <ion-item (click)="updateName()">
       <ion-grid>
