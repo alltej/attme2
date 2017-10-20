@@ -34,7 +34,8 @@ import {PhotoViewer} from "@ionic-native/photo-viewer";
 import { DataProvider } from '../providers/data/data';
 import {UserData} from "../providers/data/user-data";
 import {Network} from "@ionic-native/network";
-import { NativeStorage } from '@ionic-native/native-storage';
+//import { NativeStorage } from '@ionic-native/native-storage';
+import {IonicStorageModule} from "@ionic/storage";
 
 //import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 
@@ -63,6 +64,7 @@ export class MyErrorHandler implements ErrorHandler {
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot(),
     //CloudModule.forRoot(cloudSettings),
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule,
@@ -80,7 +82,7 @@ export class MyErrorHandler implements ErrorHandler {
     File,
     FilePath,
     FileChooser,
-    NativeStorage,
+    Storage,
     //{provide: ErrorHandler, useClass: IonicErrorHandler},
     {provide: ErrorHandler, useClass: MyErrorHandler },
     AuthProvider,

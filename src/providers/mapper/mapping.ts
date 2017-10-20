@@ -118,6 +118,7 @@ export class MappingProvider {
 
     Object.keys(snapshot.val()).map((key: any) => {
       let aMember: any = list[key];
+      console.log(`mappings::aMember::${aMember}`)
       iMembers.push({
         uid: aMember.uid,
         memberKey: aMember.memberKey,

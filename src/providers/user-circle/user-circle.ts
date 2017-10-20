@@ -17,7 +17,7 @@ export class UserCircleProvider {
               private authService:AuthProvider,
               private userData: UserData) {
     this.userId = this.authService.getLoggedInUser().uid;
-    this.ooid = this.userData.getSelectedOrganization();
+    this.ooid = this.userData.getCurrentOOID();
     //this.ooid = this.userData.getSelectedOrganization();
     //this.aoid = this.userData.getSelectOrgMemberKey();
   }

@@ -36,7 +36,7 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
         public userData: UserData,
         public navParams: NavParams) {
     super();
-    this.ooid = this.userData.getSelectedOrganization();
+    this.ooid = this.userData.getCurrentOOID();
   }
 
   ngOnInit(): void {

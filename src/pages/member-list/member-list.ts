@@ -47,7 +47,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
 
 
     this.searchControl = new FormControl();
-    this.ooid = this.userData.getSelectedOrganization();
+    this.ooid = this.userData.getCurrentOOID();
     this.aoid = this.userData.getSelectOrgMemberKey();
   }
 
@@ -78,8 +78,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
     //console.log(`startAt:${startAt}`)
     //console.log(`endAt:${endAt}`)
     //TODO: simplify
-    this.dataSvc.getOrgsRef()
-      .child(`${this.ooid}/members`)
+    this.dataSvc.getMembersRef(this.ooid)
       .orderByChild('firstName')
       .startAt(startAt)
       .endAt(endAt)

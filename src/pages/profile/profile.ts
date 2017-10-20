@@ -39,7 +39,7 @@ export class ProfilePage implements OnInit
               private userData: UserData) {}
 
   ngOnInit(): void {
-    this.ooid = this.userData.getSelectedOrganization();
+    this.ooid = this.userData.getCurrentOOID();
     this.aoMemberKey = this.userData.getSelectOrgMemberKey();
 
     console.log(`ooid==${this.ooid}::aoid::${this.aoMemberKey}`)
@@ -55,7 +55,7 @@ export class ProfilePage implements OnInit
     this.profileSvc.getUserProfileData(currentUser.uid)
       .then(snapShot => {
         let userData: any = snapShot.val();
-        let test:boolean = true;
+        let test:boolean = false;
         if (test){
           this.userProfile = {
             firstname: (userData.profile!=null)?userData.profile.firstname:"",

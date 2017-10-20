@@ -46,7 +46,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
 
     this.searchControl = new FormControl();
     this.eventId = this.navParams.get('eventId');
-    this.ooid = this.userData.getSelectedOrganization();
+    this.ooid = this.userData.getCurrentOOID();
     //console.log(`EventAttendeesPage::constructor::${this.currentEventKey}`);
     //this.eventDate = eventSvc.getEventDetail(this.currentEventKey);
 

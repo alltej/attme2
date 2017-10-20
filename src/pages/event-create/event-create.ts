@@ -22,7 +22,7 @@ export class EventCreatePage {
               private userData: UserData,
               private dataSvc: DataProvider) {
     this.eventDate = new Date().toISOString();
-    this.ooid = this.userData.getSelectedOrganization();
+    this.ooid = this.userData.getCurrentOOID();
   }
 
   ionViewDidLoad() {
@@ -31,7 +31,7 @@ export class EventCreatePage {
 
 
   createEvent(name:string, description:string, eventDate:string, location:string) {
-    let newItemRef = this.dataSvc.getOrgsRef().child(`${this.userData.getSelectedOrganization()}/events`).push();
+    let newItemRef = this.dataSvc.getOrgsRef().child(`${this.userData.getCurrentOOID()}/events`).push();
     let newItemKey: string = newItemRef.key;
 
     let when = new Date(eventDate).toISOString().slice(0,10)

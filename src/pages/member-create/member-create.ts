@@ -24,7 +24,7 @@ export class MemberCreatePage implements OnInit{
   }
 
   ngOnInit(): void {
-    console.log(this.userData.getSelectedOrganization())
+    console.log(this.userData.getCurrentOOID())
 
   }
   ionViewDidLoad() {

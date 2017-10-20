@@ -32,7 +32,7 @@ export class EventDetailPage extends BaseClass implements OnInit{
               public events: Events) {
     super();
     this.eventId = this.navParams.get('eventId');
-    this.ooid = this.userData.getSelectedOrganization();
+    this.ooid = this.userData.getCurrentOOID();
     this.aoid = this.userData.getSelectOrgMemberKey();
   }
 

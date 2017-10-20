@@ -28,7 +28,7 @@ export class UserOrgsPage implements OnInit{
 
   ngOnInit(): void {
     let self = this;
-    this.ooid = this.userData.getSelectedOrganization();
+    this.ooid = this.userData.getCurrentOOID();
     this.dataSvc.getUserOrgs(self.authSvc.getLoggedInUser().uid)
       .then( snapshot => {
         if (snapshot.val())
@@ -48,7 +48,7 @@ export class UserOrgsPage implements OnInit{
 
   onSelectOrganization(o: IOrganization) {
     console.log(o)
-    this.userData.setSelectedOrganization(o.oid);
+    this.userData.setCurrentOOID(o.oid);
     this.ooid = o.oid;
     console.log(this.ooid)
   }

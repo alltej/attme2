@@ -41,7 +41,7 @@ export class CommentCreatePage implements OnInit{
   ngOnInit() {
     //console.log(`CommentCreatePage::ngOnInit`);
     this.eventId = this.navParams.get('eventId');
-    this.ooid = this.userData.getSelectedOrganization();
+    this.ooid = this.userData.getCurrentOOID();
 
     //console.log(this.eventId)
     this.createCommentForm = this.fb.group({

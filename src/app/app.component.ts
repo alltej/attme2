@@ -70,7 +70,7 @@ export class MyApp {
     //       this.rootPage = 'tabs';
     // }
     let self = this;
-    this.rootPage = 'TabsPage'
+    this.rootPage = 'TabsPage';
     platform.ready().then(() => {
       if (window.cordova) {
         // Okay, so the platform is ready and our plugins are available.
@@ -81,7 +81,24 @@ export class MyApp {
         splashScreen.hide();
       }
     });
+
+    this.listenToLoginEvents();
   }
+
+  listenToLoginEvents() {
+    this.events.subscribe('user:login', () => {
+      //this.enableMenu(true);
+    });
+
+    this.events.subscribe('user:signup', () => {
+      //this.enableMenu(true);
+    });
+
+    this.events.subscribe('user:logout', () => {
+      //this.enableMenu(false);
+    });
+  }
+
 
   watchForConnection() {
     //console.log(`AppComponent::watchForConnection`)

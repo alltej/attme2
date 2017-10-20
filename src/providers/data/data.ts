@@ -6,7 +6,7 @@ import * as firebase from 'firebase';
 @Injectable()
 export class DataProvider {
   //eventsRef: any = firebase.database().ref('events');
-  membersRef: any = firebase.database().ref('members');
+  //membersRef: any = firebase.database().ref('members');
   orgsRef: any = firebase.database().ref('organizations');
 
   usersRef: any = firebase.database().ref('users');
@@ -87,13 +87,14 @@ export class DataProvider {
       .child(`${ooid}/events`)
   }
 
+  getMembersRef(ooid: string) {
+    return this.getOrgsRef()
+      .child(`${ooid}/members`)
+  }
+
   getEventCommentsRef(ooid: string, eventId: string) {
     return this.getOrgsRef()
       .child(`${ooid}/comments/${eventId}`)
-  }
-
-  getMembersRef() {
-    return this.membersRef;
   }
 
   getOrgsRef() {

@@ -9,6 +9,9 @@ import {
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { EmailValidator } from '../../validators/email';
 import { AuthProvider } from '../../providers/auth/auth';
+import {UserData} from "../../providers/data/user-data";
+import {DataProvider} from "../../providers/data/data";
+import {MappingProvider} from "../../providers/mapper/mapping";
 
 @IonicPage()
 @Component({
@@ -25,6 +28,9 @@ export class LoginPage {
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
     public authProvider: AuthProvider,
+    private dataSvc:DataProvider,
+    private mappingSvc:MappingProvider,
+    private userData: UserData,
     public formBuilder: FormBuilder) {
 
     this.loginForm = formBuilder.group({
@@ -49,6 +55,20 @@ export class LoginPage {
     } else {
       this.authProvider.loginUser(this.loginForm.value.email, this.loginForm.value.password)
         .then( authData => {
+
+          this.dataSvc.getUserOrgs(this.authProvider.getLoggedInUser().uid)
+            .then( snapshot => {
+              if (snapshot.val())
+                //console.log(snapshot)
+              //self.userOrganizations = this.mappingSvc.getUserOrgs(snapshot);
+              this.mappingSvc.getUserOrgs(snapshot).forEach( oo => {
+                this.userData.setCurrentOOID(oo.oid)
+              });
+            }).catch(error =>{
+            console.log(error)
+          });
+
+
           this.loading.dismiss().then( () => {
             this.navCtrl.setRoot('TabsPage');
           });

@@ -47,7 +47,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
 
   ngOnInit(): void {
     //console.log(this.memberKey)
-    this.ooid = this.userData.getSelectedOrganization();
+    this.ooid = this.userData.getCurrentOOID();
     this.loadMemberDetails2();
   }
 

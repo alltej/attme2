@@ -2,30 +2,39 @@ import { Injectable } from '@angular/core';
 
 import { Events } from 'ionic-angular';
 import {IOrganization} from "../../models/user.interface";
-import {NativeStorage} from "@ionic-native/native-storage";
-
+import { Storage } from '@ionic/storage';
 
 @Injectable()
 export class UserData {
-  _favorites: string[] = [];
-  _selectedOrganization: string;
+  currentOoId: string;
   private _organizations: Array<IOrganization>;
   public  ooid: string
 
   constructor(
-    public events: Events) {
+    public events: Events,
+    public storage: Storage) {
   }
 
 
-  setSelectedOrganization(sessionName: string): void {
-    this._selectedOrganization=sessionName;
+  setCurrentOOID(ooid: string): void {
+    console.log(`setCurrentOOID==${ooid}`)
+    this.storage.set('currentOOID', ooid);
+    this.currentOoId=ooid;
     //this.storage.setItem('ooid', sessionName);
   };
 
-  getSelectedOrganization(): string {
+  getCurrentOOID(): string {
     //return Promise.resolve("-KwCMJMRwy57wGWfVfry");
-    return "-KwCMJMRwy57wGWfVfry"
-
+    //return this.currentOoId; //"-KwCMJMRwy57wGWfVfry"
+    this.storage.get('currentOOID').then((value) => {
+      this.currentOoId = value;
+    });
+    if (this.currentOoId == null) {
+      //TODO: Need to set a default on Login
+      console.log('TODO: Need to set a default on Login')
+      this.currentOoId = "-KwCMJMRwy57wGWfVfry"
+    }
+    return this.currentOoId;
     //
     // return this.storage.getItem('ooid').then((value) => {
     //   return value;
