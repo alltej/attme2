@@ -119,13 +119,17 @@ export class MyApp {
     var self = this;
 
     this.authService.onAuthStateChanged(function (user) {
+      console.log(`AppComponent::ngAfterViewInit::onAuthStateChanged`)
       if (user === null) {
+        console.log(`AppComponent::ngAfterViewInit::onAuthStateChanged::user === null`)
         self.menuCtrl.close();
         //self.nav.setRoot(LoginPage);
-        this.rootPage = 'LoginPage';
-        // let loginodal = self.modalCtrl.create('LoginPage');
-        // loginodal.present();
+        //this.rootPage = 'LoginPage';
+        let loginodal = self.modalCtrl.create('LoginPage');
+        loginodal.present();
       }else{
+        console.log(`AppComponent::ngAfterViewInit::onAuthStateChanged::user !== null`)
+
         this.rootPage = HomePage;
       }
     });
