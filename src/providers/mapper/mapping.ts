@@ -109,7 +109,7 @@ export class MappingProvider {
 
 
   getMembers(snapshot: any): Array<IMember> {
-    //console.log(`mapping::getEvents::${snapshot.val()}`)
+    console.log(`mapping::getMembers::${snapshot.val()}`)
     let iMembers: Array<IMember> = [];
     if (snapshot.val() == null)
       return iMembers;
@@ -124,8 +124,8 @@ export class MappingProvider {
         memberKey: aMember.memberKey,
         email: aMember.email,
         birthDate: aMember.birthDate,
-        firstName: aMember.firstname,
-        lastName: aMember.lastname,
+        firstname: aMember.firstname,
+        lastname: aMember.lastname,
         memberId: aMember.memberId,
         photoUrl: aMember.photoUrl,
         isMyCircle: false //TODO

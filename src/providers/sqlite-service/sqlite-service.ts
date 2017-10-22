@@ -129,7 +129,7 @@ export class SqliteService {
   addMember(member: IMember) {
     let self = this;
     let query: string = 'INSERT INTO Members (uid, email, firstName, lastName, memberId, photoUrl) Values (?,?,?,?,?,?)';
-    self.db.executeSql(query, [member.uid, member.email, member.firstName, member.lastName,member.memberId, member.photoUrl]).then((data) => {
+    self.db.executeSql(query, [member.uid, member.email, member.firstname, member.lastname,member.memberId, member.photoUrl]).then((data) => {
       console.log('user ' + member.email + ' added');
     }, (err) => {
       console.error('Unable to add user: ', err);

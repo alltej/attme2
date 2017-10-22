@@ -22,8 +22,8 @@ export class MemberInviteProvider {
         (newUser) => {
           this.userProfileRef.child(newUser.uid)
             .child("profile").set({
-              lastName:member.lastName,
-              firstName:member.firstName,
+              lastName:member.lastname,
+              firstName:member.firstname,
               email: member.email,
               organizations : {
                   ooid : {name: orgName, role: 1}

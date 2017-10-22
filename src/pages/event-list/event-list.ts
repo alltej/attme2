@@ -76,7 +76,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    //console.log(this.userData.getSelectedOrganization());
+    console.log(`event-lists::ngOnInit`);
     let self = this;
     self.segment = "current";
     self.weekNumber = 0;
@@ -231,7 +231,13 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   loadEvents(fromStart: boolean) {
-    //console.log(`event-list::loadEvents::fromStart:${fromStart}::segment:${this.segment}`)
+    console.log(`event-list::loadEvents::fromStart:${fromStart}::segment:${this.segment}`)
+
+    //try to reset this.ooid if get set to null/undefined
+    if (this.ooid == null) {
+      this.ooid = this.userData.getCurrentOOID();
+    }
+
     let self = this;
 
     if (fromStart) {

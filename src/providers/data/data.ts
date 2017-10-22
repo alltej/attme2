@@ -88,6 +88,7 @@ export class DataProvider {
   }
 
   getMembersRef(ooid: string) {
+    console.log(`data::getMembersRef::ooid=${ooid}`)
     return this.getOrgsRef()
       .child(`${ooid}/members`)
   }

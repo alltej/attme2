@@ -3,8 +3,8 @@ export interface IMember {
   memberKey: string;
   email: string;
   birthDate: string;
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   memberId: string;
   photoUrl: string;
   isMyCircle: boolean;

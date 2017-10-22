@@ -36,6 +36,7 @@ import {UserData} from "../providers/data/user-data";
 import {Network} from "@ionic-native/network";
 //import { NativeStorage } from '@ionic-native/native-storage';
 import {IonicStorageModule} from "@ionic/storage";
+import {Camera} from "@ionic-native/camera";
 
 //import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 
@@ -83,6 +84,7 @@ export class MyErrorHandler implements ErrorHandler {
     FilePath,
     FileChooser,
     Storage,
+    Camera,
     //{provide: ErrorHandler, useClass: IonicErrorHandler},
     {provide: ErrorHandler, useClass: MyErrorHandler },
     AuthProvider,

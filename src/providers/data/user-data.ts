@@ -29,11 +29,11 @@ export class UserData {
     this.storage.get('currentOOID').then((value) => {
       this.currentOoId = value;
     });
-    if (this.currentOoId == null) {
-      //TODO: Need to set a default on Login
-      console.log('TODO: Need to set a default on Login')
-      this.currentOoId = "-KwCMJMRwy57wGWfVfry"
-    }
+    // if (this.currentOoId == null) {
+    //   //TODO: Need to set a default on Login
+    //   console.log('TODO: Need to set a default on Login')
+    //   this.currentOoId = "-KwCMJMRwy57wGWfVfry"
+    // }
     return this.currentOoId;
     //
     // return this.storage.getItem('ooid').then((value) => {

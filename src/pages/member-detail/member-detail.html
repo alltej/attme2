@@ -1,10 +1,10 @@
 
-<ion-header>
+<!--<ion-header>-->
 
-  <ion-navbar color="hcolor">
-    <ion-title>{{ member?.firstName }} {{ member?.lastName }}</ion-title>
-  </ion-navbar>
-  <!--<ion-buttons right>-->
+  <!--<ion-navbar color="hcolor">-->
+    <!--<ion-title>{{ member?.firstName }} {{ member?.lastName }}</ion-title>-->
+  <!--</ion-navbar>-->
+  <!--<ion-buttons end>-->
     <!--<button ion-button (click)="openImageOptions()">-->
       <!--<ion-icon name="camera"></ion-icon>-->
     <!--</button>-->
@@ -12,16 +12,32 @@
     <!--&lt;!&ndash;<ion-icon name="refresh"></ion-icon>&ndash;&gt;-->
     <!--&lt;!&ndash;</button>&ndash;&gt;-->
   <!--</ion-buttons>-->
+<!--</ion-header>-->
+
+<ion-header>
+  <ion-navbar color="hcolor" align-title="center">
+    <ion-title>{{ member?.firstname }} {{ member?.lastname }}</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="openImageOptions()">
+        <ion-icon name="camera"></ion-icon>
+      </button>
+      <!--<button ion-button (click)="reload()">-->
+      <!--<ion-icon name="refresh"></ion-icon>-->
+      <!--</button>-->
+    </ion-buttons>
+    <!--<ion-buttons end>-->
+    <!--<button ion-button icon-only (click)="logOut()">-->
+    <!--<ion-icon name="log-out"></ion-icon>-->
+    <!--</button>-->
+    <!--</ion-buttons>-->
+  </ion-navbar>
 </ion-header>
 
 <ion-content padding>
   <div *ngIf="!userDataLoaded">
     <img src="assets/images/ring.gif" style="display:block; margin:auto" />
   </div>
-  <!--<ion-list-header>-->
-  <!--Member Detail-->
-  <!--</ion-list-header>-->
-  <ion-list no-border >
+  <ion-list no-border *ngIf="userDataLoaded">
     <ion-list-header>
       Member Detail
     </ion-list-header>
@@ -54,10 +70,10 @@
           <ion-col col-6>
             Name
           </ion-col>
-          <ion-col col-6 *ngIf="member?.firstName || member?.lastName">
-            {{member?.firstName}} {{member?.lastName}}
+          <ion-col col-6 *ngIf="member?.firstname || member?.lastname">
+            {{member?.firstname}} {{member?.lastname}}
           </ion-col>
-          <ion-col col-6 class="placeholder-profile" *ngIf="!member?.firstName">
+          <ion-col col-6 class="placeholder-profile" *ngIf="!member?.firstname">
             <span>
               Tap here to edit.
             </span>

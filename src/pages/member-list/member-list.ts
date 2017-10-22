@@ -52,7 +52,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   ngOnInit() {
-    //console.log('member-list::ngOnInit')
+    console.log('member-list::ngOnInit')
 
     this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
       this.loadMembers2();
@@ -79,7 +79,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
     //console.log(`endAt:${endAt}`)
     //TODO: simplify
     this.dataSvc.getMembersRef(this.ooid)
-      .orderByChild('firstName')
+      .orderByChild('firstname')
       .startAt(startAt)
       .endAt(endAt)
       .once('value', snapshot=> {

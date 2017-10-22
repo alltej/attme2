@@ -7,7 +7,7 @@ import {MemberProvider} from "../../providers/member/member";
 import {BaseClass} from "../BasePage";
 import {ProfileImageProvider} from "../../providers/profile/profile-image";
 import {MemberInviteProvider} from "../../providers/member/member-invite";
-import { Camera, CameraOptions } from 'ionic-native';
+import { Camera, CameraOptions } from '@ionic-native/camera';
 import {StorageProvider} from "../../providers/storage/storage";
 import {IMember} from "../../models/member.interface";
 import {ProfileProvider} from "../../providers/profile/profile";
@@ -35,6 +35,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
               public alertCtrl: AlertController,
               public loadingCtrl: LoadingController,
               public actionSheeCtrl: ActionSheetController,
+              private camera: Camera,
               public navParams: NavParams,
               private memberSvc: MemberProvider,
               private memberInviteSvc: MemberInviteProvider,
@@ -67,8 +68,8 @@ export class MemberDetailPage extends BaseClass implements OnInit{
         // console.log(userData)
         this.getUserImage().then(url => {
           this.member = {
-            firstName: userData.firstname,
-            lastName: userData.lastname,
+            firstname: userData.firstname,
+            lastname: userData.lastname,
             birthDate: userData.birthDate,
             uid: userData.uid,
             memberKey: userData.memberKey,
@@ -84,8 +85,8 @@ export class MemberDetailPage extends BaseClass implements OnInit{
         //console.log(error.code);
         //TODO
         this.member = {
-          firstName: userData.firstname,
-          lastName: userData.lastname,
+          firstname: userData.firstname,
+          lastname: userData.lastname,
           birthDate: userData.birthDate,
           uid: userData.memberKey,
           memberKey: userData.memberKey,
@@ -165,12 +166,12 @@ export class MemberDetailPage extends BaseClass implements OnInit{
         {
           name: 'firstName',
           placeholder: 'Your first name',
-          value: this.member.firstName
+          value: this.member.firstname
         },
         {
           name: 'lastName',
           placeholder: 'Your last name',
-          value: this.member.lastName
+          value: this.member.lastname
         },
       ],
       buttons: [
@@ -299,14 +300,14 @@ export class MemberDetailPage extends BaseClass implements OnInit{
           text: 'Camera',
           icon: 'camera',
           handler: () => {
-            this.openCamera(Camera.PictureSourceType.CAMERA);
+            this.openCamera(this.camera.PictureSourceType.CAMERA);
           }
         },
         {
           text: 'Album',
           icon: 'folder-open',
           handler: () => {
-            this.openCamera(Camera.PictureSourceType.PHOTOLIBRARY);
+            this.openCamera(this.camera.PictureSourceType.PHOTOLIBRARY);
           }
         }
       ]
@@ -319,16 +320,16 @@ export class MemberDetailPage extends BaseClass implements OnInit{
 
     let options: CameraOptions = {
       quality: 95,
-      destinationType: Camera.DestinationType.DATA_URL,
+      destinationType: this.camera.DestinationType.DATA_URL,
       sourceType: pictureSourceType,
-      encodingType: Camera.EncodingType.PNG,
+      encodingType: this.camera.EncodingType.PNG,
       targetWidth: 400,
       targetHeight: 400,
       saveToPhotoAlbum: true,
       correctOrientation: true
     };
 
-    Camera.getPicture(options).then(imageData => {
+    this.camera.getPicture(options).then(imageData => {
       const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
         const byteCharacters = atob(b64Data);
         const byteArrays = [];

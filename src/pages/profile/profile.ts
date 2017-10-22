@@ -1,13 +1,13 @@
-import {Component, NgZone, OnInit} from '@angular/core';
+import {Component,  OnInit} from '@angular/core';
 import {IonicPage, NavController, AlertController, ActionSheetController, LoadingController} from 'ionic-angular';
 import { ProfileProvider } from '../../providers/profile/profile';
 import { AuthProvider } from '../../providers/auth/auth';
 import {MemberProvider} from "../../providers/member/member";
-import {ProfileImageProvider} from "../../providers/profile/profile-image";
 import {StorageProvider} from "../../providers/storage/storage";
 import {IUser} from "../../models/user.interface";
 import {IUserProfile} from "../../models/user-profile.interface";
-import { Camera, CameraOptions } from 'ionic-native';
+import { Camera, CameraOptions } from '@ionic-native/camera';
+
 import {UserData} from "../../providers/data/user-data";
 
 @IonicPage()
@@ -32,6 +32,7 @@ export class ProfilePage implements OnInit
               public alertCtrl: AlertController,
               public loadingCtrl: LoadingController,
               public actionSheeCtrl: ActionSheetController,
+              private camera: Camera,
               public profileSvc: ProfileProvider,
               public authSvc: AuthProvider,
               public memberSvc: MemberProvider,
@@ -50,8 +51,6 @@ export class ProfilePage implements OnInit
     this.userDataLoaded = false;
     let currentUser: any = {};
     currentUser = this.authSvc.getLoggedInUser();
-    console.log(`currentUser.uid==${currentUser.uid}`)
-    //return this.profileSvc.getUserProfileData(this.authSvc.getLoggedInUser().uid);
     this.profileSvc.getUserProfileData(currentUser.uid)
       .then(snapShot => {
         let userData: any = snapShot.val();
@@ -188,14 +187,14 @@ export class ProfilePage implements OnInit
           text: 'Camera',
           icon: 'camera',
           handler: () => {
-            this.openCamera(Camera.PictureSourceType.CAMERA);
+            this.openCamera(this.camera.PictureSourceType.CAMERA);
           }
         },
         {
           text: 'Album',
           icon: 'folder-open',
           handler: () => {
-            this.openCamera(Camera.PictureSourceType.PHOTOLIBRARY);
+            this.openCamera(this.camera.PictureSourceType.PHOTOLIBRARY);
           }
         }
       ]
@@ -208,16 +207,16 @@ export class ProfilePage implements OnInit
 
     let options: CameraOptions = {
       quality: 95,
-      destinationType: Camera.DestinationType.DATA_URL,
+      destinationType: this.camera.DestinationType.DATA_URL,
       sourceType: pictureSourceType,
-      encodingType: Camera.EncodingType.PNG,
+      encodingType: this.camera.EncodingType.PNG,
       targetWidth: 400,
       targetHeight: 400,
       saveToPhotoAlbum: true,
       correctOrientation: true
     };
 
-    Camera.getPicture(options).then(imageData => {
+    this.camera.getPicture(options).then(imageData => {
       const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
         const byteCharacters = atob(b64Data);
         const byteArrays = [];
@@ -293,7 +292,8 @@ export class ProfilePage implements OnInit
 
           this.profileSvc.setUserImage(uid,downloadURL)
             .then( () => {
-              this.memberSvc.updatePhotoUrl(this.ooid, this.aoMemberKey, downloadURL)
+              //TODO: Update our membership photo?
+              //this.memberSvc.updatePhotoUrl(this.ooid, this.aoMemberKey, downloadURL)
             }).catch( error => {
               console.log(error)
           })
