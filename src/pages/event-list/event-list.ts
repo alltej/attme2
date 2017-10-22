@@ -76,7 +76,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    console.log(`event-lists::ngOnInit`);
+    console.log(`event-lists::`);
     let self = this;
     self.segment = "current";
     self.weekNumber = 0;

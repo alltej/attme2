@@ -128,6 +128,7 @@ export class MappingProvider {
         lastname: aMember.lastname,
         memberId: aMember.memberId,
         photoUrl: aMember.photoUrl,
+        textAvatar: aMember.textAvatar,
         isMyCircle: false //TODO
       });
     });

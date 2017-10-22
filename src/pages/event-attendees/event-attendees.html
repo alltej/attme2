@@ -24,9 +24,20 @@
     <ion-label>Attendance is disabled</ion-label>
   </ion-item>
   <ion-item *ngFor="let member of members">
-    <ion-avatar item-start>
-      <img [src]="getAvatar(member?.photoUrl)">
+
+    <!--<ion-avatar item-start>-->
+      <!--<img [src]="getAvatar(member?.photoUrl)">-->
+    <!--</ion-avatar>-->
+    <ion-avatar item-start >
+      <div *ngIf="(member?.photoUrl==null); else photoTemplate">
+        <ion-text-avatar>{{member?.textAvatar}}</ion-text-avatar>
+      </div>
+      <ng-template #photoTemplate>
+        <img [src]="member?.photoUrl">
+      </ng-template>
     </ion-avatar>
+
+
     <h2>{{member.firstname}} {{member.lastname}}</h2>
     <!--<p>Hayao Miyazaki • 1988</p>-->
     <!--<button ion-button clear item-end>View</button>-->

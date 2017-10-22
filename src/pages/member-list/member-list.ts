@@ -64,7 +64,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
   private loadMembers2() {
     let self = this;
     self.loading = true;
-
+    self.iMembers = [];
     let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     let alphaArray = str.split("");
 

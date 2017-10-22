@@ -31,7 +31,7 @@
         <!--<img src="{{member?.photoUrl}}">-->
 
         <div *ngIf="(member?.photoUrl==null); else photoTemplate">
-          <ion-text-avatar>AZ</ion-text-avatar>
+          <ion-text-avatar>{{member?.textAvatar}}</ion-text-avatar>
         </div>
 
         <ng-template #photoTemplate>

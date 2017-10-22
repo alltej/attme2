@@ -6,7 +6,7 @@ import { Storage } from '@ionic/storage';
 
 @Injectable()
 export class UserData {
-  currentOoId: string;
+  //currentOoId: string;
   private _organizations: Array<IOrganization>;
   public  ooid: string
 
@@ -19,7 +19,7 @@ export class UserData {
   setCurrentOOID(ooid: string): void {
     console.log(`setCurrentOOID==${ooid}`)
     this.storage.set('currentOOID', ooid);
-    this.currentOoId=ooid;
+    this.ooid=ooid;
     //this.storage.setItem('ooid', sessionName);
   };
 
@@ -27,14 +27,14 @@ export class UserData {
     //return Promise.resolve("-KwCMJMRwy57wGWfVfry");
     //return this.currentOoId; //"-KwCMJMRwy57wGWfVfry"
     this.storage.get('currentOOID').then((value) => {
-      this.currentOoId = value;
+      this.ooid = value;
     });
-    // if (this.currentOoId == null) {
-    //   //TODO: Need to set a default on Login
-    //   console.log('TODO: Need to set a default on Login')
-    //   this.currentOoId = "-KwCMJMRwy57wGWfVfry"
-    // }
-    return this.currentOoId;
+    if (this.ooid == null) {
+      //TODO: Need to set a default on Login
+      //console.log('TODO: Need to set a default on Login')
+      //this.ooid = "-KwCMJMRwy57wGWfVfry"
+    }
+    return this.ooid;
     //
     // return this.storage.getItem('ooid').then((value) => {
     //   return value;
