@@ -10,10 +10,7 @@ import {DataProvider} from "../../providers/data/data";
 import {UserData} from "../../providers/data/user-data";
 
 
-@IonicPage({
-  name: 'comment-create',
-  segment: ':eventId/comment-create'
-})
+@IonicPage()
 @Component({
   selector: 'page-comment-create',
   templateUrl: 'comment-create.html',

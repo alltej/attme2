@@ -52,8 +52,9 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
       })
 //.child(self.userData.getSelectedOrganization())
     this.commentsSvc.getEventCommentsRef(this.ooid,this.eventId)
+      .orderByChild('dateCreated')
       .once('value', snapshot =>  {
-        this.comments = this.mappingsService.getComments(snapshot);
+        this.comments = this.mappingsService.getComments(snapshot).reverse();
         this.commentsLoaded = true;
       }, error => {
         //console.log(error)
@@ -77,7 +78,7 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
   }
 
   createComment() {
-    //console.log('createComment')
+    console.log('createComment')
     //CommentCreatePage
     let modalPage = this.modalCtrl.create('CommentCreatePage', {
       eventId: this.eventId
