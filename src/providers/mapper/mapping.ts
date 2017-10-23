@@ -109,7 +109,7 @@ export class MappingProvider {
 
 
   getMembers(snapshot: any): Array<IMember> {
-    console.log(`mapping::getMembers::${snapshot.val()}`)
+    //console.log(`mapping::getMembers::${snapshot.val()}`)
     let iMembers: Array<IMember> = [];
     if (snapshot.val() == null)
       return iMembers;

@@ -123,11 +123,11 @@ export class MemberDetailPage extends BaseClass implements OnInit{
           textAvatar: userData.textAvatar
         };
 
-        console.log(`this.member.uid ==${this.member.uid }`)
+        //console.log(`this.member.uid ==${this.member.uid }`)
         this.userDataLoaded = true;
         this.isUserProfileExists = this.member.uid != null;
         this.enableEditEmail = this.member.uid != null || (this.member.email == null);
-        console.log(`this.isUserProfileExists==${this.isUserProfileExists }`)
+        //console.log(`this.isUserProfileExists==${this.isUserProfileExists }`)
 
       // if (this.member != null) {
       //   this.enableEditEmail = this.member.uid != null || (this.member.email == null);

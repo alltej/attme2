@@ -22,7 +22,7 @@ export class MemberCreatePage implements OnInit{
   }
 
   ngOnInit(): void {
-    console.log(this.userData.getCurrentOOID())
+    //console.log(this.userData.getCurrentOOID())
   }
 
   ionViewDidLoad() {
@@ -30,7 +30,7 @@ export class MemberCreatePage implements OnInit{
   }
 
   createMember(firstname: string, lastname: string, memberId: string, email: string) {
-    console.log(`createMember::this.userData.ooid==${this.userData.ooid}`)
+    //console.log(`createMember::this.userData.ooid==${this.userData.ooid}`)
     let newItemRef = this.dataSvc.getOrgsRef().child(`${this.userData.ooid}/members`).push();
     let newItemKey: string = newItemRef.key;
 

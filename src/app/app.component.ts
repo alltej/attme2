@@ -136,24 +136,24 @@ export class MyApp {
     var self = this;
 
     this.authService.onAuthStateChanged(function (user) {
-      console.log(`AppComponent::ngAfterViewInit::onAuthStateChanged`)
+      //console.log(`AppComponent::ngAfterViewInit::onAuthStateChanged`)
       if (user === null) {
-        console.log(`AppComponent::ngAfterViewInit::onAuthStateChanged::user === null`)
+        //console.log(`AppComponent::ngAfterViewInit::onAuthStateChanged::user === null`)
         self.menuCtrl.close();
         //self.nav.setRoot(LoginPage);
         //this.rootPage = 'LoginPage';
         let loginodal = self.modalCtrl.create('LoginPage');
         loginodal.present();
       }else{
-        console.log(`AppComponent::ngAfterViewInit::onAuthStateChanged::user !== null`)
-        console.log(`user==${user}`)
+        //console.log(`AppComponent::ngAfterViewInit::onAuthStateChanged::user !== null`)
+        //console.log(`user==${user}`)
         this.rootPage = HomePage;
       }
     });
   }
 
   onLoad(page: any) {
-    console.log(`MyApp:onLoad::${page}`)
+    //console.log(`MyApp:onLoad::${page}`)
     this.nav.setRoot(page);
     this.menuCtrl.close();
 

@@ -29,7 +29,6 @@ export class UserLikesProvider {
     })
       .then( result => {
         if (result.committed) {
-          console.log("zzzzzz")
           let un = "";
           this.dataSvc.usersRef
             .child(`${this.authSvc.getLoggedInUser().uid}/profile`)

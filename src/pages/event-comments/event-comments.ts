@@ -24,11 +24,9 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
   commentsLoaded: boolean = false;
   comments: IComment[];
 
-  private membersRx: Observable<any[]>;
   private ooid: string;
   constructor(
         public commentsSvc: EventCommentsProvider,
-        public authSvc: AuthProvider,
         public modalCtrl: ModalController,
         public toastCtrl: ToastController,
         public mappingsService: MappingProvider,

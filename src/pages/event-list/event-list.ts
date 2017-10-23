@@ -50,7 +50,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
               private userData: UserData,
               public events: Events) {
     super();
-    console.log(`this.userData.getCurrentOOID()==${this.userData.getCurrentOOID()}`)
+    //console.log(`this.userData.getCurrentOOID()==${this.userData.getCurrentOOID()}`)
     this.ooid = this.userData.getCurrentOOID();
 
     this.searchControl = new FormControl();
@@ -76,7 +76,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    console.log(`event-lists::`);
+    //console.log(`event-lists::`);
     let self = this;
     self.segment = "current";
     self.weekNumber = 0;
@@ -181,7 +181,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
 
   public onEventAdded = (childSnapshot, prevChildKey) => {
     let priority = childSnapshot.val(); // priority..
-    console.log(`priority=${priority}`)
+    //console.log(`priority=${priority}`)
     let self = this;
     self.events.publish('event:created');
     // fetch new thread..
@@ -231,7 +231,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   loadEvents(fromStart: boolean) {
-    console.log(`event-list::loadEvents::fromStart:${fromStart}::segment:${this.segment}`)
+    //console.log(`event-list::loadEvents::fromStart:${fromStart}::segment:${this.segment}`)
 
     //try to reset this.ooid if get set to null/undefined
     if (this.ooid == null) {
@@ -391,7 +391,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   goToEventDetail(eventId){
-    console.log(`goToEventDetail::${eventId}`);
+    //console.log(`goToEventDetail::${eventId}`);
       this.navCtrl.push('event-detail', { 'parentPage': this, 'eventId': eventId });
 
     // this.events.subscribe('reloadPage1',() => {
