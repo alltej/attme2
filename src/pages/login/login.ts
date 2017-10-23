@@ -55,14 +55,14 @@ export class LoginPage {
     } else {
       this.authProvider.loginUser(this.loginForm.value.email, this.loginForm.value.password)
         .then( authData => {
-
+          console.log(`authData.emailVerified==${authData.emailVerified}`)
           this.dataSvc.getUserOrgs(this.authProvider.getLoggedInUser().uid)
             .then( snapshot => {
               if (snapshot.val())
-                //console.log(snapshot)
+
               //self.userOrganizations = this.mappingSvc.getUserOrgs(snapshot);
-              this.mappingSvc.getUserOrgs(snapshot).forEach( oo => {
-                this.userData.setCurrentOOID(oo.oid)
+              this.mappingSvc.getUserOrgs(snapshot).forEach( org => {
+                this.userData.setCurrentOrg(org)
               });
             }).catch(error =>{
             console.log(error)

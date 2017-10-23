@@ -66,43 +66,74 @@ export class MemberDetailPage extends BaseClass implements OnInit{
         if (userData == null)
           return null;
         // console.log(userData)
-        this.getUserImage().then(url => {
-          this.member = {
-            firstname: userData.firstname,
-            lastname: userData.lastname,
-            birthDate: userData.birthDate,
-            uid: userData.uid,
-            memberKey: userData.memberKey,
-            email: userData.email,
-            memberId: userData.memberId,
-            photoUrl: url,
-            isMyCircle: false,
-          };
+      //   this.getUserImage().then(url => {
+      //     this.member = {
+      //       firstname: userData.firstname,
+      //       lastname: userData.lastname,
+      //       birthDate: userData.birthDate,
+      //       uid: userData.uid,
+      //       memberKey: userData.memberKey,
+      //       email: userData.email,
+      //       memberId: userData.memberId,
+      //       photoUrl: url,
+      //       isMyCircle: false,
+      //       textAvatar: userData.textAvatar
+      //     };
+      //
+      //     console.log(`this.member.uid ==${this.member.uid }`)
+      //     this.userDataLoaded = true;
+      //     this.isUserProfileExists = this.member.uid != null;
+      //     this.enableEditEmail = this.member.uid != null || (this.member.email == null);
+      //     console.log(`this.isUserProfileExists==${this.isUserProfileExists }`)
+      //
+      // }).catch(error => {
+      //   //console.log(error.code);
+      //   //TODO
+      //   this.member = {
+      //     firstname: userData.firstname,
+      //     lastname: userData.lastname,
+      //     birthDate: userData.birthDate,
+      //     uid: userData.uid,
+      //     memberKey: userData.memberKey,
+      //     email: userData.email,
+      //     memberId: userData.memberId,
+      //     photoUrl: 'assets/images/profile.png',
+      //     isMyCircle: false,
+      //     textAvatar: userData.textAvatar
+      //
+      //   };
+      //     console.log(`this.member.uid ==${this.member.uid }`)
+      //
+      //   this.userDataLoaded = true
+      //   this.isUserProfileExists = this.member.uid != null;
+      //     this.enableEditEmail = this.member.uid != null || (this.member.email == null);
+      //     console.log(`this.isUserProfileExists==${this.isUserProfileExists }`)
+      // });
 
-          this.userDataLoaded = true;
-
-      }).catch(error => {
-        //console.log(error.code);
-        //TODO
         this.member = {
           firstname: userData.firstname,
           lastname: userData.lastname,
           birthDate: userData.birthDate,
-          uid: userData.memberKey,
+          uid: userData.uid,
           memberKey: userData.memberKey,
           email: userData.email,
           memberId: userData.memberId,
-          photoUrl: 'assets/images/profile.png',
-          isMyCircle: false
+          photoUrl: (userData.photoUrl == null)?'assets/images/profile.png':userData.photoUrl,
+          isMyCircle: false,
+          textAvatar: userData.textAvatar
         };
 
+        console.log(`this.member.uid ==${this.member.uid }`)
         this.userDataLoaded = true;
-      });
-
-      if (this.member != null) {
-        this.enableEditEmail = this.member.uid != null || (this.member.email == null);
-      }
         this.isUserProfileExists = this.member.uid != null;
+        this.enableEditEmail = this.member.uid != null || (this.member.email == null);
+        console.log(`this.isUserProfileExists==${this.isUserProfileExists }`)
+
+      // if (this.member != null) {
+      //   this.enableEditEmail = this.member.uid != null || (this.member.email == null);
+      //   console.log(`this.enableEditEmail==${this.enableEditEmail }`)
+      // }
+
       //console.log("aaaa11")
       // this.profileSvc.findMemberId2(this.ooid, this.memberKey)
       //   .on('value', (snapshot) =>
@@ -287,8 +318,10 @@ export class MemberDetailPage extends BaseClass implements OnInit{
   }
 
   onCreateInvite() {
+    //TODO: Get the Org Name, Role
+    let role:number = 5
     this.memberInviteSvc
-      .createUserInvite(this.ooid, "TODO Org", this.member);
+      .createUserInvite(this.ooid, "Org A", role, this.member);
   }
 
   openImageOptions() {

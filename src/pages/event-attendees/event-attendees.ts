@@ -32,6 +32,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   private members: any[] = [];
   private isAttendanceEnabled: boolean  = false;
   private ooid: string;
+  private userRole: number;
 
   constructor(public navCtrl: NavController,
               private membersSvc: MemberProvider,
@@ -47,6 +48,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
     this.searchControl = new FormControl();
     this.eventId = this.navParams.get('eventId');
     this.ooid = this.userData.getCurrentOOID();
+    this.userRole = this.userData.getRole();
     //console.log(`EventAttendeesPage::constructor::${this.currentEventKey}`);
     //this.eventDate = eventSvc.getEventDetail(this.currentEventKey);
 
@@ -103,7 +105,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
     this.membersRx
       .map(members =>{
         return members.map(member =>{
-          this.attendanceSvc.getMemberVoteCount(this.eventId, member.$key)
+          this.attendanceSvc.getMemberVoteCount(this.ooid, this.eventId, member.$key)
             .takeUntil(this.componentDestroyed$)
             .map( (ul) =>{
               return ul;
@@ -120,7 +122,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
       }) //TODO
       .map(members =>{
         return members.map(member =>{
-          this.attendanceSvc.isVoted(this.eventId, member.$key)
+          this.attendanceSvc.isVoted(this.ooid, this.eventId, member.$key)
             .takeUntil(this.componentDestroyed$)
             .map( (ul) =>{
               //console.log(ul)
@@ -141,11 +143,11 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
 
   onUpVote(selectedMember: any){
     //console.log(`${this.currentEventKey}, ${selectedMember.$key}`)
-    this.attendanceSvc.addAttendee(this.eventId, selectedMember.$key);
+    this.attendanceSvc.addAttendee(this.ooid, this.eventId, selectedMember.$key);
   }
 
   onDownVote(selectedMember: any){
-    this.attendanceSvc.removeAttendee(this.eventId, selectedMember.$key);
+    this.attendanceSvc.removeAttendee(this.ooid, this.eventId, selectedMember.$key);
   }
 
   selectedAll(){
@@ -184,6 +186,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
 
   isEnableAttendance(eventDate) {
     //if (this.isToday(eventDate)) return true;
+    if (this.userRole == 1 || this.userRole == 3) return true;
     if (this.isAttendanceEnabledForEvent(eventDate)) return true;
     return false;
   }

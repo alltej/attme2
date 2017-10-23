@@ -10,6 +10,7 @@ export class DataProvider {
   orgsRef: any = firebase.database().ref('organizations');
 
   usersRef: any = firebase.database().ref('users');
+  userInvitesRef: any = firebase.database().ref('userInvites');
 
   databaseRef: any = firebase.database();
   connectionRef: any = firebase.database().ref('.info/connected');

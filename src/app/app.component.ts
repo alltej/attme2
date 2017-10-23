@@ -146,7 +146,7 @@ export class MyApp {
         loginodal.present();
       }else{
         console.log(`AppComponent::ngAfterViewInit::onAuthStateChanged::user !== null`)
-
+        console.log(`user==${user}`)
         this.rootPage = HomePage;
       }
     });

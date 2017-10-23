@@ -1,25 +1,28 @@
 import { Injectable } from '@angular/core';
 
 import { Events } from 'ionic-angular';
-import {IOrganization} from "../../models/user.interface";
+import {IOrganization, IUserOrgs} from "../../models/user.interface";
 import { Storage } from '@ionic/storage';
 
 @Injectable()
 export class UserData {
-  //currentOoId: string;
-  private _organizations: Array<IOrganization>;
-  public  ooid: string
+    ooid: string
+    role: number
 
   constructor(
     public events: Events,
     public storage: Storage) {
+      this.ooid = this.getCurrentOOID()
+      this.role = this.getRole()
   }
 
 
-  setCurrentOOID(ooid: string): void {
-    console.log(`setCurrentOOID==${ooid}`)
-    this.storage.set('currentOOID', ooid);
-    this.ooid=ooid;
+  setCurrentOrg(selectedOrg: IUserOrgs): void {
+    console.log(`setCurrentOOID==${selectedOrg}`)
+    this.storage.set('currentOOID', selectedOrg.oid);
+    this.ooid=selectedOrg.oid;
+    this.storage.set('currentRole', selectedOrg.role);
+    this.role=selectedOrg.role;
     //this.storage.setItem('ooid', sessionName);
   };
 
@@ -29,16 +32,19 @@ export class UserData {
     this.storage.get('currentOOID').then((value) => {
       this.ooid = value;
     });
-    if (this.ooid == null) {
-      //TODO: Need to set a default on Login
-      //console.log('TODO: Need to set a default on Login')
-      //this.ooid = "-KwCMJMRwy57wGWfVfry"
-    }
+
     return this.ooid;
     //
     // return this.storage.getItem('ooid').then((value) => {
     //   return value;
     // });
+  };
+
+  getRole(): number {
+    this.storage.get('currentRole').then((value) => {
+      this.role = value;
+    })
+    return this.role;
   };
 
   //TODO: Programmatically Update the MemberKey of the Current Organization

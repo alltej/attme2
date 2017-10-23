@@ -46,9 +46,9 @@ export class UserOrgsPage implements OnInit{
 
 
 
-  onSelectOrganization(o: IOrganization) {
+  onSelectOrganization(o: IUserOrgs) {
     console.log(o)
-    this.userData.setCurrentOOID(o.oid);
+    this.userData.setCurrentOrg(o);
     this.ooid = o.oid;
     console.log(this.ooid)
   }
