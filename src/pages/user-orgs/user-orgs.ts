@@ -32,13 +32,13 @@ export class UserOrgsPage implements OnInit{
     this.dataSvc.getUserOrgs(self.authSvc.getLoggedInUser().uid)
       .then( snapshot => {
         if (snapshot.val())
-          console.log(snapshot)
+          //console.log(snapshot)
           //self.userOrganizations = this.mappingSvc.getUserOrgs(snapshot);
           this.mappingSvc.getUserOrgs(snapshot).forEach( oo => {
             self.userOrganizations.push(oo)
           });
         }).catch(error =>{
-          console.log(error)
+          //console.log(error)
     });
 
     //this.selectedOid = this.userData.getSelectedOrganization();
@@ -47,9 +47,9 @@ export class UserOrgsPage implements OnInit{
 
 
   onSelectOrganization(o: IUserOrgs) {
-    console.log(o)
+    //console.log(o)
     this.userData.setCurrentOrg(o);
     this.ooid = o.oid;
-    console.log(this.ooid)
+    //console.log(this.ooid)
   }
 }

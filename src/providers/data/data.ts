@@ -69,6 +69,10 @@ export class DataProvider {
     return this.usersRef.child(userUid).once('value');
   }
 
+  getUserRef(userUid: string) {
+    return this.usersRef.child(userUid);
+  }
+
   // getMemberData(memberKey: any) {
   //   return this.membersRef.child(memberKey).once('value');
   // }
@@ -85,7 +89,7 @@ export class DataProvider {
   getUserInvite(userId: string) {
     //console.log(`getUserOrgs:${userUid}`)
     //
-    return this.userInvitesRef.child('/userInvites' + userId).once('value');
+    return this.userInvitesRef.child(`/${userId}`).once('value');
   }
 //
   getEventsRef(ooid: string) {

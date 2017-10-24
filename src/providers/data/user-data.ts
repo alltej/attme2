@@ -11,11 +11,13 @@ import {Storage} from "@ionic/storage";
 export class UserData {
     ooid: string
     role: number
+    ooName: string;
 
   constructor(
     public events: Events,
     public storage: Storage) {
       this.getCurrentOOID()
+      this.getCurrentOOName()
       this.getRole()
   }
 
@@ -24,6 +26,7 @@ export class UserData {
     //console.log(`setCurrentOOID==${selectedOrg}`)
     try {
       this.storage.set('currentOOID', selectedOrg.oid);
+      this.storage.set('currentOOName', selectedOrg.name);
       this.storage.set('currentRole', selectedOrg.role);
     } catch (e) {
       //console.log(`setCurrentOrg::${e}`)
@@ -46,6 +49,22 @@ export class UserData {
     }
 
     return this.ooid;
+    //
+    // return this.storage.get('ooid').then((value) => {
+    //   return value;
+    // });
+  };
+
+  getCurrentOOName(): string {
+    try {
+      this.storage.get('currentOOName').then((value) => {
+        this.ooName = value;
+      });
+    } catch (e) {
+      //console.log(`getCurrentOOID::${e}`)
+      //console.log(`getCurrentOOID::this.ooid==${this.ooid}`)
+    }
+    return this.ooName;
     //
     // return this.storage.get('ooid').then((value) => {
     //   return value;

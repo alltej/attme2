@@ -106,7 +106,7 @@ export class MemberProvider {
   }
 
   updateDOB(ooid: string, memberKey: string, birthDate: Date): firebase.Promise<void> {
-    console.log(`updateDOB::ooid==${ooid};;${memberKey}::${birthDate}`)
+    //console.log(`updateDOB::ooid==${ooid};;${memberKey}::${birthDate}`)
     return this.dataSvc.getOrgsRef()
       .child(ooid)
       .child(`/members/${memberKey}`)
@@ -116,7 +116,7 @@ export class MemberProvider {
   }
 
   getMemberData2(ooid: string, memberKey: string) {
-    console.log(`getMemberData2::ooid=${memberKey}::memberKey=${memberKey}`);
+    //console.log(`getMemberData2::ooid=${memberKey}::memberKey=${memberKey}`);
     return this.dataSvc.getOrgsRef().child(`/${ooid}/members/${memberKey}`).once('value');
   }
 }

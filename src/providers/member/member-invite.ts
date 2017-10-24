@@ -25,7 +25,9 @@ export class MemberInviteProvider {
               lastname:member.lastname,
               firstname:member.firstname,
               email: member.email,
-              ooid: ooid
+              ooid: ooid,
+              ooName: orgName,
+              role: roleId
           }).then(()=>{
             //let user:any = firebase.auth().currentUser;
             let user:any = newUser;

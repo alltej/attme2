@@ -56,22 +56,47 @@ export class LoginPage {
       this.authProvider.loginUser(this.loginForm.value.email, this.loginForm.value.password)
         .then( authData => {
           if (authData){
-            //console.log(`authData.emailVerified==${authData.emailVerified}`)
+            this.dataSvc.getUser(authData.uid).then( aUser =>{
+                console.log(`loginUser::createUser`)
+                if (!aUser.val()) {
+                  console.log(`loginUser::createUser==TRUE`)
+                  this.dataSvc.getUserRef(authData.uid).child('profile').set({
+                    email: authData.email
+                  });
+                }
+            }).then(() =>{
+                //console.log(`authData.emailVerified==${authData.emailVerified}`)
+                console.log(`authData.uid==${authData.uid}`)
+                this.dataSvc.getUserInvite(authData.uid).then( invite =>{
+                  console.log(`getUserInvite`)
+                  if (invite.val()){
+                    console.log(`loginUser::inviteExists==TRUE`)
+                    let inviteData = invite.val();
+                    console.log(`inviteData::${inviteData}`)
+                    this.dataSvc.getUserRef(authData.uid).child(`organizations/${inviteData.ooid}/`)
+                      .set({
+                        name: inviteData.ooName,
+                        role: inviteData.role
+                      })
+                  }
+                })
+            }).then(()=>{
+              this.dataSvc.getUserOrgs(this.authProvider.getLoggedInUser().uid)
+                .then( snapshot => {
+                  if (snapshot.val()){
+                    //self.userOrganizations = this.mappingSvc.getUserOrgs(snapshot);
+                    this.mappingSvc.getUserOrgs(snapshot).forEach( org => {
+                      this.userData.setCurrentOrg(org)
+                    });
+
+                  }
+
+                }).catch(error =>{
+                console.log(error)
+              })
+            })
           }
-          this.dataSvc.getUserOrgs(this.authProvider.getLoggedInUser().uid)
-            .then( snapshot => {
-              if (snapshot.val()){
-                //self.userOrganizations = this.mappingSvc.getUserOrgs(snapshot);
-                this.mappingSvc.getUserOrgs(snapshot).forEach( org => {
-                  this.userData.setCurrentOrg(org)
-                });
-
-              }
-
-            }).catch(error =>{
-            console.log(error)
-          });
-
+          ;
 
           this.loading.dismiss().then( () => {
             this.navCtrl.setRoot('TabsPage');
