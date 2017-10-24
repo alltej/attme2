@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 
 import { Events } from 'ionic-angular';
-import {IOrganization, IUserOrgs} from "../../models/user.interface";
-import { Storage } from '@ionic/storage';
+import {IUserOrgs} from "../../models/user.interface";
+//import { Storage } from '@ionic/storage';
+import {NativeStorage} from "@ionic-native/native-storage";
+//import {Storage} from "@ionic/storage";
 
 @Injectable()
 export class UserData {
@@ -11,7 +13,7 @@ export class UserData {
 
   constructor(
     public events: Events,
-    public storage: Storage) {
+    public storage: NativeStorage) {
       this.ooid = this.getCurrentOOID()
       this.role = this.getRole()
   }
@@ -19,29 +21,29 @@ export class UserData {
 
   setCurrentOrg(selectedOrg: IUserOrgs): void {
     console.log(`setCurrentOOID==${selectedOrg}`)
-    this.storage.set('currentOOID', selectedOrg.oid);
+    this.storage.setItem('currentOOID', selectedOrg.oid);
     this.ooid=selectedOrg.oid;
-    this.storage.set('currentRole', selectedOrg.role);
+    this.storage.setItem('currentRole', selectedOrg.role);
     this.role=selectedOrg.role;
-    //this.storage.setItem('ooid', sessionName);
+    //this.storage.set('ooid', sessionName);
   };
 
   getCurrentOOID(): string {
     //return Promise.resolve("-KwCMJMRwy57wGWfVfry");
     //return this.currentOoId; //"-KwCMJMRwy57wGWfVfry"
-    this.storage.get('currentOOID').then((value) => {
+    this.storage.getItem('currentOOID').then((value) => {
       this.ooid = value;
     });
 
     return this.ooid;
     //
-    // return this.storage.getItem('ooid').then((value) => {
+    // return this.storage.get('ooid').then((value) => {
     //   return value;
     // });
   };
 
   getRole(): number {
-    this.storage.get('currentRole').then((value) => {
+    this.storage.getItem('currentRole').then((value) => {
       this.role = value;
     })
     return this.role;

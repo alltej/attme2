@@ -43,7 +43,7 @@ export class ProfilePage implements OnInit
     this.ooid = this.userData.getCurrentOOID();
     this.aoMemberKey = this.userData.getSelectOrgMemberKey();
 
-    console.log(`ooid==${this.ooid}::aoid::${this.aoMemberKey}`)
+    //console.log(`ooid==${this.ooid}::aoid::${this.aoMemberKey}`)
     this.loadUserProfile();
   }
 

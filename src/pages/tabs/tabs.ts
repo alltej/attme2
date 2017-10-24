@@ -1,6 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Events, IonicPage, NavController, Tabs} from 'ionic-angular';
-import {AuthProvider} from "../../providers/auth/auth";
 
 @IonicPage()
 @Component({
@@ -17,7 +16,6 @@ export class TabsPage implements OnInit {
   public selectedTab: number = -1;
 
   constructor(public navCtrl: NavController,
-              public authService: AuthProvider,
               public events: Events) {
   }
 

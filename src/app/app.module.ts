@@ -3,7 +3,7 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
-import { IonTextAvatar } from 'ionic-text-avatar';
+//import { IonTextAvatar } from 'ionic-text-avatar';
 
 import firebase from 'firebase';
 
@@ -29,14 +29,14 @@ import {MemberInviteProvider} from "../providers/member/member-invite";
 import {EventCommentsProvider} from "../providers/event/event-comments";
 import {ItemsProvider} from "../providers/mapper/items-provider";
 import {MappingProvider} from "../providers/mapper/mapping";
-import { StorageProvider } from '../providers/storage/storage';
+import {StorageProvider} from '../providers/storage/storage';
 import {PhotoViewer} from "@ionic-native/photo-viewer";
 import { DataProvider } from '../providers/data/data';
 import {UserData} from "../providers/data/user-data";
 import {Network} from "@ionic-native/network";
-//import { NativeStorage } from '@ionic-native/native-storage';
-import {IonicStorageModule} from "@ionic/storage";
+//import {IonicStorageModule,Storage} from "@ionic/storage";
 import {Camera} from "@ionic-native/camera";
+import {NativeStorage} from "@ionic-native/native-storage";
 
 //import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 
@@ -53,7 +53,7 @@ firebase.initializeApp(firebaseConfig);
 export class MyErrorHandler implements ErrorHandler {
   handleError(err: any): void {
     console.log(err)
-    window.Ionic.handleNewError(err);
+    //window.Ionic.handleNewError(err);
   }
 }
 
@@ -65,7 +65,6 @@ export class MyErrorHandler implements ErrorHandler {
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot(),
     //CloudModule.forRoot(cloudSettings),
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule,
@@ -83,8 +82,9 @@ export class MyErrorHandler implements ErrorHandler {
     File,
     FilePath,
     FileChooser,
-    Storage,
+    NativeStorage ,
     Camera,
+    NativeStorage,
     //{provide: ErrorHandler, useClass: IonicErrorHandler},
     {provide: ErrorHandler, useClass: MyErrorHandler },
     AuthProvider,
