@@ -68,7 +68,7 @@ export class CommentCreatePage implements OnInit{
       loader.present();
 
       let uid = this.authService.getLoggedInUser().uid;
-      console.log(`uid::${uid}`)
+      //console.log(`uid::${uid}`)
 
       //TODO: Get this user data from UserData service
       //TODO: Need to have name node in users/uid/profile

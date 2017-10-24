@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { Events } from 'ionic-angular';
 import {IUserOrgs} from "../../models/user.interface";
 //import { Storage } from '@ionic/storage';
-import {NativeStorage} from "@ionic-native/native-storage";
+//import {NativeStorage} from "@ionic-native/native-storage";
+import {Storage} from "@ionic/storage";
 //import {Storage} from "@ionic/storage";
 
 @Injectable()
@@ -13,17 +14,21 @@ export class UserData {
 
   constructor(
     public events: Events,
-    public storage: NativeStorage) {
-      this.ooid = this.getCurrentOOID()
-      this.role = this.getRole()
+    public storage: Storage) {
+      this.getCurrentOOID()
+      this.getRole()
   }
 
 
   setCurrentOrg(selectedOrg: IUserOrgs): void {
-    console.log(`setCurrentOOID==${selectedOrg}`)
-    this.storage.setItem('currentOOID', selectedOrg.oid);
+    //console.log(`setCurrentOOID==${selectedOrg}`)
+    try {
+      this.storage.set('currentOOID', selectedOrg.oid);
+      this.storage.set('currentRole', selectedOrg.role);
+    } catch (e) {
+      //console.log(`setCurrentOrg::${e}`)
+    }
     this.ooid=selectedOrg.oid;
-    this.storage.setItem('currentRole', selectedOrg.role);
     this.role=selectedOrg.role;
     //this.storage.set('ooid', sessionName);
   };
@@ -31,9 +36,14 @@ export class UserData {
   getCurrentOOID(): string {
     //return Promise.resolve("-KwCMJMRwy57wGWfVfry");
     //return this.currentOoId; //"-KwCMJMRwy57wGWfVfry"
-    this.storage.getItem('currentOOID').then((value) => {
-      this.ooid = value;
-    });
+    try {
+      this.storage.get('currentOOID').then((value) => {
+        this.ooid = value;
+      });
+    } catch (e) {
+      //console.log(`getCurrentOOID::${e}`)
+      //console.log(`getCurrentOOID::this.ooid==${this.ooid}`)
+    }
 
     return this.ooid;
     //
@@ -43,8 +53,11 @@ export class UserData {
   };
 
   getRole(): number {
-    this.storage.getItem('currentRole').then((value) => {
+    this.storage.get('currentRole').then((value) => {
       this.role = value;
+    }).catch(e => {
+      //console.log(`getRole::${e}`)
+      this.role = 5
     })
     return this.role;
   };

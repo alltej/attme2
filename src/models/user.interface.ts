@@ -40,6 +40,6 @@ export interface IUserProfile {
   lastname: string
   firstname: string
   birthDate: string
-  email: number
+  email: string
   name: string
 }

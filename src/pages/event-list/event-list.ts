@@ -50,8 +50,8 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
               private userData: UserData,
               public events: Events) {
     super();
-    //console.log(`this.userData.getCurrentOOID()==${this.userData.getCurrentOOID()}`)
     this.ooid = this.userData.getCurrentOOID();
+    //console.log(`this.ooid==${this.ooid}`)
 
     this.searchControl = new FormControl();
 

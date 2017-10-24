@@ -7,6 +7,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase';
 import {Observable} from "rxjs/Observable";
 import {DataProvider} from "../data/data";
+import {INewUserMember, IUserProfile} from "../../models/user.interface";
 
 @Injectable()
 export class AuthProvider {
@@ -48,8 +49,17 @@ export class AuthProvider {
   signupUser(email: string, password: string): firebase.Promise<any> {
     return this.fireAuth.createUserWithEmailAndPassword(email, password)
       .then( newUser => {
+        // this.dataSvc.usersRef.child(`${newUser.uid}/profile`).set({
+        //   email: email
+        // });
+
         this.dataSvc.usersRef.child(`${newUser.uid}/profile`).set({
           email: email
+        });
+        this.dataSvc.usersRef.child(`${newUser.uid}/organizations/${newUser.uid}`).set({
+          oid: newUser.uid,
+          name: "Default",
+          role: 1
         });
     });
   }

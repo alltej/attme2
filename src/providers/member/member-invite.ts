@@ -32,7 +32,7 @@ export class MemberInviteProvider {
             //console.log(`User Created::${user}`);
             user.sendEmailVerification().then(
               (success) => {
-                console.log("please verify your email")
+                //console.log("please verify your email")
               }
             ).catch(
               (err) => {

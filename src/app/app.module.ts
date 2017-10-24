@@ -36,8 +36,8 @@ import {UserData} from "../providers/data/user-data";
 import {Network} from "@ionic-native/network";
 //import {IonicStorageModule,Storage} from "@ionic/storage";
 import {Camera} from "@ionic-native/camera";
-import {NativeStorage} from "@ionic-native/native-storage";
-
+//import {NativeStorage} from "@ionic-native/native-storage";
+import {IonicStorageModule} from '@ionic/storage';
 //import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 
 // const cloudSettings: CloudSettings = {
@@ -52,8 +52,8 @@ firebase.initializeApp(firebaseConfig);
 
 export class MyErrorHandler implements ErrorHandler {
   handleError(err: any): void {
-    console.log(err)
-    //window.Ionic.handleNewError(err);
+    //console.log(err)
+    window.Ionic.handleNewError(err);
   }
 }
 
@@ -65,6 +65,7 @@ export class MyErrorHandler implements ErrorHandler {
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot(),
     //CloudModule.forRoot(cloudSettings),
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule,
@@ -82,9 +83,8 @@ export class MyErrorHandler implements ErrorHandler {
     File,
     FilePath,
     FileChooser,
-    NativeStorage ,
+    //NativeStorage ,
     Camera,
-    NativeStorage,
     //{provide: ErrorHandler, useClass: IonicErrorHandler},
     {provide: ErrorHandler, useClass: MyErrorHandler },
     AuthProvider,

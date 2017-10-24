@@ -22,7 +22,7 @@ export class DataProvider {
       this.checkFirebaseConnection();
 
     } catch (error) {
-      console.log('Data Service error:' + error);
+      //console.log('Data Service error:' + error);
     }
   }
 
@@ -33,10 +33,10 @@ export class DataProvider {
       connectedRef.on('value', snap => {
         //console.log(snap.val());
         if (snap.val() === true) {
-          console.log('Firebase: Connected:');
+          //console.log('Firebase: Connected:');
           this.connected = true;
         } else {
-          console.log('Firebase: No connection:');
+          //console.log('Firebase: No connection:');
           this.connected = false;
         }
       });
@@ -78,9 +78,14 @@ export class DataProvider {
   // }
 
   getUserOrgs(userUid: string) {
-    console.log(`getUserOrgs:${userUid}`)
-    //
+    //console.log(`getUserOrgs:${userUid}`)
     return this.usersRef.child(userUid + '/organizations').once('value');
+  }
+
+  getUserInvite(userId: string) {
+    //console.log(`getUserOrgs:${userUid}`)
+    //
+    return this.userInvitesRef.child('/userInvites' + userId).once('value');
   }
 //
   getEventsRef(ooid: string) {
@@ -89,7 +94,7 @@ export class DataProvider {
   }
 
   getMembersRef(ooid: string) {
-    console.log(`data::getMembersRef::ooid=${ooid}`)
+    //console.log(`data::getMembersRef::ooid=${ooid}`)
     return this.getOrgsRef()
       .child(`${ooid}/members`)
   }

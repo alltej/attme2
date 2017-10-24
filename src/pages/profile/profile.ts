@@ -91,7 +91,7 @@ export class ProfilePage implements OnInit
               this.userDataLoaded = true;
 
             }).catch(error => {
-            console.log(error.code);
+            //console.log(error.code);
             this.userProfile = {
               firstname: (userData.profile!=null)?userData.profile.firstname:"",
               lastname: (userData.profile!=null)?userData.profile.lastname:"",
