@@ -35,8 +35,8 @@ export class LoginPage {
     public formBuilder: FormBuilder) {
 
     this.loginForm = formBuilder.group({
-      email: ['netcade@gmail.com', Validators.compose([Validators.required, EmailValidator.isValid])],
-      password: ['Welcome.1', Validators.compose([Validators.minLength(6), Validators.required])]
+      email: ['', Validators.compose([Validators.required, EmailValidator.isValid])],
+      password: ['', Validators.compose([Validators.minLength(6), Validators.required])]
     });
     this.appVersionNumber = "1.0.17";
     // if (this.platform.is('mobileweb') || this.platform.is('core')) {
