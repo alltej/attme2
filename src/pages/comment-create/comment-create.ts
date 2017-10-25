@@ -38,7 +38,9 @@ export class CommentCreatePage implements OnInit{
   ngOnInit() {
     //console.log(`CommentCreatePage::ngOnInit`);
     this.eventId = this.navParams.get('eventId');
-    this.ooid = this.userData.getCurrentOOID();
+    this.userData.getCurrentOOID().then(oid=>{
+      this.ooid = oid;
+    });
 
     //console.log(this.eventId)
     this.createCommentForm = this.fb.group({
@@ -94,7 +96,7 @@ export class CommentCreatePage implements OnInit{
           votesDown: null
         };
 
-        this.commentsSvc.submitComment(this.userData.ooid, this.eventId, newComment)
+        this.commentsSvc.submitComment(this.ooid, this.eventId, newComment)
           .then(snapshot => {
           loader.dismiss()
               .then(() => {

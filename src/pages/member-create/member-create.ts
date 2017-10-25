@@ -13,6 +13,7 @@ import {DataProvider} from "../../providers/data/data";
   templateUrl: 'member-create.html',
 })
 export class MemberCreatePage implements OnInit{
+  private ooid: string;
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private userData: UserData,
@@ -22,7 +23,9 @@ export class MemberCreatePage implements OnInit{
   }
 
   ngOnInit(): void {
-    //console.log(this.userData.getCurrentOOID())
+    this.userData.getCurrentOOID().then(oid=>{
+      this.ooid = oid;
+    });
   }
 
   ionViewDidLoad() {
@@ -31,7 +34,7 @@ export class MemberCreatePage implements OnInit{
 
   createMember(firstname: string, lastname: string, memberId: string, email: string) {
     //console.log(`createMember::this.userData.ooid==${this.userData.ooid}`)
-    let newItemRef = this.dataSvc.getOrgsRef().child(`${this.userData.ooid}/members`).push();
+    let newItemRef = this.dataSvc.getOrgsRef().child(`${this.ooid}/members`).push();
     let newItemKey: string = newItemRef.key;
 
     let textAvatar = firstname.charAt(0) + lastname.charAt(0)
@@ -47,7 +50,7 @@ export class MemberCreatePage implements OnInit{
       textAvatar: textAvatar
     };
 
-    this.memberSvc.createMember3(this.userData.ooid,newMember)
+    this.memberSvc.createMember3(this.ooid,newMember)
       .then( newEvent => {
         this.navParams.get("parentPage").loadMembers2();
         this.navCtrl.pop();

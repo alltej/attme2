@@ -37,6 +37,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   private whenStartFilter: string;
   private whenEndFilter: string;
   private ooid: string;
+  //private ooid: string;
 
   constructor(public navCtrl: NavController,
               public toastCtrl: ToastController,
@@ -50,7 +51,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
               private userData: UserData,
               public events: Events) {
     super();
-    this.ooid = this.userData.getCurrentOOID();
+
     //console.log(`this.ooid==${this.ooid}`)
 
     this.searchControl = new FormControl();
@@ -78,6 +79,8 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   ngOnInit(): void {
     //console.log(`event-lists::`);
     let self = this;
+    this.getCurrentOOID();
+
     self.segment = "current";
     self.weekNumber = 0;
 
@@ -94,6 +97,12 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
     //   this.loading = false;
     //   this.setFilteredItems();
     // });
+  }
+
+  private getCurrentOOID() {
+    this.userData.getCurrentOOID().then(oid => {
+      this.ooid = oid;
+    });
   }
 
   checkFirebase() {
@@ -234,10 +243,6 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
     //console.log(`event-list::loadEvents::fromStart:${fromStart}::segment:${this.segment}`)
 
     //try to reset this.ooid if get set to null/undefined
-    if (this.ooid == null) {
-      this.ooid = this.userData.getCurrentOOID();
-    }
-
     let self = this;
 
     if (fromStart) {

@@ -9,6 +9,8 @@ import {SignupPage} from "../pages/signup/signup";
 import {DataProvider} from "../providers/data/data";
 import {Network} from "@ionic-native/network";
 import {HomePage} from "../pages/home/home";
+import {Storage} from "@ionic/storage";
+import {UserData} from "../providers/data/user-data";
 
 //import {firebaseConfig} from "../config/firebase.config";
 declare var window: any;
@@ -23,14 +25,16 @@ export class MyApp {
   constructor(platform: Platform,
               statusBar: StatusBar,
               splashScreen: SplashScreen,
+              private storge: Storage,
               public network: Network,
               private dataSvc: DataProvider,
               private menuCtrl: MenuController,
               private authService: AuthProvider,
               public events: Events,
+              public userData: UserData,
               public modalCtrl: ModalController) {
 
-
+    //console.log(`appComponent::MyApp::constructor`)
     //console.log('MyApp:constructor')
     // const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
     //   //console.log('firebase.auth().onAuthStateChanged')
@@ -70,7 +74,8 @@ export class MyApp {
     //       this.rootPage = 'tabs';
     // }
     let self = this;
-    this.rootPage = 'TabsPage';
+    //this.rootPage = 'TabsPage';
+    this.rootPage = HomePage;
     platform.ready().then(() => {
       if (window.cordova) {
         // Okay, so the platform is ready and our plugins are available.
@@ -82,12 +87,22 @@ export class MyApp {
       }
     });
 
+    //TODO: enable this
+    this.userData.hasLoggedIn().then((hasLoggedIn) => {
+      //console.log(`appComponent::hasLoggedIn==${hasLoggedIn}`)
+      this.enableMenu(hasLoggedIn === true);
+      if (hasLoggedIn){
+        this.rootPage = 'LoginPage';
+      }
+    });
+    this.enableMenu(true);
     this.listenToLoginEvents();
   }
 
   listenToLoginEvents() {
     this.events.subscribe('user:login', () => {
-      //this.enableMenu(true);
+      //console.log('this.enableMenu(true);')
+      this.enableMenu(true);
     });
 
     this.events.subscribe('user:signup', () => {
@@ -95,10 +110,14 @@ export class MyApp {
     });
 
     this.events.subscribe('user:logout', () => {
-      //this.enableMenu(false);
+      this.enableMenu(false);
     });
   }
 
+  enableMenu(loggedIn: boolean) {
+    this.menuCtrl.enable(loggedIn, 'loggedInMenu');
+    //this.menu.enable(!loggedIn, 'loggedOutMenu');
+  }
 
   watchForConnection() {
     //console.log(`AppComponent::watchForConnection`)
@@ -140,15 +159,20 @@ export class MyApp {
       if (user === null) {
         //console.log(`AppComponent::ngAfterViewInit::onAuthStateChanged::user === null`)
         self.menuCtrl.close();
-        //self.nav.setRoot(LoginPage);
+        self.nav.setRoot('LoginPage');
         //this.rootPage = 'LoginPage';
-        let loginodal = self.modalCtrl.create('LoginPage');
-        loginodal.present();
-      }else{
-        //console.log(`AppComponent::ngAfterViewInit::onAuthStateChanged::user !== null`)
-        //console.log(`user==${user}`)
-        this.rootPage = HomePage;
+        // this.storge.ready().then(() => {
+        //
+        // });
+
+        // let loginodal = self.modalCtrl.create('LoginPage');
+        // loginodal.present();
       }
+      // else{
+      //   //console.log(`AppComponent::ngAfterViewInit::onAuthStateChanged::user !== null`)
+      //   //console.log(`user==${user}`)
+      //   this.rootPage = HomePage;
+      // }
     });
   }
 
@@ -182,6 +206,7 @@ export class MyApp {
     var self = this
     self.menuCtrl.close()
     self.authService.logoutUser()
+    this.userData.logout();
   }
 
   isUserLoggedIn(): boolean {

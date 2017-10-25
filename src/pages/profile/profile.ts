@@ -23,10 +23,7 @@ export class ProfilePage implements OnInit
   user: IUser;
   userDataLoaded: boolean = false;
 
-  avatar: string = "assets/images/profile-default.png";
-  displayName: string;
-  private ooid: string;
-  private aoMemberKey: string;
+  //avatar: string = "assets/images/profile-default.png";
 
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
@@ -40,8 +37,8 @@ export class ProfilePage implements OnInit
               private userData: UserData) {}
 
   ngOnInit(): void {
-    this.ooid = this.userData.getCurrentOOID();
-    this.aoMemberKey = this.userData.getSelectOrgMemberKey();
+
+    //this.aoMemberKey = this.userData.getSelectOrgMemberKey();
 
     //console.log(`ooid==${this.ooid}::aoid::${this.aoMemberKey}`)
     this.loadUserProfile();
@@ -55,61 +52,26 @@ export class ProfilePage implements OnInit
       .then(snapShot => {
         let userData: any = snapShot.val();
         let test:boolean = false;
-        if (test){
-          this.userProfile = {
-            firstname: (userData.profile!=null)?userData.profile.firstname:"",
-            lastname: (userData.profile!=null)?userData.profile.lastname:"",
-            birthDate: (userData.profile!=null)?userData.profile.birthDate:"",
-            image: 'assets/images/profile.png',
+        //console.log(`userData==${userData}`)
 
-          };
+        this.userProfile = {
+          firstname: userData.profile.firstname,
+          lastname: userData.profile.lastname,
+          birthDate: userData.profile.birthDate,
+          image: 'assets/images/profile.png',
+        };
+        //this.birthDate = userData.birthDate;
 
-          this.user = {
-            uid : currentUser.uid,
-            username : currentUser.email //userData.username
-          };
-          //this.birthDate = userData.birthDate;
-          this.userDataLoaded = true;
-        }
-        else{
-          //console.log(`userData==${userData}`)
-          this.storageSvc.getStorageRef().child('/users/' + currentUser.uid + '/profile.png').getDownloadURL()
-            .then(url => {
-              this.userProfile = {
-                firstname: userData.profile.firstname,
-                lastname: userData.profile.lastname,
-                birthDate: userData.profile.birthDate,
-                image: url,
-              };
-              //this.birthDate = userData.birthDate;
+        this.user = {
+          uid : currentUser.uid,
+          username : currentUser.email //userData.username
+        };
 
-              this.user = {
-                uid : currentUser.uid,
-                username : currentUser.email //userData.username
-              };
+        this.userDataLoaded = true;
 
-              this.userDataLoaded = true;
-
-            }).catch(error => {
-            //console.log(error.code);
-            this.userProfile = {
-              firstname: (userData.profile!=null)?userData.profile.firstname:"",
-              lastname: (userData.profile!=null)?userData.profile.lastname:"",
-              birthDate: (userData.profile!=null)?userData.profile.birthDate:"",
-              image: 'assets/images/profile.png',
-
-            };
-
-            this.user = {
-              uid : currentUser.uid,
-              username : currentUser.email //userData.username
-            };
-            //this.birthDate = userData.birthDate;
-            this.userDataLoaded = true;
-          });
-        }
-
-      })
+      }).catch(e =>{
+        //console.log(e)
+    })
 
   }
 
@@ -118,12 +80,12 @@ export class ProfilePage implements OnInit
       message: "Your first name & last name",
       inputs: [
         {
-          name: 'firstName',
+          name: 'firstname',
           placeholder: 'Your first name',
           value: this.userProfile.firstname
         },
         {
-          name: 'lastName',
+          name: 'lastname',
           placeholder: 'Your last name',
           value: this.userProfile.lastname
         },
@@ -168,6 +130,7 @@ export class ProfilePage implements OnInit
             //let newEmail = data.newEmail;
 
             this.profileSvc.updateDOB(this.authSvc.getLoggedInUser().uid, data.birthDate).then( () =>{
+              this.reload();
             }).catch(error => {
               //console.log('ERROR: '+error.message);
             });

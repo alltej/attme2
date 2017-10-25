@@ -19,7 +19,7 @@ export class TestAvatarPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad TestAvatarPage');
+    //console.log('ionViewDidLoad TestAvatarPage');
   }
 
 }

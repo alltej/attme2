@@ -20,11 +20,12 @@ export class ProfileProvider {
     return this.dataSvc.usersRef.child(`${uid}`).once('value');
   }
 
-  updateName(uid:string, firstName: string, lastName: string): firebase.Promise<void> {
+  updateName(uid:string, firstname: string, lastname: string): firebase.Promise<void> {
+    console.log(`firstname==${firstname}::lastname==${lastname}`)
     return this.dataSvc.usersRef.child(`${uid}/profile`).update({
-      firstname: firstName,
-      lastname: lastName,
-      name: firstName + " " + lastName
+      firstname: firstname,
+      lastname: lastname,
+      name: firstname + " " + lastname
     });
   }
 

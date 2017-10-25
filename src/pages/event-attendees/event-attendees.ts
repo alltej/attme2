@@ -31,7 +31,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   private membersRx: Observable<any[]>;
   private members: any[] = [];
   private isAttendanceEnabled: boolean  = false;
-  private ooid: string;
+  //private ooid: string;
   private userRole: number;
 
   constructor(public navCtrl: NavController,
@@ -44,17 +44,34 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
               private  eventSvc: EventProvider) {
     super();
 
-
     this.searchControl = new FormControl();
     this.eventId = this.navParams.get('eventId');
-    this.ooid = this.userData.getCurrentOOID();
-    this.userRole = this.userData.getRole();
+
+
+    //this.userRole = this.userData.getRole();
     //console.log(`EventAttendeesPage::constructor::${this.currentEventKey}`);
     //this.eventDate = eventSvc.getEventDetail(this.currentEventKey);
 
   }
 
   ngOnInit(): void {
+    // this.userData.getCurrentOOID().then(oid=>{
+    //   this.ooid = oid;
+    //   console.log(`this.ooid==${this.ooid}`)
+    // });
+    //
+    // this.userData.getRole().then(role=>{
+    //   this.userRole = role;
+    // });
+
+    // let ooidPromise = this.userData.getCurrentOOID();
+    // let rolePromise = this.userData.getRole();
+    //
+    // let ooid: any
+    // let role: any
+    // Promise.all([ooidPromise, ooidPromise]).then((ooid, role) => {
+    // });
+
     this.relationship = "circles";
     this.userCircles = this.userSvc.getMyCircles1();
 //this.userCircles
@@ -65,8 +82,8 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
       this.setFilteredItems();
     });
 
-
-    this.eventSvc.getEventDetail(this.ooid, this.eventId).take(1)
+    console.log(`EventAttendees:ngOnInit::this.userData.currentOOId==${this.userData.currentOOId}`)
+    this.eventSvc.getEventDetail(this.userData.currentOOId, this.eventId).take(1)
       .subscribe( (snapshot)=> {
         if (snapshot.val() == null) return null;
         let eventDate = new Date(snapshot.val().when);
@@ -89,7 +106,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   }
 
   setFilteredItems(){
-    this.membersRx =  this.membersSvc.getMembersForEvent(this.ooid, this.eventId)
+    this.membersRx =  this.membersSvc.getMembersForEvent(this.userData.currentOOId, this.eventId)
       .takeUntil(this.componentDestroyed$);
     if (!(this.searchTerm == null || this.searchTerm == '')){
       this.membersRx = this.membersRx.map((members) =>
@@ -105,7 +122,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
     this.membersRx
       .map(members =>{
         return members.map(member =>{
-          this.attendanceSvc.getMemberVoteCount(this.ooid, this.eventId, member.$key)
+          this.attendanceSvc.getMemberVoteCount(this.userData.currentOOId, this.eventId, member.$key)
             .takeUntil(this.componentDestroyed$)
             .map( (ul) =>{
               return ul;
@@ -122,7 +139,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
       }) //TODO
       .map(members =>{
         return members.map(member =>{
-          this.attendanceSvc.isVoted(this.ooid, this.eventId, member.$key)
+          this.attendanceSvc.isVoted(this.userData.currentOOId, this.eventId, member.$key)
             .takeUntil(this.componentDestroyed$)
             .map( (ul) =>{
               //console.log(ul)
@@ -143,11 +160,11 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
 
   onUpVote(selectedMember: any){
     //console.log(`${this.currentEventKey}, ${selectedMember.$key}`)
-    this.attendanceSvc.addAttendee(this.ooid, this.eventId, selectedMember.$key);
+    this.attendanceSvc.addAttendee(this.userData.currentOOId, this.eventId, selectedMember.$key);
   }
 
   onDownVote(selectedMember: any){
-    this.attendanceSvc.removeAttendee(this.ooid, this.eventId, selectedMember.$key);
+    this.attendanceSvc.removeAttendee(this.userData.currentOOId, this.eventId, selectedMember.$key);
   }
 
   selectedAll(){
@@ -182,7 +199,6 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
       return photoUrl;
     }
   }
-
 
   isEnableAttendance(eventDate) {
     //if (this.isToday(eventDate)) return true;

@@ -1,5 +1,5 @@
 import 'rxjs/add/operator/map';
-import {Injectable} from "@angular/core";
+import {Injectable, OnInit} from "@angular/core";
 import {AngularFireDatabase} from 'angularfire2/database';
 import {AuthProvider} from "../auth/auth";
 import {Subscription} from "rxjs/Subscription";
@@ -7,19 +7,18 @@ import {UserData} from "../data/user-data";
 
 
 @Injectable()
-export class UserCircleProvider {
+export class UserCircleProvider{
 
   userId:string;
   public circlesSub: Subscription;
   private ooid: string;
-  private aoid: string;
   constructor(private af:AngularFireDatabase,
               private authService:AuthProvider,
               private userData: UserData) {
     this.userId = this.authService.getLoggedInUser().uid;
-    this.ooid = this.userData.getCurrentOOID();
-    //this.ooid = this.userData.getSelectedOrganization();
-    //this.aoid = this.userData.getSelectOrgMemberKey();
+    this.userData.getCurrentOOID().then(oid=>{
+      this.ooid = oid;
+    })
   }
 
   addToMyCircle(memberKey:string){
@@ -48,9 +47,8 @@ export class UserCircleProvider {
   }
 
   removeFromMyCircle(memberKey: string) {
-    let url = `/userCircles/${this.userId}/${memberKey}`;
-    //let afRef = this.af.database.object(url);
-    this.af.object(url).remove();
+    this.af.object(`/users/${this.authService.getLoggedInUser().uid}/circles/${this.ooid}/members/${memberKey}`)
+      .remove();
   }
 
 }

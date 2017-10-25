@@ -25,21 +25,16 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
   searchControl: FormControl;
   queryText: string = '';
   members: any[] = [];
-  public weekNumber: number;
   public pageSize: number = 50;
   public start: number = 0;
   public iMembers: Array<IMember> = [];
 
-  private membersRx: Observable<any[]>;
-  private letter: string;
   private ooid: string;
   private aoid: string;
   constructor(
     private navCtrl: NavController,
-    private membersSvc: MemberProvider,
     private dataSvc: DataProvider,
     public mappingsService: MappingProvider,
-    public itemsSvc: ItemsProvider,
     private userCircleSvc: UserCircleProvider,
     private userData: UserData,
     public events: Events) {
@@ -47,13 +42,14 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
 
 
     this.searchControl = new FormControl();
-    this.ooid = this.userData.getCurrentOOID();
-    this.aoid = this.userData.getSelectOrgMemberKey();
+
   }
 
   ngOnInit() {
     console.log('member-list::ngOnInit')
-
+    this.userData.getCurrentOOID().then(oid=>{
+      this.ooid = oid;})
+    this.aoid = this.userData.getSelectOrgMemberKey();
     this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
       this.loadMembers2();
       this.loading = false;

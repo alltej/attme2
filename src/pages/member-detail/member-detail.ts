@@ -29,6 +29,8 @@ export class MemberDetailPage extends BaseClass implements OnInit{
   avatar: string = "assets/images/profile-default.png";
   userDataLoaded: boolean = false;
   member :IMember;
+  private ooid: string;
+  private orgName: string;
   //private ooid: string;
 
   constructor(public navCtrl: NavController,
@@ -48,19 +50,22 @@ export class MemberDetailPage extends BaseClass implements OnInit{
 
   ngOnInit(): void {
     //console.log(this.memberKey)
-    //this.ooid = this.userData.getCurrentOOID();
+    this.userData.getCurrentOOID().then(oid=>{
+      this.ooid = oid;
+    });
+
     this.loadMemberDetails2();
   }
 
   getUserImage() {
     return this.storageSvc.getStorageRef()
-      .child(this.userData.ooid)
+      .child(this.ooid)
       .child('members/' + this.memberKey + '/profile.png').getDownloadURL();
   }
 
   private loadMemberDetails2(){
     this.userDataLoaded = false;
-    this.memberSvc.getMemberData2(this.userData.ooid,this.memberKey)
+    this.memberSvc.getMemberData2(this.ooid,this.memberKey)
       .then(snapShot => {
         let userData: any = snapShot.val();
         if (userData == null)
@@ -212,7 +217,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
         {
           text: 'Save',
           handler: data => {
-            this.memberSvc.updateName(this.userData.ooid, this.memberKey, data.firstname, data.lastname)
+            this.memberSvc.updateName(this.ooid, this.memberKey, data.firstname, data.lastname)
               .then( () =>{
               this.reload()
             }).catch(error => {
@@ -242,7 +247,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
           text: 'Save',
           handler: data => {
 
-            this.memberSvc.updateEmail(this.userData.ooid, this.memberKey, data.newEmail)
+            this.memberSvc.updateEmail(this.ooid, this.memberKey, data.newEmail)
               .then( () =>{
                 this.reload()
             }).catch(error => {
@@ -275,7 +280,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
           handler: data => {
             //let newEmail = data.newEmail;
 
-            this.memberSvc.updateDOB(this.userData.ooid, this.memberKey, data.birthDate)
+            this.memberSvc.updateDOB(this.ooid, this.memberKey, data.birthDate)
               .then( () =>{
                 this.reload()
               }).catch(error => {
@@ -304,7 +309,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
         {
           text: 'Save',
           handler: data => {
-            this.memberSvc.updateMemberId(this.userData.ooid, this.memberKey, data.newMemberId)
+            this.memberSvc.updateMemberId(this.ooid, this.memberKey, data.newMemberId)
               .then( () =>{
                 this.reload()
               }).catch(error => {
@@ -320,8 +325,12 @@ export class MemberDetailPage extends BaseClass implements OnInit{
   onCreateInvite() {
     //TODO: Get the Org Name, Role
     let role:number = 5
+    let orgName:string = "Org"
+    this.userData.getCurrentOOName().then(oname=>{
+      orgName = oname;
+    });
     this.memberInviteSvc
-      .createUserInvite(this.userData.ooid, this.userData.ooName, role, this.member);
+      .createUserInvite(this.ooid, orgName, role, this.member);
   }
 
   openImageOptions() {
@@ -409,7 +418,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
     };
 
     let uploadTask = this.storageSvc.getStorageRef()
-      .child(this.userData.ooid)
+      .child(this.ooid)
       .child('members/' + this.memberKey + '/profile.png').put(file, metadata);
 
     // Listen for state changes, errors, and completion of the upload.
@@ -437,7 +446,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
         loader.dismiss().then(() => {
           // Upload completed successfully, now we can get the download URL
           let downloadURL = uploadTask.snapshot.downloadURL;
-          this.memberSvc.updatePhotoUrl(this.userData.ooid, this.memberKey, downloadURL)
+          this.memberSvc.updatePhotoUrl(this.ooid, this.memberKey, downloadURL)
           this.reload();
         });
       });

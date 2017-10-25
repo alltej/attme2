@@ -21,7 +21,6 @@ export class EventDetailPage extends BaseClass implements OnInit{
   private likedBy: any;
   likedByList: FirebaseListObservable<any[]>;
   private ooid: string;
-  private aoid: string;
 
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
@@ -31,13 +30,15 @@ export class EventDetailPage extends BaseClass implements OnInit{
               private userData: UserData,
               public events: Events) {
     super();
-    this.eventId = this.navParams.get('eventId');
-    this.ooid = this.userData.getCurrentOOID();
-    this.aoid = this.userData.getSelectOrgMemberKey();
+
   }
 
   ngOnInit(): void {
     //console.log(`EventDetailPage::ngOnInit::${this.eventId}`)
+    this.eventId = this.navParams.get('eventId');
+
+    this.userData.getCurrentOOID().then(oid=>{
+      this.ooid = oid;})
     this.eventSvc.getEventDetail(this.ooid, this.eventId)
       .subscribe((item: any)=>{
         this.selEvent = item.val();

@@ -4,18 +4,19 @@ import {AngularFireDatabase, FirebaseListObservable} from "angularfire2/database
 import {attmeConfig} from "../../config/attme.config";
 import {IEvent, INewEvent} from "../../models/event.interface";
 import {DataProvider} from "../data/data";
+import {UserData} from "../data/user-data";
 
 @Injectable()
-export class EventProvider implements OnDestroy {
-  ngOnDestroy(): void {
-  }
+export class EventProvider {
 
   public eventRef:firebase.database.Reference;
   private startAtFilter: string;
   private endAtFilter: string;
 
   constructor(private af:AngularFireDatabase,
-              private dataSvc: DataProvider) {
+              private dataSvc: DataProvider,
+              private userData: UserData) {
+
   }
 
   getRecentEvents(): FirebaseListObservable<any[]> {
@@ -45,7 +46,7 @@ export class EventProvider implements OnDestroy {
   }
 
   getEventLikes(ooid: string, eventId: string) {
-    return this.af.list(`/organizations/${ooid}/events/${eventId}/likedBy`,{
+    return this.af.list(`/organizations/${this.userData.currentOOId}/events/${eventId}/likedBy`,{
       query: {
         orderByKey: true,
         limitToLast: 20
@@ -54,7 +55,7 @@ export class EventProvider implements OnDestroy {
   }
 
   getEventDetail(ooid: string, eventId:string) {
-    return this.af.object(`/organizations/${ooid}/events/${eventId}`, { preserveSnapshot: true });
+    return this.af.object(`/organizations/${this.userData.currentOOId}/events/${eventId}`, { preserveSnapshot: true });
   }
 
 

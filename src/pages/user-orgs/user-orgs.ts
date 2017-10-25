@@ -28,7 +28,8 @@ export class UserOrgsPage implements OnInit{
 
   ngOnInit(): void {
     let self = this;
-    this.ooid = this.userData.getCurrentOOID();
+    this.userData.getCurrentOOID().then(oid=>{
+      this.ooid = oid;})
     this.dataSvc.getUserOrgs(self.authSvc.getLoggedInUser().uid)
       .then( snapshot => {
         if (snapshot.val())

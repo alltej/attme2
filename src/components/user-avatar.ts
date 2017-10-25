@@ -36,6 +36,9 @@ export class UserAvatarComponent implements OnInit {
           //self.imageUrl = url.split('?')[0] + '?alt=media' + '&t=' + (new Date().getTime());
           self.imageUrl = url;
           self.imageLoaded = true;
+      }).catch(e =>{
+        self.imageUrl = 'assets/images/profile.png';
+        self.imageLoaded = true;
       });
     }
   }

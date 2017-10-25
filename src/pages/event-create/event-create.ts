@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {EventProvider} from "../../providers/event/event";
 import {UserData} from "../../providers/data/user-data";
@@ -12,7 +12,8 @@ import {IEvent, INewEvent} from "../../models/event.interface";
   selector: 'page-event-create',
   templateUrl: 'event-create.html',
 })
-export class EventCreatePage {
+export class EventCreatePage implements  OnInit{
+
   private eventDate: string;
   private ooid: string;
 
@@ -22,9 +23,13 @@ export class EventCreatePage {
               private userData: UserData,
               private dataSvc: DataProvider) {
     this.eventDate = new Date().toISOString();
-    this.ooid = this.userData.getCurrentOOID();
   }
 
+  ngOnInit(): void {
+    this.userData.getCurrentOOID().then(oid=>{
+      this.ooid = oid;
+    });
+  }
   ionViewDidLoad() {
     //console.log('ionViewDidLoad EventCreatePage');
   }

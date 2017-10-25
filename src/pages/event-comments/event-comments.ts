@@ -34,12 +34,15 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
         public userData: UserData,
         public navParams: NavParams) {
     super();
-    this.ooid = this.userData.getCurrentOOID();
   }
 
   ngOnInit(): void {
     this.eventId = this.navParams.get('eventId');
     this.commentsLoaded = false;
+
+    this.userData.getCurrentOOID().then(oid=>{
+      this.ooid = oid;
+    });
     //TODO: Get event name from param
     this.commentsSvc.getEvent(this.eventId)
       .then(snapshot => {
