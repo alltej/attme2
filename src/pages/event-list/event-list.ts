@@ -36,7 +36,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
 
   private whenStartFilter: string;
   private whenEndFilter: string;
-  private ooid: string;
+  //private ooid: string;
   //private ooid: string;
 
   constructor(public navCtrl: NavController,
@@ -79,7 +79,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   ngOnInit(): void {
     //console.log(`event-lists::`);
     let self = this;
-    this.getCurrentOOID();
+    //this.getCurrentOOID();
 
     self.segment = "current";
     self.weekNumber = 0;
@@ -99,11 +99,11 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
     // });
   }
 
-  private getCurrentOOID() {
-    this.userData.getCurrentOOID().then(oid => {
-      this.ooid = oid;
-    });
-  }
+  // private getCurrentOOID() {
+  //   this.userData.getCurrentOOID().then(oid => {
+  //     this.ooid = oid;
+  //   });
+  // }
 
   checkFirebase() {
     let self = this;
@@ -123,7 +123,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
       //console.log('Firebase connection found (threads.ts) - attempt: ' + self.firebaseConnectionAttempts);
       //    let newItemRef = this.dataSvc.getOrgsRef().child(`${this.userData.getSelectedOrganization()}/events`).push();
 
-      self.dataSvc.getOrgsRef().child(`${this.ooid}/stats/events`).on('child_changed', self.onEventAdded);
+      self.dataSvc.getOrgsRefByOOId(this.userData.currentOOId).child(`/stats/events`).on('child_changed', self.onEventAdded);
       if (self.authSvc.getLoggedInUser() === null) {
         //console.log('getLoggedInUser is null')
       } else {
@@ -194,7 +194,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
     let self = this;
     self.events.publish('event:created');
     // fetch new thread..
-    self.dataSvc.getEventsRef(this.ooid)
+    self.dataSvc.getEventsRef(this.userData.currentOOId)
       .orderByPriority().equalTo(priority).once('value').then(dataSnapshot => {
       let key = Object.keys(dataSnapshot.val())[0];
       let newThread: IEvent = self.mappingsService.getEvent(dataSnapshot.val()[key], key);
@@ -280,7 +280,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
       this.whenEndFilter = new Date(futureDateMax).toISOString();
 
       this.dataSvc.getOrgsRef()
-        .child(this.ooid)
+        .child(this.userData.currentOOId)
         .child('events')
         .orderByChild('when')
         .startAt(this.whenStartFilter)
@@ -335,7 +335,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
         //this.scrollToTop();
         return;
       }
-      this.dataSvc.getEventsRef(this.ooid)
+      this.dataSvc.getEventsRef(this.userData.currentOOId)
         .orderByChild('when')
         .startAt(this.whenStartFilter)
         .endAt(this.whenEndFilter)

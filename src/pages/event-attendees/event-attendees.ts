@@ -82,7 +82,6 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
       this.setFilteredItems();
     });
 
-    console.log(`EventAttendees:ngOnInit::this.userData.currentOOId==${this.userData.currentOOId}`)
     this.eventSvc.getEventDetail(this.userData.currentOOId, this.eventId).take(1)
       .subscribe( (snapshot)=> {
         if (snapshot.val() == null) return null;

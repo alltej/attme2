@@ -29,7 +29,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
   public start: number = 0;
   public iMembers: Array<IMember> = [];
 
-  private ooid: string;
+  //private ooid: string;
   private aoid: string;
   constructor(
     private navCtrl: NavController,
@@ -46,9 +46,6 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   ngOnInit() {
-    console.log('member-list::ngOnInit')
-    this.userData.getCurrentOOID().then(oid=>{
-      this.ooid = oid;})
     this.aoid = this.userData.getSelectOrgMemberKey();
     this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
       this.loadMembers2();
@@ -74,7 +71,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
     //console.log(`startAt:${startAt}`)
     //console.log(`endAt:${endAt}`)
     //TODO: simplify
-    this.dataSvc.getMembersRef(this.ooid)
+    this.dataSvc.getMembersRef(this.userData.currentOOId)
       .orderByChild('firstname')
       .startAt(startAt)
       .endAt(endAt)
@@ -126,7 +123,6 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
   // }
 
   onLoadMember(selectedMember:any){
-    console.log(selectedMember);
     this.navCtrl.push('MemberDetailPage', {memberKey: selectedMember.memberKey});
   }
 
@@ -145,6 +141,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
     this.userCircleSvc.isMyCircle(selectedMember.$key)
       .take(1)
       .subscribe(data => {
+        //this.selEvent = item.val();
         if(data.val()==null) {
           isIn = false;
         } else {

@@ -15,7 +15,7 @@ import {IEvent, INewEvent} from "../../models/event.interface";
 export class EventCreatePage implements  OnInit{
 
   private eventDate: string;
-  private ooid: string;
+  //private ooid: string;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -26,9 +26,9 @@ export class EventCreatePage implements  OnInit{
   }
 
   ngOnInit(): void {
-    this.userData.getCurrentOOID().then(oid=>{
-      this.ooid = oid;
-    });
+    // this.userData.getCurrentOOID().then(oid=>{
+    //   this.ooid = oid;
+    // });
   }
   ionViewDidLoad() {
     //console.log('ionViewDidLoad EventCreatePage');
@@ -36,7 +36,7 @@ export class EventCreatePage implements  OnInit{
 
 
   createEvent(name:string, description:string, eventDate:string, location:string) {
-    let newItemRef = this.dataSvc.getOrgsRef().child(`${this.userData.getCurrentOOID()}/events`).push();
+    let newItemRef = this.dataSvc.getOrgsRef().child(`${this.userData.currentOOId}/events`).push();
     let newItemKey: string = newItemRef.key;
 
     let when = new Date(eventDate).toISOString().slice(0,10)
@@ -48,7 +48,7 @@ export class EventCreatePage implements  OnInit{
       where:location,
     };
 
-    this.eventSvc.createEvent2(this.ooid, newItem)
+    this.eventSvc.createEvent2(this.userData.currentOOId, newItem)
       .then( newEvent => {
         this.navParams.get("parentPage").loadEvents(true);
         this.navCtrl.pop();

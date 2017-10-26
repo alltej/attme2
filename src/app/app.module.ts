@@ -38,6 +38,7 @@ import {Network} from "@ionic-native/network";
 import {Camera} from "@ionic-native/camera";
 //import {NativeStorage} from "@ionic-native/native-storage";
 import {IonicStorageModule} from '@ionic/storage';
+import {AppVersion} from "@ionic-native/app-version";
 //import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 
 // const cloudSettings: CloudSettings = {
@@ -52,8 +53,8 @@ firebase.initializeApp(firebaseConfig);
 
 export class MyErrorHandler implements ErrorHandler {
   handleError(err: any): void {
-    //console.log(err)
-    window.Ionic.handleNewError(err);
+    console.log(err)
+    //window.Ionic.handleNewError(err);
   }
 }
 
@@ -77,6 +78,7 @@ export class MyErrorHandler implements ErrorHandler {
     HomePage
   ],
   providers: [
+    AppVersion,
     StatusBar,
     SplashScreen,
     Network,

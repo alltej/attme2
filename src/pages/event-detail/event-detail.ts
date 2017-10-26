@@ -18,9 +18,8 @@ export class EventDetailPage extends BaseClass implements OnInit{
   public selEvent: any = {};
   private eventId: string;
   public isLiked: boolean = false;
-  private likedBy: any;
   likedByList: FirebaseListObservable<any[]>;
-  private ooid: string;
+  //private ooid: string;
 
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
@@ -37,17 +36,15 @@ export class EventDetailPage extends BaseClass implements OnInit{
     //console.log(`EventDetailPage::ngOnInit::${this.eventId}`)
     this.eventId = this.navParams.get('eventId');
 
-    this.userData.getCurrentOOID().then(oid=>{
-      this.ooid = oid;})
-    this.eventSvc.getEventDetail(this.ooid, this.eventId)
+    this.eventSvc.getEventDetail(this.userData.currentOOId, this.eventId)
       .subscribe((item: any)=>{
         this.selEvent = item.val();
         this.selEvent.eventId = this.eventId;
       });
 
-    this.likedByList = this.eventSvc.getEventLikes(this.ooid, this.eventId);
+    this.likedByList = this.eventSvc.getEventLikes(this.userData.currentOOId, this.eventId);
     //console.log(item)
-    this.userLikeSvc.isLiked(this.ooid, this.eventId)
+    this.userLikeSvc.isLiked(this.userData.currentOOId, this.eventId)
       .subscribe(ul =>{
         if (ul.on != null) {
           //console.log('likeIt:true')
@@ -58,7 +55,7 @@ export class EventDetailPage extends BaseClass implements OnInit{
 
   onAddLike(eventKey: string){
     //console.log(`AA::onAddLike::${eventKey}`)
-    this.userLikeSvc.addLike(this.ooid, eventKey);
+    this.userLikeSvc.addLike(this.userData.currentOOId, eventKey);
 
     this.events.publish('reloadPage1', true);
     //console.log(`BB::onAddLike::publish`)
@@ -66,7 +63,7 @@ export class EventDetailPage extends BaseClass implements OnInit{
 
   onRemoveLike(eventKey: string){
     //console.log(eventId)
-    this.userLikeSvc.removeLike(this.ooid, eventKey);
+    this.userLikeSvc.removeLike(this.userData.currentOOId, eventKey);
     this.isLiked = false;
   }
 

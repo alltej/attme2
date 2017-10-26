@@ -4,7 +4,7 @@ import {
   Loading,
   LoadingController,
   NavController,
-  AlertController, Events
+  AlertController, Events, Platform
 } from 'ionic-angular';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { EmailValidator } from '../../validators/email';
@@ -12,6 +12,7 @@ import { AuthProvider } from '../../providers/auth/auth';
 import {UserData} from "../../providers/data/user-data";
 import {DataProvider} from "../../providers/data/data";
 import {MappingProvider} from "../../providers/mapper/mapping";
+import { AppVersion } from '@ionic-native/app-version';
 
 @IonicPage()
 @Component({
@@ -32,22 +33,26 @@ export class LoginPage {
     private mappingSvc:MappingProvider,
     private userData: UserData,
     private events: Events,
+    private platform: Platform,
+    private appVersion: AppVersion,
     public formBuilder: FormBuilder) {
 
     this.loginForm = formBuilder.group({
       email: ['', Validators.compose([Validators.required, EmailValidator.isValid])],
       password: ['', Validators.compose([Validators.minLength(6), Validators.required])]
     });
-    this.appVersionNumber = "1.0.17";
-    // if (this.platform.is('mobileweb') || this.platform.is('core')) {
-    //   // This will only print when running on desktop
-    //   //console.log("I'm a regular browser!");
-    //   this.appVersionNumber = "1.0.9999";
-    // }else{
-    //   this.appVersion.getVersionNumber().then(result => {
-    //     this.appVersionNumber = result;
-    //   });
-    // }
+    this.appVersionNumber = "1.0.19";
+    if (this.platform.is('mobileweb') || this.platform.is('core')) {
+      // This will only print when running on desktop
+      //console.log("I'm a regular browser!");
+      this.appVersionNumber = "1.0.1";
+    }else{
+      this.appVersion.getVersionNumber().then(result => {
+        this.appVersionNumber = result;
+      }).catch(e =>{
+
+      });
+    }
   }
 
   loginUser(): void {

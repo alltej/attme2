@@ -24,7 +24,7 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
   commentsLoaded: boolean = false;
   comments: IComment[];
 
-  private ooid: string;
+  //private ooid: string;
   constructor(
         public commentsSvc: EventCommentsProvider,
         public modalCtrl: ModalController,
@@ -40,9 +40,9 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
     this.eventId = this.navParams.get('eventId');
     this.commentsLoaded = false;
 
-    this.userData.getCurrentOOID().then(oid=>{
-      this.ooid = oid;
-    });
+    // this.userData.getCurrentOOID().then(oid=>{
+    //   this.ooid = oid;
+    // });
     //TODO: Get event name from param
     this.commentsSvc.getEvent(this.eventId)
       .then(snapshot => {
@@ -52,7 +52,7 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
         this.eventName = eventData.name;
       })
 //.child(self.userData.getSelectedOrganization())
-    this.commentsSvc.getEventCommentsRef(this.ooid,this.eventId)
+    this.commentsSvc.getEventCommentsRef(this.userData.currentOOId,this.eventId)
       .orderByChild('dateCreated')
       .once('value', snapshot =>  {
         this.comments = this.mappingsService.getComments(snapshot).reverse();
@@ -79,8 +79,6 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
   }
 
   createComment() {
-    console.log('createComment')
-    //CommentCreatePage
     let modalPage = this.modalCtrl.create('CommentCreatePage', {
       eventId: this.eventId
     });

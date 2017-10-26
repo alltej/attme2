@@ -11,26 +11,25 @@ export class UserCircleProvider{
 
   userId:string;
   public circlesSub: Subscription;
-  private ooid: string;
+  //private ooid: string;
   constructor(private af:AngularFireDatabase,
               private authService:AuthProvider,
               private userData: UserData) {
     this.userId = this.authService.getLoggedInUser().uid;
-    this.userData.getCurrentOOID().then(oid=>{
-      this.ooid = oid;
-    })
+    // this.userData.getCurrentOOID().then(oid=>{
+    //   this.ooid = oid;
+    // })
   }
 
   addToMyCircle(memberKey:string){
-    const userId = this.authService.getLoggedInUser().uid;
-    let afRef = this.af.object(`/users/${this.authService.getLoggedInUser().uid}/circles/${this.ooid}/members/${memberKey}`)
+    let afRef = this.af.object(`/users/${this.userId}/circles/${this.userData.currentOOId}/members/${memberKey}`)
     afRef.set(true);
   }
 
   getMyCircles1(){
     let circleKeys = [];
     this.circlesSub = this.af
-      .list(`/users/${this.authService.getLoggedInUser().uid}/circles/${this.ooid}/members`, { preserveSnapshot: true})
+      .list(`/users/${this.userId}/circles/${this.userData.currentOOId}/members`, { preserveSnapshot: true})
       .take(1)
       .subscribe(itemKeys=>{
         itemKeys.forEach(itemKey => {
@@ -42,12 +41,12 @@ export class UserCircleProvider{
   }
 
   isMyCircle(memberKey: string) {
-    return this.af.object(`/userCircles/${this.userId}/${memberKey}`);
+    return this.af.object(`/users/${this.userId}/circles/${this.userData.currentOOId}/members/${memberKey}`);
 
   }
 
   removeFromMyCircle(memberKey: string) {
-    this.af.object(`/users/${this.authService.getLoggedInUser().uid}/circles/${this.ooid}/members/${memberKey}`)
+    this.af.object(`/users/${this.userId}/circles/${this.userData.currentOOId}/members/${memberKey}`)
       .remove();
   }
 

@@ -9,7 +9,6 @@ import {UserData} from "../data/user-data";
 @Injectable()
 export class EventProvider {
 
-  public eventRef:firebase.database.Reference;
   private startAtFilter: string;
   private endAtFilter: string;
 
@@ -73,27 +72,35 @@ export class EventProvider {
   }
 
   updateEventDate(eventId: string, newDate: Date) {
-    return this.af.object(`/events/${eventId}`).update({
-      when: newDate
-    });
+    return this.dataSvc.getEventsRef(this.userData.currentOOId)
+      .child(eventId)
+      .update({
+        when: newDate
+      });
   }
 
   updateEventName(eventId: string | any, newName: string) {
-    return this.af.object(`/events/${eventId}`).update({
-      name: newName
-    });
+    return this.dataSvc.getEventsRef(this.userData.currentOOId)
+      .child(eventId)
+      .update({
+        name: newName
+      });
   }
 
   updateEventLocation(eventId: string | any, newLocation: any) {
-    return this.af.object(`/events/${eventId}`).update({
-      where: newLocation
-    });
+    return this.dataSvc.getEventsRef(this.userData.currentOOId)
+      .child(eventId)
+      .update({
+        where: newLocation
+      });
   }
 
   updateEventDescription(eventId: string | any, newDescription: any) {
-    return this.af.object(`/events/${eventId}`).update({
-      description: newDescription
-    });
+    return this.dataSvc.getEventsRef(this.userData.currentOOId)
+      .child(eventId)
+      .update({
+        description: newDescription
+      });
   }
 
   createEvent2(ooid: string, newEvent: INewEvent): firebase.Promise<any> {

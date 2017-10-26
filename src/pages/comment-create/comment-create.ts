@@ -21,7 +21,7 @@ export class CommentCreatePage implements OnInit{
   comment: AbstractControl;
   eventId: string;
   loaded: boolean = false;
-  private ooid: string;
+  //private ooid: string;
 
   constructor(public nav: NavController,
               public navParams: NavParams,
@@ -38,9 +38,9 @@ export class CommentCreatePage implements OnInit{
   ngOnInit() {
     //console.log(`CommentCreatePage::ngOnInit`);
     this.eventId = this.navParams.get('eventId');
-    this.userData.getCurrentOOID().then(oid=>{
-      this.ooid = oid;
-    });
+    // this.userData.getCurrentOOID().then(oid=>{
+    //   this.ooid = oid;
+    // });
 
     //console.log(this.eventId)
     this.createCommentForm = this.fb.group({
@@ -82,7 +82,7 @@ export class CommentCreatePage implements OnInit{
         }
         //console.log(`username::${username}`)
 
-        let commentRef = this.commentsSvc.getEventCommentsRef(this.ooid, this.eventId).push();
+        let commentRef = this.commentsSvc.getEventCommentsRef(this.userData.currentOOId, this.eventId).push();
         let commentkey: string = commentRef.key;
         let user: IUser = { uid: uid, username: username };
 
@@ -96,7 +96,7 @@ export class CommentCreatePage implements OnInit{
           votesDown: null
         };
 
-        this.commentsSvc.submitComment(this.ooid, this.eventId, newComment)
+        this.commentsSvc.submitComment(this.userData.currentOOId, this.eventId, newComment)
           .then(snapshot => {
           loader.dismiss()
               .then(() => {

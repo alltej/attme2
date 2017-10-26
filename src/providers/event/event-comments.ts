@@ -7,6 +7,7 @@ import {AuthProvider} from "../auth/auth";
 import * as firebase from 'firebase';
 import {IComment} from "../../models/comment.interface";
 import {DataProvider} from "../data/data";
+import {UserData} from "../data/user-data";
 
 @Injectable()
 export class EventCommentsProvider{
@@ -17,7 +18,8 @@ export class EventCommentsProvider{
   constructor(
     private authService: AuthProvider,
     private af:AngularFireDatabase,
-    private dataSvc: DataProvider
+    private dataSvc: DataProvider,
+    private userData: UserData
     ) {  }
 
 
@@ -34,7 +36,7 @@ export class EventCommentsProvider{
   }
 
   getEvent(eventId: string) {
-    return this.eventsRef.child(eventId).once('value');
+    return this.dataSvc.getEvent(this.userData.currentOOId, eventId)
   }
 
   getCommentsRef() {

@@ -91,7 +91,12 @@ export class DataProvider {
     //
     return this.userInvitesRef.child(`/${userId}`).once('value');
   }
-//
+
+  getEvent(ooid: string, eventId: string) {
+    return this.getEventsRef(ooid)
+      .child(`${eventId}`).once('value');
+  }
+
   getEventsRef(ooid: string) {
     return this.getOrgsRef()
       .child(`${ooid}/events`)
@@ -110,5 +115,9 @@ export class DataProvider {
 
   getOrgsRef() {
     return this.orgsRef;
+  }
+
+  getOrgsRefByOOId(ooid: string) {
+    return this.orgsRef.child(ooid);
   }
 }
