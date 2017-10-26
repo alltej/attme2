@@ -32,7 +32,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   private members: any[] = [];
   private isAttendanceEnabled: boolean  = false;
   //private ooid: string;
-  private userRole: number;
+  //private userRole: number;
 
   constructor(public navCtrl: NavController,
               private membersSvc: MemberProvider,
@@ -201,7 +201,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
 
   isEnableAttendance(eventDate) {
     //if (this.isToday(eventDate)) return true;
-    if (this.userRole == 1 || this.userRole == 3) return true;
+    if (this.userData.currentOORole == 1 || this.userData.currentOORole == 3) return true;
     if (this.isAttendanceEnabledForEvent(eventDate)) return true;
     return false;
   }

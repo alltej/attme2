@@ -19,7 +19,15 @@ export class MemberProvider {
   getMembersForEvent(ooid: string, eventKey: string): FirebaseListObservable<any[]> {
     return  this.af.list(`/organizations/${ooid}/members`,{
       query: {
-        orderByChild: 'firstName'
+        orderByChild: 'firstname'
+      }
+    });
+  }
+
+  getMembersRx(ooid: string): FirebaseListObservable<any[]> {
+    return  this.af.list(`/organizations/${ooid}/members`,{
+      query: {
+        orderByChild: 'firstname'
       }
     });
   }

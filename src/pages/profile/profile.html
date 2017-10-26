@@ -43,7 +43,7 @@
         <!--<img src="{{userProfile.image}}">-->
         <user-avatar [user]="user" *ngIf="userDataLoaded"></user-avatar>
       </ion-thumbnail>
-      <p>{{currentUser?.email}}</p>
+      <p>{{user?.username}}</p>
     </ion-item>
     <ion-item (click)="updateName()">
       <ion-grid>

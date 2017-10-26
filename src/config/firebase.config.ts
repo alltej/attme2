@@ -8,10 +8,10 @@
 // };
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyBzoz0YkmaZtN0V6tCh366JOYqSYZh_FXc",
-  authDomain: "attme-dev.firebaseapp.com",
-  databaseURL: "https://attme-dev.firebaseio.com",
-  projectId: "attme-dev",
-  storageBucket: "attme-dev.appspot.com",
-  messagingSenderId: "875382559491"
+  apiKey: "",
+  authDomain: "",
+  databaseURL: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: ""
 };

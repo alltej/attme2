@@ -3,7 +3,7 @@ import {ItemsProvider} from "./items-provider";
 import {IComment} from "../../models/comment.interface";
 import {IEvent} from "../../models/event.interface";
 import {IMember} from "../../models/member.interface";
-import {IOrganization, IUserOrgs} from "../../models/user.interface";
+import {IUserOrgs} from "../../models/user.interface";
 
 
 

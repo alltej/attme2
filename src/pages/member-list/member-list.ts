@@ -20,7 +20,7 @@ import {UserData} from "../../providers/data/user-data";
 })
 export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
 
-  loading: boolean;
+  loading: boolean = false;
   segment: string = 'all';
   searchControl: FormControl;
   queryText: string = '';
@@ -28,12 +28,17 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
   public pageSize: number = 50;
   public start: number = 0;
   public iMembers: Array<IMember> = [];
-
+   myCircleMemberKeys: any[];
+  //userCircles: any[];
   //private ooid: string;
   private aoid: string;
+
+  private membersRx: Observable<any[]>;
+  private circlesRx: Observable<any[]>;
   constructor(
     private navCtrl: NavController,
     private dataSvc: DataProvider,
+    private membersSvc: MemberProvider,
     public mappingsService: MappingProvider,
     private userCircleSvc: UserCircleProvider,
     private userData: UserData,
@@ -46,94 +51,135 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   ngOnInit() {
-    this.aoid = this.userData.getSelectOrgMemberKey();
-    this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
-      this.loadMembers2();
-      this.loading = false;
-    });
-
-  }
-
-  private loadMembers2() {
     let self = this;
-    self.loading = true;
-    self.iMembers = [];
-    let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    let alphaArray = str.split("");
 
-    let startFrom: number = self.start - self.pageSize;
-    if (startFrom < 0)
-      startFrom = 0;
-
-    let startAt = "A"; //alphaArray[startFrom];
-    let endAt = "Z"; //alphaArray[self.start + self.pageSize];
-
-    //console.log(`startAt:${startAt}`)
-    //console.log(`endAt:${endAt}`)
-    //TODO: simplify
-    this.dataSvc.getMembersRef(this.userData.currentOOId)
-      .orderByChild('firstname')
-      .startAt(startAt)
-      .endAt(endAt)
-      .once('value', snapshot=> {
-        self.mappingsService.getMembers(snapshot)
-          .forEach(aMember => {
-            if (aMember.photoUrl == null) {
-              //aMember.photoUrl = "assets/images/profile-default.png" //"assets/img/avatar-luke.png"
-            }
-            self.iMembers.push(aMember);
-          });
-        self.start -= (self.pageSize + 1);
-        self.events.publish('members:viewed');
-        self.loading = false;
+    self.searchControl.valueChanges.debounceTime(700).subscribe(search => {
+      self.loadMembers();
+      self.loading = false;
     });
+
+
   }
 
-  // public loadMembers() {
-  //   this.loading = true;
-  //   this.membersRx  =
-  //     this.membersSvc.getMembers2(this.userData.getSelectedOrganization())
-  //       .takeUntil(this.componentDestroyed$);
+  // private loadMembers2() {
+  //   let self = this;
+  //   self.loading = true;
+  //   self.iMembers = [];
   //
-  //   if (!(this.queryText == null || this.queryText == '')){
-  //     this.membersRx = this.membersRx.map((members) =>
-  //       members.filter(member => member.lastName.toLowerCase().includes(this.queryText.toLowerCase()) || member.firstName.toLowerCase().includes(this.queryText.toLowerCase())))
-  //   }
   //
-  //   this.membersRx.map((members) => {
-  //       return members.map(member => {
-  //         if (member.photoUrl == null) {
-  //           //member.photoUrl = "assets/images/profile-default.png" //"assets/img/avatar-luke.png"
-  //         }
-  //         //console.log(member.photoUrl);
-  //         this.userCircleSvc.isMyCircle(member.$key)
-  //           .takeUntil(this.componentDestroyed$)
-  //           .map((ul) => {
-  //             return ul;
-  //           })
-  //           .subscribe(data => {
-  //             member.isMyCircle = data.$value ? true : false;
-  //           });
-  //         return member;
-  //       })
-  //     })
-  //     .subscribe((items: any[]) => {
-  //       this.members = items;
-  //     });
+  //
+  //   let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  //   let alphaArray = str.split("");
+  //
+  //   let startFrom: number = self.start - self.pageSize;
+  //   if (startFrom < 0)
+  //     startFrom = 0;
+  //
+  //   let startAt = "A"; //alphaArray[startFrom];
+  //   let endAt = "Z"; //alphaArray[self.start + self.pageSize];
+  //
+  //   // self.myCircleMemberKeys = [];
+  //   // self.myCircleMemberKeys = this.userCircleSvc.getMyCircles1();
+  //   //console.log(`self.myCircleMemberKeys.length==${this.userCircleSvc.getMyCircles1().length}`)
+  //   //TODO: simplify
+  //   this.dataSvc.getMembersRef(this.userData.currentOOId)
+  //     .orderByChild('firstname')
+  //     .startAt(startAt)
+  //     .endAt(endAt)
+  //     .once('value', snapshot=> {
+  //       self.mappingsService.getMembers(snapshot)
+  //         .forEach(aMember => {
+  //
+  //           if (self.myCircleMemberKeys.indexOf(aMember.memberKey) > -1) {
+  //             aMember.isMyCircle = true
+  //           }else{
+  //             aMember.isMyCircle = false
+  //           }
+  //           // self.myCircleMemberKeys.forEach(m =>{
+  //           //   console.log(m)
+  //           // })
+  //           if (aMember.photoUrl == null) {
+  //             //aMember.photoUrl = "assets/images/profile-default.png" //"assets/img/avatar-luke.png"
+  //           }
+  //           self.iMembers.push(aMember);
+  //         });
+  //       self.start -= (self.pageSize + 1);
+  //       self.events.publish('members:viewed');
+  //       self.loading = false;
+  //   });
   // }
+
+  public loadMembers() {
+    this.loading = true;
+    // this.membersRx =  this.membersSvc.getMembersForEvent(this.userData.currentOOId, this.eventId)
+    //   .takeUntil(this.componentDestroyed$);
+    //
+     this.circlesRx = this.userCircleSvc.getMyCirclesRx()
+        .takeUntil(this.componentDestroyed$)
+
+    this.circlesRx.map((members) => {
+      return members.map(member => {
+        return member.$key
+      })
+     }).subscribe((items: any[]) =>{
+       this.myCircleMemberKeys = items;
+    });
+
+    this.membersRx  =
+      this.membersSvc.getMembersRx(this.userData.currentOOId)
+        .takeUntil(this.componentDestroyed$);
+
+    if (!(this.queryText == null || this.queryText == '')){
+      this.membersRx = this.membersRx.map((members) =>
+        members.filter(member => member.lastname.toLowerCase().includes(this.queryText.toLowerCase()) || member.firstname.toLowerCase().includes(this.queryText.toLowerCase())))
+    }
+
+    this.membersRx.map((members) => {
+        return members.map(member => {
+          if (member.photoUrl == null) {
+            //member.photoUrl = "assets/images/profile-default.png" //"assets/img/avatar-luke.png"
+          }
+
+          // console.log(`IsInCircle::member.memberKey==${member.memberKey}`)
+          // if (this.myCircleMemberKeys.indexOf(member.memberKey) > -1) {
+          //   member.isMyCircle = true
+          // }else{
+          //   member.isMyCircle = false
+          // }
+
+          //console.log(member.photoUrl);
+          this.userCircleSvc.isMyCircle(member.$key)
+            .takeUntil(this.componentDestroyed$)
+            .map((ul) => {
+              return ul;
+            })
+            .subscribe(data => {
+              member.isMyCircle = data.$value ? true : false;
+            });
+          return member;
+        })
+      })
+      .subscribe((items: any[]) => {
+        //this.members = items;
+        this.iMembers = items;
+        this.loading = true;
+      });
+
+  }
 
   onLoadMember(selectedMember:any){
     this.navCtrl.push('MemberDetailPage', {memberKey: selectedMember.memberKey});
   }
 
   onAddToCircle(selectedMember: any){
-    //console.log(`onAddToCircle${selectedMember.$key}`);
-    this.userCircleSvc.addToMyCircle(selectedMember.memberKey);
+    let self = this;
+    self.userCircleSvc.addToMyCircle(selectedMember.memberKey);
+    //this.loadMembers2()
   }
 
   onRemoveFromCircle(selectedMember: any){
-    //console.log('onRemoveFromCircle');
-    this.userCircleSvc.removeFromMyCircle(selectedMember.$key);
+    this.userCircleSvc.removeFromMyCircle(selectedMember.memberKey);
+    //this.loadMembers2()
   }
 
   isMyCircle(selectedMember: any){
@@ -156,7 +202,6 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   getAvatar(photoUrl: String) {
-    //console.log(photoUrl);
     if (photoUrl == null) {
       return "assets/images/avatar-luke.png"
     }else{
@@ -166,6 +211,6 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
 
   onSearchInput(){
     let self = this;
-    self.loadMembers2();
+    self.loadMembers();
   }
 }

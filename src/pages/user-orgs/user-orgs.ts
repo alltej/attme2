@@ -15,7 +15,7 @@ export class UserOrgsPage implements OnInit{
 
   //public iMembers: Array<IMember> = [];
   public userOrganizations: Array<IUserOrgs> = [];
-  //public ooid: string;
+  public ooid: string;
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private authSvc: AuthProvider,
@@ -30,11 +30,10 @@ export class UserOrgsPage implements OnInit{
     let self = this;
     // this.userData.getCurrentOOID().then(oid=>{
     //   this.ooid = oid;})
+    this.ooid = this.userData.currentOOId
     this.dataSvc.getUserOrgs(self.authSvc.getLoggedInUser().uid)
       .then( snapshot => {
         if (snapshot.val())
-          //console.log(snapshot)
-          //self.userOrganizations = this.mappingSvc.getUserOrgs(snapshot);
           this.mappingSvc.getUserOrgs(snapshot).forEach( oo => {
             self.userOrganizations.push(oo)
           });
@@ -50,6 +49,7 @@ export class UserOrgsPage implements OnInit{
   onSelectOrganization(o: IUserOrgs) {
     //console.log(o)
     this.userData.setCurrentOrg(o);
+    this.navCtrl.setRoot('TabsPage');
     //this.ooid = o.oid;
     //console.log(this.ooid)
   }

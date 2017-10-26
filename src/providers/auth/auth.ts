@@ -52,7 +52,6 @@ export class AuthProvider {
         // this.dataSvc.usersRef.child(`${newUser.uid}/profile`).set({
         //   email: email
         // });
-
         this.dataSvc.usersRef.child(`${newUser.uid}/profile`).set({
           email: email
         });
@@ -61,6 +60,7 @@ export class AuthProvider {
           name: "Default",
           role: 1
         });
+        return newUser
     });
   }
 

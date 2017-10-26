@@ -22,7 +22,6 @@ export class ProfilePage implements OnInit
   //birthDate:string;
   user: IUser;
   userDataLoaded: boolean = false;
-
   //avatar: string = "assets/images/profile-default.png";
 
   constructor(public navCtrl: NavController,

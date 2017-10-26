@@ -32,14 +32,7 @@
         <!--<ion-icon name="people"></ion-icon>-->
         <!--Members-->
       <!--</button>-->
-      <button
-        ion-item
-        icon-left
-        (click)="onLoad('ProfilePage')"
-        *ngIf="isUserLoggedIn()">
-        <ion-icon name="person"></ion-icon>
-        My Profile
-      </button>
+
       <button
         ion-item
         icon-left
@@ -47,6 +40,14 @@
         *ngIf="isUserLoggedIn()">
         <ion-icon name="person"></ion-icon>
         My Organizations
+      </button>
+      <button
+        ion-item
+        icon-left
+        (click)="onLoad('ProfilePage')"
+        *ngIf="isUserLoggedIn()">
+        <ion-icon name="person"></ion-icon>
+        My Profile
       </button>
       <button
         ion-item

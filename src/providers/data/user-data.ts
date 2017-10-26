@@ -18,33 +18,25 @@ export class UserData {
     public storage: Storage) {
 
     if (this.currentOOId == null) {
-      //console.log(`UserData::this.currentOOId == null`)
       this.getCurrentOOID().then( data =>{
         this.currentOOId = data
-        //console.log(`UserData::this.currentOOId == ${this.currentOOId}`)
       })
     }
 
     if (this.currentOORole == null) {
-      //console.log(`UserData::this.currentOORole == null`)
       this.getRole().then( data =>{
         this.currentOORole = data
-        //console.log(`UserData::this.currentOORole == ${this.currentOORole}`)
-
       })
     }
 
     if (this.currentOOName == null) {
-      //console.log(`UserData::this.currentOOName == null`)
       this.getCurrentOOName().then( data =>{
         this.currentOOName = data
-        //console.log(`UserData::this.currentOOName == ${this.currentOOName}`)
       })
     }
   }
 
   setCurrentOrg(selectedOrg: IUserOrgs): void {
-    //console.log(`setCurrentOOID==${selectedOrg}`)
     this.storage.set('currentOOID', selectedOrg.oid);
     this.storage.set('currentOOName', selectedOrg.name);
     this.storage.set('currentRole', selectedOrg.role);

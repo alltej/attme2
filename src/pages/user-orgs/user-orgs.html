@@ -14,22 +14,24 @@
 
 <ion-content padding>
   <ion-list>
-    <ion-item *ngFor="let o of userOrganizations" (click)="onSelectOrganization(o)">
+    <ion-item *ngFor="let o of userOrganizations" (click)="onSelectOrganization(o)"
+              detail-push
+              selected="true"
+    >
      <!--<ion-avatar item-start>-->
         <!--<ion-text-avatar color="secondary">A</ion-text-avatar>-->
       <!--</ion-avatar>-->
       <h2>{{o.name}}</h2>
-      <div item-content>
-        <button
-          ion-button
-          clear
-          small
-          *ngIf="(o.oid==ooid)">
-          <ion-icon name="heart-outline"></ion-icon>
-        </button>
-      </div>
+      <!--<div >-->
+        <!--<button-->
+          <!--ion-button-->
+          <!--clear-->
+          <!--small>-->
+          <!--&lt;!&ndash;<ion-icon name="heart-outline" item-left></ion-icon>&ndash;&gt;-->
+          <!--&lt;!&ndash;<ion-icon name='arrow-dropright' item-right secondary></ion-icon>&ndash;&gt;-->
+        <!--</button>-->
+      <!--</div>-->
     </ion-item>
 
   </ion-list>
-
 </ion-content>

@@ -101,7 +101,6 @@ export class MyApp {
 
   listenToLoginEvents() {
     this.events.subscribe('user:login', () => {
-      //console.log('this.enableMenu(true);')
       this.enableMenu(true);
     });
 

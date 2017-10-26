@@ -32,7 +32,6 @@ export class LoginPage {
     private dataSvc:DataProvider,
     private mappingSvc:MappingProvider,
     private userData: UserData,
-    private events: Events,
     private platform: Platform,
     private appVersion: AppVersion,
     public formBuilder: FormBuilder) {

@@ -122,7 +122,6 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
     } else {
       //console.log('Firebase connection found (threads.ts) - attempt: ' + self.firebaseConnectionAttempts);
       //    let newItemRef = this.dataSvc.getOrgsRef().child(`${this.userData.getSelectedOrganization()}/events`).push();
-
       self.dataSvc.getOrgsRefByOOId(this.userData.currentOOId).child(`/stats/events`).on('child_changed', self.onEventAdded);
       if (self.authSvc.getLoggedInUser() === null) {
         //console.log('getLoggedInUser is null')
@@ -291,7 +290,6 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
               //anEvent.likedBy.
             if (anEvent.likedBy != null) {
               let userLikes: Array<string> = Object.keys(anEvent.likedBy);
-              //console.log(userLikes)
               //TODO: refactor to not use the indexOf
               if (userLikes.length>0 && userLikes.indexOf(self.authSvc.getLoggedInUser().uid) > -1) {
                 anEvent.isLiked = true

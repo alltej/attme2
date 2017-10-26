@@ -20,7 +20,6 @@ export class UserAvatarComponent implements OnInit {
               public authSvc: AuthProvider,
               private dataService: DataProvider,
               private photoViewer: PhotoViewer) {
-    //console.log('Hello AttmeUserAvatarComponent Component');
 
   }
 
