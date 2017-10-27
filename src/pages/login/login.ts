@@ -63,12 +63,12 @@ export class LoginPage {
           if (authData){
             this.dataSvc.getUser(authData.uid).then( aUser =>{
                 //console.log(`loginUser::createUser`)
-                if (!aUser.val()) {
-                  //console.log(`loginUser::createUser==TRUE`)
-                  this.dataSvc.getUserRef(authData.uid).child('profile').set({
-                    email: authData.email
-                  });
-                }
+                // if (!aUser.val()) {
+                //   //console.log(`loginUser::createUser==TRUE`)
+                //   this.dataSvc.getUserRef(authData.uid).child('profile').set({
+                //     email: authData.email
+                //   });
+                // }
             }).then(() =>{
                 //console.log(`authData.emailVerified==${authData.emailVerified}`)
                 //console.log(`authData.uid==${authData.uid}`)
@@ -82,6 +82,11 @@ export class LoginPage {
                       .set({
                         name: inviteData.ooName,
                         role: inviteData.role
+                      })
+                    this.dataSvc.getUserRef(authData.uid).child(`profile`)
+                      .set({
+                        lastname: inviteData.lastname,
+                        firstname: inviteData.firstname,
                       })
                   }
                 })

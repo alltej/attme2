@@ -52,8 +52,20 @@ export class MemberInviteProvider {
         var errorMessage = error.message;
         if (errorCode == 'auth/weak-password') {
           alert('The password is too weak.');
-        } else {
-          alert(errorMessage);
+        } else if (error.message == 'The email address is already in use by another account.'){
+          alert(errorMessage + ' TODO: Create invite by email')
+          //TODO
+          // this.dataSvc.userInvitesRef.child(newUser.uid).set({
+          //   lastname:member.lastname,
+          //   firstname:member.firstname,
+          //   email: member.email,
+          //   ooid: ooid,
+          //   ooName: orgName,
+          //   role: roleId
+          // })
+        }
+        else {
+          alert(errorMessage + ' code: ' + error.message);
         }
         //console.log(error);
       })

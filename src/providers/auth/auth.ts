@@ -38,14 +38,16 @@ export class AuthProvider {
     return this.fireAuth.signInWithEmailAndPassword(email, password);
   }
 
-  signupUser(email: string, password: string): firebase.Promise<any> {
+  signupUser(email: string, password: string, firstname: string, lastname: string): firebase.Promise<any> {
     return this.fireAuth.createUserWithEmailAndPassword(email, password)
       .then( newUser => {
         // this.dataSvc.usersRef.child(`${newUser.uid}/profile`).set({
         //   email: email
         // });
         this.dataSvc.usersRef.child(`${newUser.uid}/profile`).set({
-          email: email
+          email: email,
+          firstname: firstname,
+          lastname: lastname,
         });
         this.dataSvc.usersRef.child(`${newUser.uid}/organizations/${newUser.uid}`).set({
           oid: newUser.uid,

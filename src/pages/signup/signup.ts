@@ -46,34 +46,27 @@ export class SignupPage implements OnInit{
     if (!this.signupForm.valid){
       //console.log(this.signupForm.value);
     } else {
-      this.authProvider.signupUser(this.signupForm.value.email, this.signupForm.value.password)
+      this.authProvider.signupUser(
+        this.signupForm.value.email,
+        this.signupForm.value.password,
+        this.signupForm.value.firstname,
+        this.signupForm.value.lastname)
         .then((authData) => {
         //TODO: refactor by merging similar code in login page
           if (authData){
-            this.dataSvc.getUser(authData.uid)
-              .then( aUser =>{
-                if (!aUser.val()) {
-                  //console.log(`loginUser::createUser==TRUE`)
-                  this.dataSvc.getUserRef(authData.uid).child('profile').set({
-                    email: authData.email
-                  });
-                }
+            //console.log(`authData.uid==${authData.uid}`)
+            this.dataSvc.getUserInvite(authData.uid).then( invite =>{
+              //console.log(`getUserInvite`)
+              if (invite.val()){
+                //console.log(`loginUser::inviteExists==TRUE`)
+                let inviteData = invite.val();
+                //console.log(`inviteData::${inviteData}`)
+                this.dataSvc.getUserRef(authData.uid).child(`organizations/${inviteData.ooid}/`)
+                  .set({
+                    name: inviteData.ooName,
+                    role: inviteData.role
+                  })
               }
-            ).then(() =>{
-              //console.log(`authData.uid==${authData.uid}`)
-              this.dataSvc.getUserInvite(authData.uid).then( invite =>{
-                //console.log(`getUserInvite`)
-                if (invite.val()){
-                  //console.log(`loginUser::inviteExists==TRUE`)
-                  let inviteData = invite.val();
-                  //console.log(`inviteData::${inviteData}`)
-                  this.dataSvc.getUserRef(authData.uid).child(`organizations/${inviteData.ooid}/`)
-                    .set({
-                      name: inviteData.ooName,
-                      role: inviteData.role
-                    })
-                }
-              })
             }).then(()=>{
               this.dataSvc.getUserOrgs(authData.uid)
                 .then( snapshot => {
@@ -92,8 +85,6 @@ export class SignupPage implements OnInit{
                 //console.log(error)
               })
             })
-          }
-          else{
           }
 
           this.loading.dismiss().then( () => {
