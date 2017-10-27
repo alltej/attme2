@@ -65,56 +65,11 @@ export class MemberDetailPage extends BaseClass implements OnInit{
 
   private loadMemberDetails2(){
     this.userDataLoaded = false;
-    this.memberSvc.getMemberData2(this.userData.currentOOId,this.memberKey)
+    this.memberSvc.getMemberData2(this.memberKey)
       .then(snapShot => {
         let userData: any = snapShot.val();
         if (userData == null)
           return null;
-        // console.log(userData)
-      //   this.getUserImage().then(url => {
-      //     this.member = {
-      //       firstname: userData.firstname,
-      //       lastname: userData.lastname,
-      //       birthDate: userData.birthDate,
-      //       uid: userData.uid,
-      //       memberKey: userData.memberKey,
-      //       email: userData.email,
-      //       memberId: userData.memberId,
-      //       photoUrl: url,
-      //       isMyCircle: false,
-      //       textAvatar: userData.textAvatar
-      //     };
-      //
-      //     console.log(`this.member.uid ==${this.member.uid }`)
-      //     this.userDataLoaded = true;
-      //     this.isUserProfileExists = this.member.uid != null;
-      //     this.enableEditEmail = this.member.uid != null || (this.member.email == null);
-      //     console.log(`this.isUserProfileExists==${this.isUserProfileExists }`)
-      //
-      // }).catch(error => {
-      //   //console.log(error.code);
-      //   //TODO
-      //   this.member = {
-      //     firstname: userData.firstname,
-      //     lastname: userData.lastname,
-      //     birthDate: userData.birthDate,
-      //     uid: userData.uid,
-      //     memberKey: userData.memberKey,
-      //     email: userData.email,
-      //     memberId: userData.memberId,
-      //     photoUrl: 'assets/images/profile.png',
-      //     isMyCircle: false,
-      //     textAvatar: userData.textAvatar
-      //
-      //   };
-      //     console.log(`this.member.uid ==${this.member.uid }`)
-      //
-      //   this.userDataLoaded = true
-      //   this.isUserProfileExists = this.member.uid != null;
-      //     this.enableEditEmail = this.member.uid != null || (this.member.email == null);
-      //     console.log(`this.isUserProfileExists==${this.isUserProfileExists }`)
-      // });
-
         this.member = {
           firstname: userData.firstname,
           lastname: userData.lastname,
@@ -128,33 +83,9 @@ export class MemberDetailPage extends BaseClass implements OnInit{
           textAvatar: userData.textAvatar
         };
 
-        //console.log(`this.member.uid ==${this.member.uid }`)
         this.userDataLoaded = true;
         this.isUserProfileExists = this.member.uid != null;
         this.enableEditEmail = this.member.uid != null || (this.member.email == null);
-        //console.log(`this.isUserProfileExists==${this.isUserProfileExists }`)
-
-      // if (this.member != null) {
-      //   this.enableEditEmail = this.member.uid != null || (this.member.email == null);
-      //   console.log(`this.enableEditEmail==${this.enableEditEmail }`)
-      // }
-
-      //console.log("aaaa11")
-      // this.profileSvc.findMemberId2(this.ooid, this.memberKey)
-      //   .on('value', (snapshot) =>
-      //   {
-      //     let data = snapshot.val();
-      //     //console.log(data)
-      //     if (data){
-      //       //console.log("bbb22")
-      //       this.isUserProfileExists = true;
-      //     }
-      //     //console.log(`this.member::${this.member}`)
-      //     if (this.member != null) {
-      //       this.enableEditEmail = !this.isUserProfileExists || (this.member.email == null);
-      //     }
-      //     //this.enableEditEmail = !this.isUserProfileExists || (this.member.email == null);
-      //   })
 
     })
 
@@ -217,7 +148,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
         {
           text: 'Save',
           handler: data => {
-            this.memberSvc.updateName(this.userData.currentOOId, this.memberKey, data.firstname, data.lastname)
+            this.memberSvc.updateName(this.memberKey, data.firstname, data.lastname)
               .then( () =>{
               this.reload()
             }).catch(error => {
@@ -247,7 +178,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
           text: 'Save',
           handler: data => {
 
-            this.memberSvc.updateEmail(this.userData.currentOOId, this.memberKey, data.newEmail)
+            this.memberSvc.updateEmail(this.memberKey, data.newEmail)
               .then( () =>{
                 this.reload()
             }).catch(error => {
@@ -280,7 +211,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
           handler: data => {
             //let newEmail = data.newEmail;
 
-            this.memberSvc.updateDOB(this.userData.currentOOId, this.memberKey, data.birthDate)
+            this.memberSvc.updateDOB(this.memberKey, data.birthDate)
               .then( () =>{
                 this.reload()
               }).catch(error => {
@@ -309,7 +240,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
         {
           text: 'Save',
           handler: data => {
-            this.memberSvc.updateMemberId(this.userData.currentOOId, this.memberKey, data.newMemberId)
+            this.memberSvc.updateMemberId(this.memberKey, data.newMemberId)
               .then( () =>{
                 this.reload()
               }).catch(error => {
@@ -446,7 +377,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
         loader.dismiss().then(() => {
           // Upload completed successfully, now we can get the download URL
           let downloadURL = uploadTask.snapshot.downloadURL;
-          this.memberSvc.updatePhotoUrl(this.userData.currentOOId, this.memberKey, downloadURL)
+          this.memberSvc.updatePhotoUrl(this.memberKey, downloadURL)
           this.reload();
         });
       });

@@ -34,6 +34,7 @@ export class UserCircleProvider{
   }
 
   getMyCirclesRx(): FirebaseListObservable<any[]>{
+    if (this.userData.currentOOId == null) return
     return this.af
       .list(`/users/${this.authService.getLoggedInUser().uid}/circles/${this.userData.currentOOId}/members`);
   }

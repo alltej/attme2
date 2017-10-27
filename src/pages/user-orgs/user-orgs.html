@@ -13,16 +13,17 @@
 
 
 <ion-content padding>
+  <ion-list-header>
+    Select Organization
+  </ion-list-header>
   <ion-list>
     <ion-item *ngFor="let o of userOrganizations" (click)="onSelectOrganization(o)"
-              detail-push
-              selected="true"
     >
      <!--<ion-avatar item-start>-->
         <!--<ion-text-avatar color="secondary">A</ion-text-avatar>-->
       <!--</ion-avatar>-->
-      <h2>{{o.name}}</h2>
-      <!--<div >-->
+
+      <!--<div item-content>-->
         <!--<button-->
           <!--ion-button-->
           <!--clear-->
@@ -31,6 +32,28 @@
           <!--&lt;!&ndash;<ion-icon name='arrow-dropright' item-right secondary></ion-icon>&ndash;&gt;-->
         <!--</button>-->
       <!--</div>-->
+
+      <h2>{{o.name}}</h2>
+      <div item-content *ngIf="(o.oid.toUpperCase()===ooid.toUpperCase()); else orgTemplate">
+        <button
+          ion-item
+          clear
+          small
+          color="secondary"
+          >
+          <!--<ion-icon name="heart-outline" item-left></ion-icon>-->
+          <!--<ion-icon name='arrow-dropright' item-right secondary></ion-icon>-->
+        </button>
+      </div>
+      <ng-template #orgTemplate>
+        <button
+          ion-button
+          clear
+          small>
+          <!--<ion-icon name="heart-outline" item-left></ion-icon>-->
+          <!--<ion-icon name='arrow-dropright' item-right secondary></ion-icon>-->
+        </button>
+      </ng-template>
     </ion-item>
 
   </ion-list>

@@ -126,7 +126,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
     });
 
     this.membersRx  =
-      this.membersSvc.getMembersRx(this.userData.currentOOId)
+      this.membersSvc.getMembersRx()
         .takeUntil(this.componentDestroyed$);
 
     if (!(this.queryText == null || this.queryText == '')){
@@ -139,13 +139,6 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
           if (member.photoUrl == null) {
             //member.photoUrl = "assets/images/profile-default.png" //"assets/img/avatar-luke.png"
           }
-
-          // console.log(`IsInCircle::member.memberKey==${member.memberKey}`)
-          // if (this.myCircleMemberKeys.indexOf(member.memberKey) > -1) {
-          //   member.isMyCircle = true
-          // }else{
-          //   member.isMyCircle = false
-          // }
 
           //console.log(member.photoUrl);
           this.userCircleSvc.isMyCircle(member.$key)

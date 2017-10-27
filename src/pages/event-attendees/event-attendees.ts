@@ -82,7 +82,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
       this.setFilteredItems();
     });
 
-    this.eventSvc.getEventDetail(this.userData.currentOOId, this.eventId).take(1)
+    this.eventSvc.getEventDetail(this.eventId).take(1)
       .subscribe( (snapshot)=> {
         if (snapshot.val() == null) return null;
         let eventDate = new Date(snapshot.val().when);
@@ -105,7 +105,7 @@ export class EventAttendeesPage extends BaseClass implements OnInit, OnDestroy {
   }
 
   setFilteredItems(){
-    this.membersRx =  this.membersSvc.getMembersForEvent(this.userData.currentOOId, this.eventId)
+    this.membersRx =  this.membersSvc.getMembersForEvent()
       .takeUntil(this.componentDestroyed$);
     if (!(this.searchTerm == null || this.searchTerm == '')){
       this.membersRx = this.membersRx.map((members) =>

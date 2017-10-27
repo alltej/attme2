@@ -5,6 +5,7 @@ import {AuthProvider} from "../auth/auth";
 import firebase from 'firebase';
 import {INewMember} from "../../models/member.interface";
 import {DataProvider} from "../data/data";
+import {UserData} from "../data/user-data";
 
 @Injectable()
 export class MemberProvider {
@@ -13,42 +14,43 @@ export class MemberProvider {
 
   constructor(private af:AngularFireDatabase,
               private authService: AuthProvider,
-              private dataSvc: DataProvider) {
+              private dataSvc: DataProvider,
+              private userData: UserData) {
   }
 
-  getMembersForEvent(ooid: string, eventKey: string): FirebaseListObservable<any[]> {
-    return  this.af.list(`/organizations/${ooid}/members`,{
+  getMembersForEvent(): FirebaseListObservable<any[]> {
+    return  this.af.list(`/organizations/${this.userData.currentOOId}/members`,{
       query: {
         orderByChild: 'firstname'
       }
     });
   }
 
-  getMembersRx(ooid: string): FirebaseListObservable<any[]> {
-    return  this.af.list(`/organizations/${ooid}/members`,{
+  getMembersRx(): FirebaseListObservable<any[]> {
+    return  this.af.list(`/organizations/${this.userData.currentOOId}/members`,{
       query: {
         orderByChild: 'firstname'
       }
     });
   }
 
-  createMember3(ooid: string, newMember: INewMember): firebase.Promise<any> {
+  createMember3(newMember: INewMember): firebase.Promise<any> {
     try {
-      this.dataSvc.getOrgsRef().child(`${ooid}/members`).child(newMember.memberKey).set(newMember);
+      this.dataSvc.getOrgsRef().child(`${this.userData.currentOOId}/members`).child(newMember.memberKey).set(newMember);
 
-      return this.dataSvc.getOrgsRef().child(`${ooid}/stats/members`).once('value')
+      return this.dataSvc.getOrgsRef().child(`${this.userData.currentOOId}/stats/members`).once('value')
         .then((snapshot) => {
           let count = snapshot == null ? 0 : snapshot.val();
-          this.dataSvc.getOrgsRef().child(`${ooid}/stats/members`).set(count + 1);
+          this.dataSvc.getOrgsRef().child(`${this.userData.currentOOId}/stats/members`).set(count + 1);
         });
     } catch (e) {
       //console.log(e)
     }
   }
 
-  updateName(ooid: string, memberKey: string, firstName, lastName): firebase.Promise<void> {
+  updateName(memberKey: string, firstName, lastName): firebase.Promise<void> {
     return this.dataSvc.getOrgsRef()
-      .child(ooid)
+      .child(this.userData.currentOOId)
       .child(`/members/${memberKey}`)
       .update({
         firstname: firstName,
@@ -56,9 +58,9 @@ export class MemberProvider {
     });
   }
 
-  updatePhotoUrl(ooid: string, memberKey: string, photoUrl:string): firebase.Promise<void> {
+  updatePhotoUrl(memberKey: string, photoUrl:string): firebase.Promise<void> {
     return this.dataSvc.getOrgsRef()
-      .child(`${ooid}/members/${memberKey}`)
+      .child(`${this.userData.currentOOId}/members/${memberKey}`)
       .update({
         photoUrl: photoUrl
       });
@@ -95,36 +97,36 @@ export class MemberProvider {
       });
   }
 
-  updateEmail(ooid: string, memberKey: string, newEmail: string): firebase.Promise<void> {
+  updateEmail(memberKey: string, newEmail: string): firebase.Promise<void> {
     return this.dataSvc.getOrgsRef()
-      .child(ooid)
+      .child(this.userData.currentOOId)
       .child(`/members/${memberKey}`)
       .update({
         email: newEmail
       });
   }
 
-  updateMemberId(ooid: string, memberKey: string, memberId: string): firebase.Promise<void> {
+  updateMemberId(memberKey: string, memberId: string): firebase.Promise<void> {
     return this.dataSvc.getOrgsRef()
-      .child(ooid)
+      .child(this.userData.currentOOId)
       .child(`/members/${memberKey}`)
       .update({
         memberId: memberId
       });
   }
 
-  updateDOB(ooid: string, memberKey: string, birthDate: Date): firebase.Promise<void> {
+  updateDOB(memberKey: string, birthDate: Date): firebase.Promise<void> {
     //console.log(`updateDOB::ooid==${ooid};;${memberKey}::${birthDate}`)
     return this.dataSvc.getOrgsRef()
-      .child(ooid)
+      .child(this.userData.currentOOId)
       .child(`/members/${memberKey}`)
       .update({
         birthDate: birthDate
       });
   }
 
-  getMemberData2(ooid: string, memberKey: string) {
+  getMemberData2(memberKey: string) {
     //console.log(`getMemberData2::ooid=${memberKey}::memberKey=${memberKey}`);
-    return this.dataSvc.getOrgsRef().child(`/${ooid}/members/${memberKey}`).once('value');
+    return this.dataSvc.getOrgsRef().child(`/${this.userData.currentOOId}/members/${memberKey}`).once('value');
   }
 }

@@ -36,13 +36,13 @@ export class EventDetailPage extends BaseClass implements OnInit{
     //console.log(`EventDetailPage::ngOnInit::${this.eventId}`)
     this.eventId = this.navParams.get('eventId');
 
-    this.eventSvc.getEventDetail(this.userData.currentOOId, this.eventId)
+    this.eventSvc.getEventDetail(this.eventId)
       .subscribe((item: any)=>{
         this.selEvent = item.val();
         this.selEvent.eventId = this.eventId;
       });
 
-    this.likedByList = this.eventSvc.getEventLikes(this.userData.currentOOId, this.eventId);
+    this.likedByList = this.eventSvc.getEventLikes(this.eventId);
     //console.log(item)
     this.userLikeSvc.isLiked(this.userData.currentOOId, this.eventId)
       .subscribe(ul =>{

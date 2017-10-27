@@ -44,7 +44,7 @@ export class EventProvider {
     });
   }
 
-  getEventLikes(ooid: string, eventId: string) {
+  getEventLikes(eventId: string) {
     return this.af.list(`/organizations/${this.userData.currentOOId}/events/${eventId}/likedBy`,{
       query: {
         orderByKey: true,
@@ -53,8 +53,8 @@ export class EventProvider {
     });
   }
 
-  getEventDetail(ooid: string, eventId:string) {
-    return this.af.object(`/organizations/${this.userData.currentOOId}/events/${eventId}`, { preserveSnapshot: true });
+  getEventDetail(eventId:string) {
+    return this.af.object(`/organizations/${this.userData.currentOOId}/events/${eventId}`, { preserveSnapshot: true })
   }
 
 

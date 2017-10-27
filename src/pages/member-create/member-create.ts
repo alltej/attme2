@@ -50,9 +50,9 @@ export class MemberCreatePage implements OnInit{
       textAvatar: textAvatar
     };
 
-    this.memberSvc.createMember3(this.userData.currentOOId,newMember)
+    this.memberSvc.createMember3(newMember)
       .then( newEvent => {
-        this.navParams.get("parentPage").loadMembers2();
+        this.navParams.get("parentPage").loadMembers();
         this.navCtrl.pop();
     });
   }
