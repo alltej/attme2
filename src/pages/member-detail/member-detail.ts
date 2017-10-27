@@ -5,12 +5,10 @@ import {
 } from 'ionic-angular';
 import {MemberProvider} from "../../providers/member/member";
 import {BaseClass} from "../BasePage";
-import {ProfileImageProvider} from "../../providers/profile/profile-image";
 import {MemberInviteProvider} from "../../providers/member/member-invite";
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import {StorageProvider} from "../../providers/storage/storage";
 import {IMember} from "../../models/member.interface";
-import {ProfileProvider} from "../../providers/profile/profile";
 import {UserData} from "../../providers/data/user-data";
 
 @IonicPage({

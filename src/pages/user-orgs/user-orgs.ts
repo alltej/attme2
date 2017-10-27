@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {DataProvider} from "../../providers/data/data";
-import {IOrganization, IUserOrgs} from "../../models/user.interface";
+import {IUserOrgs} from "../../models/user.interface";
 import {AuthProvider} from "../../providers/auth/auth";
 import {MappingProvider} from "../../providers/mapper/mapping";
 import {UserData} from "../../providers/data/user-data";
@@ -13,7 +13,6 @@ import {UserData} from "../../providers/data/user-data";
 })
 export class UserOrgsPage implements OnInit{
 
-  //public iMembers: Array<IMember> = [];
   public userOrganizations: Array<IUserOrgs> = [];
   public ooid: string;
   constructor(public navCtrl: NavController,

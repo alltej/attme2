@@ -8,46 +8,84 @@
 
 
 <ion-content padding>
-  <div text-center>
-    <ion-img width="300" height="100" src="assets/attme.png"></ion-img>
-  </div>
+
   <form [formGroup]="signupForm" (submit)="signupUser()" novalidate>
+    <ion-list>
+      <!--<ion-list-header>-->
+        <!--Basic info-->
+      <!--</ion-list-header>-->
+      <ion-item>
+        <ion-label stacked>Firstname</ion-label>
+        <ion-input formControlName="firstname" type="text" placeholder="Your firstname"
+                   [class.invalid]="!signupForm.controls.firstname.valid && signupForm.controls.firstname.dirty">
+        </ion-input>
+      </ion-item>
+      <ion-item class="error-message"
+                *ngIf="!signupForm.controls.firstname.valid  && signupForm.controls.firstname.dirty">
+        <p>Firstname is required</p>
+      </ion-item>
 
-    <ion-item>
-      <ion-label stacked>Email</ion-label>
-      <ion-input formControlName="email" type="email" placeholder="Your email address"
-                 [class.invalid]="!signupForm.controls.email.valid && signupForm.controls.email.dirty">
-      </ion-input>
-    </ion-item>
-    <ion-item class="error-message"
-              *ngIf="!signupForm.controls.email.valid  && signupForm.controls.email.dirty">
-      <p>Please enter a valid email.</p>
-    </ion-item>
+      <ion-item>
+        <ion-label stacked>Lastname</ion-label>
+        <ion-input formControlName="lastname" type="text" placeholder="Your lastname"
+                   [class.invalid]="!signupForm.controls.lastname.valid && signupForm.controls.lastname.dirty">
+        </ion-input>
+      </ion-item>
+      <ion-item class="error-message"
+                *ngIf="!signupForm.controls.lastname.valid  && signupForm.controls.lastname.dirty">
+        <p>Lastname is required</p>
+      </ion-item>
 
-    <ion-item>
-      <ion-label stacked>Password</ion-label>
-      <ion-input formControlName="password" type="password" placeholder="Your password"
-                 [class.invalid]="!signupForm.controls.password.valid && signupForm.controls.password.dirty">
-      </ion-input>
-    </ion-item>
-    <ion-item class="error-message"
-              *ngIf="!signupForm.controls.password.valid  && signupForm.controls.password.dirty">
-      <p>Your password needs more than 6 characters.</p>
-    </ion-item>
+      <ion-item>
+        <ion-label stacked>Email</ion-label>
+        <ion-input formControlName="email" type="text" placeholder="Your firstname"
+                   [class.invalid]="!signupForm.controls.email.valid && signupForm.controls.email.dirty">
+        </ion-input>
+      </ion-item>
+      <ion-item class="error-message"
+                *ngIf="!signupForm.controls.email.valid  && signupForm.controls.email.dirty">
+        <p>Please enter a valid email.</p>
+      </ion-item>
+
+      <ion-item>
+        <ion-label stacked>Password</ion-label>
+        <ion-input formControlName="password" type="password" placeholder="Your password"
+                   [class.invalid]="!signupForm.controls.password.valid && signupForm.controls.password.dirty">
+        </ion-input>
+      </ion-item>
+      <ion-item class="error-message"
+                *ngIf="!signupForm.controls.password.valid  && signupForm.controls.password.dirty">
+        <p>Your password needs more than 6 characters.</p>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>I accept terms of use</ion-label>
+        <ion-toggle formControlName="terms" ([ngModel])="termsChecked"></ion-toggle>
+      </ion-item>
+      <ion-item class="error-message"
+                *ngIf="signupForm.controls.terms.hasError('isChecked') && signupForm.controls.terms.touched">
+        <p>You need to accept the terms of use.</p>
+      </ion-item>
+
+    </ion-list>
 
     <button ion-button block type="submit" [disabled]="!signupForm.valid">
       <ion-icon name='flame'></ion-icon>
       Create an Account
     </button>
-    <ion-card padding>
-      <ion-card-content>
-        <ion-card-title>
-          AttME - Attendance Made Easy
-        </ion-card-title>
-        <p>
-          Create profile for free and use your email and password to sign in to AttME App
-        </p>
-      </ion-card-content>
-    </ion-card>
+
   </form>
+  <div text-center>
+    <ion-img width="300" height="100" src="assets/attme.png"></ion-img>
+  </div>
+  <ion-card padding>
+    <ion-card-content>
+      <ion-card-title>
+        AttME - Attendance Made Easy
+      </ion-card-title>
+      <p>
+        Create profile for free and use your email and password to sign in to AttME App
+      </p>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

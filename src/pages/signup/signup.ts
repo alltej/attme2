@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { IonicPage,
   NavController,
   Loading,
@@ -11,6 +11,7 @@ import { HomePage } from '../home/home';
 import {DataProvider} from "../../providers/data/data";
 import {MappingProvider} from "../../providers/mapper/mapping";
 import {UserData} from "../../providers/data/user-data";
+import {CheckedValidator} from "../../validators/check-validator";
 
 @IonicPage({
   name: 'signup'
@@ -19,7 +20,9 @@ import {UserData} from "../../providers/data/user-data";
   selector: 'page-signup',
   templateUrl: 'signup.html',
 })
-export class SignupPage {
+export class SignupPage implements OnInit{
+
+  termsChecked: boolean = false
   public signupForm: FormGroup;
   loading: Loading;
   constructor(public navCtrl: NavController, public authProvider: AuthProvider,
@@ -27,11 +30,15 @@ export class SignupPage {
               private dataSvc: DataProvider,
               private mappingSvc: MappingProvider,
               private userData: UserData,
-              public alertCtrl: AlertController) {
+              public alertCtrl: AlertController) {}
 
-    this.signupForm = formBuilder.group({
+  ngOnInit(): void {
+    this.signupForm = this.formBuilder.group({
+      firstname: ['', Validators.compose([Validators.required])],
+      lastname: ['', Validators.compose([Validators.required])],
       email: ['', Validators.compose([Validators.required, EmailValidator.isValid])],
-      password: ['', Validators.compose([Validators.minLength(6), Validators.required])]
+      password: ['', Validators.compose([Validators.minLength(6), Validators.required])],
+      terms: [false, CheckedValidator.isChecked]
     });
   }
 
@@ -43,15 +50,16 @@ export class SignupPage {
         .then((authData) => {
         //TODO: refactor by merging similar code in login page
           if (authData){
-            this.dataSvc.getUser(authData.uid).then( aUser =>{
-              //console.log(`loginUser::createUser`)
-              if (!aUser.val()) {
-                //console.log(`loginUser::createUser==TRUE`)
-                this.dataSvc.getUserRef(authData.uid).child('profile').set({
-                  email: authData.email
-                });
+            this.dataSvc.getUser(authData.uid)
+              .then( aUser =>{
+                if (!aUser.val()) {
+                  //console.log(`loginUser::createUser==TRUE`)
+                  this.dataSvc.getUserRef(authData.uid).child('profile').set({
+                    email: authData.email
+                  });
+                }
               }
-            }).then(() =>{
+            ).then(() =>{
               //console.log(`authData.uid==${authData.uid}`)
               this.dataSvc.getUserInvite(authData.uid).then( invite =>{
                 //console.log(`getUserInvite`)
