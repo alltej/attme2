@@ -22,7 +22,6 @@ export class MemberInviteProvider {
   }
 
   createUserInvite(ooid:string, orgName: string, roleId: number, member: IMember){
-    console.log(`dataSvc==${this.dataSvc}`)
 
     let self = this
     self.fireAuth.createUserWithEmailAndPassword(member.email, 'Welcome.1')
@@ -60,7 +59,6 @@ export class MemberInviteProvider {
         if (errorCode == 'auth/weak-password') {
           alert('The password is too weak.');
         } else if (error.message == 'The email address is already in use by another account.'){
-          console.log('create invite')
 
           let newItemRef = self.dataSvc.getInvitesRef().push();
           let newItemKey: string = newItemRef.key;

@@ -21,6 +21,8 @@ import {UserData} from "../../providers/data/user-data";
 })
 export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   @ViewChild(Content) content: Content;
+
+  enableAddEvent: boolean = false;
   public internetConnected: boolean = true;
   public firebaseConnectionAttempts: number = 0;
   public weekNumber: number;

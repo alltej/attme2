@@ -26,6 +26,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
   private enableEditEmail: boolean = false;
   avatar: string = "assets/images/profile-default.png";
   userDataLoaded: boolean = false;
+  canInviteMember: boolean = false;
   member :IMember;
   //private ooid: string;
   private orgName: string;
@@ -47,12 +48,9 @@ export class MemberDetailPage extends BaseClass implements OnInit{
   }
 
   ngOnInit(): void {
-    //console.log(this.memberKey)
-    // this.userData.getCurrentOOID().then(oid=>{
-    //   this.ooid = oid;
-    // });
-
-    this.loadMemberDetails2();
+    let self = this
+    self.canInviteMember = self.userData.isEnableAddMember();
+    self.loadMemberDetails2();
   }
 
   getUserImage() {

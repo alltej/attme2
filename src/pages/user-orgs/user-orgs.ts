@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {Events, IonicPage, NavController, NavParams} from 'ionic-angular';
 import {DataProvider} from "../../providers/data/data";
 import {IUserOrgs} from "../../models/user.interface";
 import {AuthProvider} from "../../providers/auth/auth";
@@ -20,36 +20,37 @@ export class UserOrgsPage implements OnInit{
               private authSvc: AuthProvider,
               private mappingSvc: MappingProvider,
               private userData: UserData,
-              private dataSvc: DataProvider,
+              public dataSvc: DataProvider,
+              public events: Events
   ) {
 
   }
 
   ngOnInit(): void {
-    let self = this;
-    // this.userData.getCurrentOOID().then(oid=>{
-    //   this.ooid = oid;})
-    this.ooid = this.userData.currentOOId
-    this.dataSvc.getUserOrgs(self.authSvc.getLoggedInUser().uid)
-      .then( snapshot => {
-        if (snapshot.val())
-          this.mappingSvc.getUserOrgs(snapshot).forEach( oo => {
-            self.userOrganizations.push(oo)
-          });
-        }).catch(error =>{
-          //console.log(error)
-    });
 
-    //this.selectedOid = this.userData.getSelectedOrganization();
+    let self = this;
+    self.events.subscribe('invites:add', self.loadMyOrganizations);
+    self.ooid = self.userData.currentOOId
+    self.loadMyOrganizations();
   }
 
 
+  private loadMyOrganizations() {
+    let self = this;
+
+    self.dataSvc.getUserOrgs(self.authSvc.getLoggedInUser().uid)
+      .then(snapshot => {
+        if (snapshot.val())
+          self.mappingSvc.getUserOrgs(snapshot).forEach(oo => {
+            console.log(oo)
+            self.userOrganizations.push(oo)
+          });
+      }).catch(error => {
+    });
+  }
 
   onSelectOrganization(o: IUserOrgs) {
-    //console.log(o)
     this.userData.setCurrentOrg(o);
     this.navCtrl.setRoot('TabsPage');
-    //this.ooid = o.oid;
-    //console.log(this.ooid)
   }
 }

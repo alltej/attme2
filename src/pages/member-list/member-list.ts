@@ -20,6 +20,7 @@ import {UserData} from "../../providers/data/user-data";
 })
 export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
 
+  enableAddMember: boolean = false;
   loading: boolean = false;
   segment: string = 'all';
   searchControl: FormControl;
@@ -52,6 +53,7 @@ export class MemberListPage extends BaseClass implements OnInit, OnDestroy{
 
   ngOnInit() {
     let self = this;
+    self.enableAddMember =  self.userData.isEnableAddMember()
 
     self.searchControl.valueChanges.debounceTime(700).subscribe(search => {
       self.loadMembers();

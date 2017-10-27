@@ -140,7 +140,7 @@
     </ion-item>
 
 
-    <ion-item>
+    <ion-item *ngIf="canInviteMember">
       <ion-col>
         <button
           *ngIf="(this.member?.email?.length>0) && !this.isUserProfileExists"
@@ -154,74 +154,4 @@
 
   </ion-list>
 
-  <!--<ion-list *ngIf="userDataLoaded">-->
-
-    <!--<ion-list-header>-->
-      <!--Activity-->
-    <!--</ion-list-header>-->
-
-    <!--<ion-item>-->
-      <!--# Threads-->
-      <!--<ion-icon name='text' item-left></ion-icon>-->
-      <!--<ion-badge item-right>{{userStatistics.totalAttendance}}</ion-badge>-->
-    <!--</ion-item>-->
-
-    <!--<ion-item>-->
-      <!--# Comments-->
-      <!--<ion-icon name='quote' item-left></ion-icon>-->
-      <!--<ion-badge item-right>{{userStatistics.totalComments}}</ion-badge>-->
-    <!--</ion-item>-->
-    <!--<ion-item>-->
-      <!--# Favorites-->
-      <!--<ion-icon name='heart' item-left></ion-icon>-->
-      <!--<ion-badge item-right>{{memberDetail.totalCircles}}</ion-badge>-->
-    <!--</ion-item>-->
-
-  <!--</ion-list>-->
-  <!--<ion-grid>-->
-  <!--<ion-row>-->
-  <!--<ion-col col-6>-->
-  <!--Name-->
-  <!--</ion-col>-->
-  <!--<ion-col col-6 *ngIf="member?.firstName || member?.lastName">-->
-  <!--{{member?.firstName}} {{member?.lastName}}-->
-  <!--</ion-col>-->
-  <!--<ion-col col-6 class="placeholder-profile" *ngIf="!member?.firstName">-->
-  <!--<span>-->
-  <!--Tap here to edit.-->
-  <!--</span>-->
-  <!--</ion-col>-->
-  <!--</ion-row>-->
-  <!--<ion-row>-->
-  <!--<ion-col text-center>-->
-  <!--<h2>{{ member?.firstName }} {{ member?.lastName }}</h2>-->
-  <!--<div class="subtitle">{{ member?.email }}</div>-->
-  <!--<div class="subtitle">{{ member.$key }}</div>-->
-  <!--</ion-col>-->
-  <!--</ion-row>-->
-  <!--<ion-row>-->
-  <!--<ion-col text-center>-->
-  <!--<p>MemberID: {{ member?.memberId }}</p>-->
-  <!--</ion-col>-->
-  <!--</ion-row>-->
-  <!--<ion-row>-->
-  <!--<ion-col>-->
-  <!--<button-->
-  <!--ion-button-->
-  <!--outline-->
-  <!--block-->
-  <!--(click)="onEditMember()">Edit</button>-->
-  <!--</ion-col>-->
-  <!--</ion-row>-->
-  <!--<ion-row>-->
-  <!--<ion-col>-->
-  <!--<button-->
-  <!--*ngIf="!isUserProfileExists"-->
-  <!--ion-button-->
-  <!--outline-->
-  <!--block-->
-  <!--(click)="onCreateInvite()">Invite</button>-->
-  <!--</ion-col>-->
-  <!--</ion-row>-->
-  <!--</ion-grid>-->
 </ion-content>

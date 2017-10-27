@@ -1,0 +1,24 @@
+<ion-header>
+
+  <ion-navbar color="hcolor" align-title="center">
+    <ion-buttons left>
+      <button ion-button icon-only menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Invites</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+  <ion-list-header>
+    Invitations to Join
+  </ion-list-header>
+  <ion-list>
+    <ion-item *ngFor="let i of invites" (click)="onAcceptInvitation(i)">
+      <h2>{{i.ooName}}</h2>
+    </ion-item>
+
+  </ion-list>
+</ion-content>

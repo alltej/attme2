@@ -44,6 +44,14 @@
       <button
         ion-item
         icon-left
+        (click)="onLoad('InvitesPage')"
+        *ngIf="isUserLoggedIn()">
+        <ion-icon name="mail"></ion-icon>
+         Invites
+      </button>
+      <button
+        ion-item
+        icon-left
         (click)="onLoad('ProfilePage')"
         *ngIf="isUserLoggedIn()">
         <ion-icon name="person"></ion-icon>

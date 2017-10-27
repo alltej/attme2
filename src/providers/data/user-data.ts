@@ -69,6 +69,12 @@ export class UserData {
     });
   };
 
+  getCurrentUsername(): Promise<string> {
+    return this.storage.get('username').then((value) => {
+      return value;
+    });
+  };
+
   getCurrentOOName(): Promise<string> {
     return this.storage.get('currentOOName').then((value) => {
       return value;
@@ -87,6 +93,10 @@ export class UserData {
     return "-KwLvxN26_mAzB5NMLpM";
   };
 
+  isEnableAddMember(){
+    let allowedRoles: Array<number> = [1, 3]
+    return  allowedRoles.some(n => n == this.currentOORole)
+  }
 
   logout() {
     this.storage.remove(this.HAS_LOGGED_IN);
@@ -97,7 +107,6 @@ export class UserData {
     this.storage.remove('currentRole');
 
     this.events.publish('user:logout');
-
 
   }
 

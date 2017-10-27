@@ -6,7 +6,7 @@
       </button>
     </ion-buttons>
     <ion-title>Events</ion-title>
-    <ion-buttons right>
+    <ion-buttons right *ngIf="enableAddEvent">
       <button ion-button icon-only (click)="onNewEvent()">
         <ion-icon name="add"></ion-icon>
       </button>

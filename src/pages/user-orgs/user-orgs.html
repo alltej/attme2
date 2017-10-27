@@ -34,7 +34,7 @@
       <!--</div>-->
 
       <h2>{{o.name}}</h2>
-      <div item-content *ngIf="(o.oid.toUpperCase()===ooid.toUpperCase()); else orgTemplate">
+      <div item-content *ngIf="(o.oid.toUpperCase()===ooid?.toUpperCase()); else orgTemplate">
         <button
           ion-item
           clear

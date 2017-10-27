@@ -7,7 +7,7 @@
       </button>
     </ion-buttons>
     <ion-title>Members</ion-title>
-    <ion-buttons right>
+    <ion-buttons right *ngIf="enableAddMember">
       <button ion-button icon-only (click)="onCreateMember()">
         <ion-icon name="add"></ion-icon>
       </button>

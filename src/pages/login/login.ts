@@ -37,8 +37,8 @@ export class LoginPage {
     public formBuilder: FormBuilder) {
 
     this.loginForm = formBuilder.group({
-      email: ['abc@test.com', Validators.compose([Validators.required, EmailValidator.isValid])],
-      password: ['testpswd1', Validators.compose([Validators.minLength(6), Validators.required])]
+      email: ['', Validators.compose([Validators.required, EmailValidator.isValid])],
+      password: ['', Validators.compose([Validators.minLength(6), Validators.required])]
     });
     this.appVersionNumber = "1.0.19";
     if (this.platform.is('mobileweb') || this.platform.is('core')) {
@@ -61,6 +61,7 @@ export class LoginPage {
       this.authProvider.loginUser(this.loginForm.value.email, this.loginForm.value.password)
         .then( authData => {
           if (authData){
+            //TODO: Remove this
             this.dataSvc.getUser(authData.uid).then( aUser =>{
                 //console.log(`loginUser::createUser`)
                 // if (!aUser.val()) {
@@ -70,14 +71,9 @@ export class LoginPage {
                 //   });
                 // }
             }).then(() =>{
-                //console.log(`authData.emailVerified==${authData.emailVerified}`)
-                //console.log(`authData.uid==${authData.uid}`)
                 this.dataSvc.getUserInvite(authData.uid).then( invite =>{
-                  //console.log(`getUserInvite`)
                   if (invite.val()){
-                    //console.log(`loginUser::inviteExists==TRUE`)
                     let inviteData = invite.val();
-                    //console.log(`inviteData::${inviteData}`)
                     this.dataSvc.getUserRef(authData.uid).child(`organizations/${inviteData.ooid}/`)
                       .set({
                         name: inviteData.ooName,
@@ -91,18 +87,27 @@ export class LoginPage {
                   }
                 })
             }).then(()=>{
-              //console.log(`getUserOrgs::${authData.uid}`)
               this.dataSvc.getUserOrgs(authData.uid)
                 .then( snapshot => {
                   if (snapshot.val()){
-                    //console.log(`getUserOrgs::snapshot==${snapshot.val()}`)
 
-                    //self.userOrganizations = this.mappingSvc.getUserOrgs(snapshot);
                     //TODO: set first to default
-                    this.mappingSvc.getUserOrgs(snapshot).forEach( org => {
-                      this.userData.setCurrentOrg(org)
-                    });
-                    this.userData.login(authData.email)
+                    this.userData.getCurrentUsername().then(value =>{
+                       if (value == authData.email) {
+                         if (this.userData.currentOOId == null) {
+                           let org =this.mappingSvc.getUserOrgs(snapshot)[0]
+                           this.userData.setCurrentOrg(org)
+                           // this.mappingSvc.getUserOrgs(snapshot).forEach( org => {
+                           //   this.userData.setCurrentOrg(org)
+                           // });
+                         }
+                       }else{
+                         let org =this.mappingSvc.getUserOrgs(snapshot)[0]
+                         this.userData.setCurrentOrg(org)
+                       }
+                      this.userData.login(authData.email)
+                    })
+
                   }
 
                 }).catch(error =>{
