@@ -3,6 +3,8 @@ import {firebaseConfig} from "../../config/firebase.config";
 import * as firebase from 'firebase';
 import {IMember} from "../../models/member.interface";
 import {DataProvider} from "../data/data";
+import {IInvite} from "../../models/invite.interface";
+import {MemberProvider} from "./member";
 
 @Injectable()
 export class MemberInviteProvider {
@@ -10,7 +12,9 @@ export class MemberInviteProvider {
   private fireAuth:firebase.auth.Auth;
   //private userProfileRef:firebase.database.Reference;
 
-  constructor(private dataSvc: DataProvider) {
+  constructor(private dataSvc: DataProvider,
+              public memberSvc: MemberProvider,
+  ) {
     let secondaryApp = firebase.initializeApp(firebaseConfig, "Secondary");
     this.fireAuth = secondaryApp.auth();
     //this.userProfileRef = secondaryApp.database().ref('/users');
@@ -18,10 +22,13 @@ export class MemberInviteProvider {
   }
 
   createUserInvite(ooid:string, orgName: string, roleId: number, member: IMember){
-    this.fireAuth.createUserWithEmailAndPassword(member.email, 'Welcome.1')
+    console.log(`dataSvc==${this.dataSvc}`)
+
+    let self = this
+    self.fireAuth.createUserWithEmailAndPassword(member.email, 'Welcome.1')
       .then(
         (newUser) => {
-          this.dataSvc.userInvitesRef.child(newUser.uid).set({
+          self.dataSvc.userInvitesRef.child(newUser.uid).set({
               lastname:member.lastname,
               firstname:member.firstname,
               email: member.email,
@@ -38,7 +45,7 @@ export class MemberInviteProvider {
               }
             ).catch(
               (err) => {
-                //this.error = err;
+                //self.error = err;
                 //console.log('errA');
                 //console.log(err);
               }
@@ -53,16 +60,25 @@ export class MemberInviteProvider {
         if (errorCode == 'auth/weak-password') {
           alert('The password is too weak.');
         } else if (error.message == 'The email address is already in use by another account.'){
-          alert(errorMessage + ' TODO: Create invite by email')
-          //TODO
-          // this.dataSvc.userInvitesRef.child(newUser.uid).set({
-          //   lastname:member.lastname,
-          //   firstname:member.firstname,
-          //   email: member.email,
-          //   ooid: ooid,
-          //   ooName: orgName,
-          //   role: roleId
-          // })
+          console.log('create invite')
+
+          let newItemRef = self.dataSvc.getInvitesRef().push();
+          let newItemKey: string = newItemRef.key;
+
+          let newInvite: IInvite = {
+            inviteKey: newItemKey,
+            email: member.email,
+            ooid: ooid,
+            ooName: orgName,
+            role: roleId
+          };
+
+          self.memberSvc.createInvite(newInvite)
+            .then( newEvent => {
+              //self.navCtrl.pop();
+            }).catch(e=>{
+              //console.log(e)
+          });
         }
         else {
           alert(errorMessage + ' code: ' + error.message);

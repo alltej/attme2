@@ -6,6 +6,7 @@ import firebase from 'firebase';
 import {INewMember} from "../../models/member.interface";
 import {DataProvider} from "../data/data";
 import {UserData} from "../data/user-data";
+import {IInvite} from "../../models/invite.interface";
 
 @Injectable()
 export class MemberProvider {
@@ -43,6 +44,14 @@ export class MemberProvider {
           let count = snapshot == null ? 0 : snapshot.val();
           this.dataSvc.getOrgsRef().child(`${this.userData.currentOOId}/stats/members`).set(count + 1);
         });
+    } catch (e) {
+      //console.log(e)
+    }
+  }
+
+  createInvite(anInvite: IInvite) : firebase.Promise<any> {
+    try {
+      return this.dataSvc.getInvitesRef().child(anInvite.inviteKey).set(anInvite);
     } catch (e) {
       //console.log(e)
     }

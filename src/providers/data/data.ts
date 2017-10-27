@@ -11,6 +11,7 @@ export class DataProvider {
 
   usersRef: any = firebase.database().ref('users');
   userInvitesRef: any = firebase.database().ref('userInvites');
+  invitesRef: any = firebase.database().ref('invites');
 
   databaseRef: any = firebase.database();
   connectionRef: any = firebase.database().ref('.info/connected');
@@ -115,6 +116,10 @@ export class DataProvider {
 
   getOrgsRef() {
     return this.orgsRef;
+  }
+
+  getInvitesRef() {
+    return this.invitesRef;
   }
 
   getOrgsRefByOOId(ooid: string) {
