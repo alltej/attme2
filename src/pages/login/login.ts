@@ -13,6 +13,7 @@ import {UserData} from "../../providers/data/user-data";
 import {DataProvider} from "../../providers/data/data";
 import {MappingProvider} from "../../providers/mapper/mapping";
 import { AppVersion } from '@ionic-native/app-version';
+import {IUserProfile} from "../../models/user.interface";
 
 @IonicPage()
 @Component({
@@ -55,73 +56,64 @@ export class LoginPage {
   }
 
   loginUser(): void {
-    if (!this.loginForm.valid){
-      //console.log(this.loginForm.value);
-    } else {
+    if (this.loginForm.valid) {
       this.authProvider.loginUser(this.loginForm.value.email, this.loginForm.value.password)
-        .then( authData => {
-          if (authData){
-            //TODO: Remove this
-            this.dataSvc.getUser(authData.uid).then( aUser =>{
-                //console.log(`loginUser::createUser`)
-                // if (!aUser.val()) {
-                //   //console.log(`loginUser::createUser==TRUE`)
-                //   this.dataSvc.getUserRef(authData.uid).child('profile').set({
-                //     email: authData.email
-                //   });
-                // }
-            }).then(() =>{
-                this.dataSvc.getUserInvite(authData.uid).then( invite =>{
-                  if (invite.val()){
-                    let inviteData = invite.val();
-                    this.dataSvc.getUserRef(authData.uid).child(`organizations/${inviteData.ooid}/`)
-                      .set({
-                        name: inviteData.ooName,
-                        role: inviteData.role
+        .then(authData => {
+          if (authData) {
+            //this.dataSvc.getUser(authData.uid).then( aUser =>{
+            this.dataSvc.getUserInvite(authData.uid).then(invite => {
+              if (invite.val()) {
+                let inviteData = invite.val();
+                this.dataSvc.getUserRef(authData.uid).child(`organizations/${inviteData.ooid}/`)
+                  .set({
+                    name: inviteData.ooName,
+                    role: inviteData.role
+                  })
+                this.dataSvc.getUserRef(authData.uid).child(`profile`)
+                  .set({
+                    lastname: inviteData.lastname,
+                    firstname: inviteData.firstname,
+                  })
+              }
+            }).then(() => {
+              this.dataSvc.getUserProfile(authData.uid).then(aUser => {
+                return this.mappingSvc.getUser(aUser)
+
+              }).then(user => {
+                console.log(`user::${user}`)
+                this.dataSvc.getUserOrgs(authData.uid)
+                  .then(snapshot => {
+                    if (snapshot.val()) {
+
+                      //TODO: set first to default
+                      this.userData.getCurrentUsername().then(value => {
+                        if (value == authData.email) {
+                          if (this.userData.currentOOId == null) {
+                            let org = this.mappingSvc.getUserOrgs(snapshot)[0]
+                            this.userData.setCurrentOrg(org)
+                          }
+                        } else {
+                          let org = this.mappingSvc.getUserOrgs(snapshot)[0]
+                          this.userData.setCurrentOrg(org)
+                        }
+                        this.userData.login(authData.email, user.lastname, user.firstname)
                       })
-                    this.dataSvc.getUserRef(authData.uid).child(`profile`)
-                      .set({
-                        lastname: inviteData.lastname,
-                        firstname: inviteData.firstname,
-                      })
-                  }
+                    }
+                  }).catch(error => {
+                  //console.log(error)
                 })
-            }).then(()=>{
-              this.dataSvc.getUserOrgs(authData.uid)
-                .then( snapshot => {
-                  if (snapshot.val()){
 
-                    //TODO: set first to default
-                    this.userData.getCurrentUsername().then(value =>{
-                       if (value == authData.email) {
-                         if (this.userData.currentOOId == null) {
-                           let org =this.mappingSvc.getUserOrgs(snapshot)[0]
-                           this.userData.setCurrentOrg(org)
-                           // this.mappingSvc.getUserOrgs(snapshot).forEach( org => {
-                           //   this.userData.setCurrentOrg(org)
-                           // });
-                         }
-                       }else{
-                         let org =this.mappingSvc.getUserOrgs(snapshot)[0]
-                         this.userData.setCurrentOrg(org)
-                       }
-                      this.userData.login(authData.email)
-                    })
-
-                  }
-
-                }).catch(error =>{
-                //console.log(error)
               })
+
             })
           }
           ;
 
-          this.loading.dismiss().then( () => {
+          this.loading.dismiss().then(() => {
             this.navCtrl.setRoot('TabsPage');
           });
         }, error => {
-          this.loading.dismiss().then( () => {
+          this.loading.dismiss().then(() => {
             let alert = this.alertCtrl.create({
               message: error.message,
               buttons: [
@@ -147,7 +139,4 @@ export class LoginPage {
   goToResetPassword(): void {
     this.navCtrl.push('reset-password');
   }
-
-
-
 }

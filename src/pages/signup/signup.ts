@@ -76,7 +76,7 @@ export class SignupPage implements OnInit{
                     this.mappingSvc.getUserOrgs(snapshot).forEach( org => {
                       this.userData.setCurrentOrg(org)
                     });
-                    this.userData.login(authData.email)
+                    this.userData.login(authData.email, this.signupForm.value.lastname, this.signupForm.value.firstname)
                   }else{
 
                   }

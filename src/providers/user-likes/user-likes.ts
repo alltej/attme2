@@ -4,6 +4,7 @@ import {AngularFireDatabase} from "angularfire2/database";
 import {AuthProvider} from "../auth/auth";
 import {ProfileProvider} from "../profile/profile";
 import {DataProvider} from "../data/data";
+import {UserData} from "../data/user-data";
 
 @Injectable()
 export class UserLikesProvider {
@@ -11,13 +12,8 @@ export class UserLikesProvider {
 
   constructor(private af:AngularFireDatabase,
               private authSvc:AuthProvider,
-              private dataSvc:DataProvider,
-              private profileSvc:ProfileProvider,
-              ) {
-    // if (this.authSvc.getLoggedInUser() != null) {
-    //   this.currentUid = this.authSvc.getLoggedInUser().uid;
-    // }
-  }
+              private userData: UserData,
+              ) {}
 
   addLike(ooid: string, eventKey: string) {
     //let currentUid = this.authSvc.getLoggedInUser().uid;
@@ -29,29 +25,22 @@ export class UserLikesProvider {
     })
       .then( result => {
         if (result.committed) {
-          let un = "";
-          this.dataSvc.usersRef
-            .child(`${this.authSvc.getLoggedInUser().uid}/profile`)
-            .once('value')
-            .then( userProfileValue => {
-              un =  userProfileValue.val().lastname + " " + userProfileValue.val().firstname.charAt(0)
-          }).then(sf => {
-            this.af.object(`/organizations/${ooid}/events/${eventKey}/likedBy/${this.authSvc.getLoggedInUser().uid}`)
-              .$ref.transaction(currentValue => {
-              if (currentValue === null) {
-                return{
-                  on : new Date().toISOString(),
-                  name: un
-                };
-              }
-            }).then(data => {
-              if (data.committed) {
-                let tagObs = this.af.object(`/organizations/${ooid}/events/${eventKey}/stats/likes`);
-                tagObs.$ref.transaction(tagValue => {
-                  return tagValue ? tagValue + 1 : 1;
-                });
-              }
-            })
+          let un = this.userData.likedBy
+          this.af.object(`/organizations/${ooid}/events/${eventKey}/likedBy/${this.authSvc.getLoggedInUser().uid}`)
+            .$ref.transaction(currentValue => {
+            if (currentValue === null) {
+              return{
+                on : new Date().toISOString(),
+                name: un
+              };
+            }
+          }).then(data => {
+            if (data.committed) {
+              let tagObs = this.af.object(`/organizations/${ooid}/events/${eventKey}/stats/likes`);
+              tagObs.$ref.transaction(tagValue => {
+                return tagValue ? tagValue + 1 : 1;
+              });
+            }
           })
         }
       })

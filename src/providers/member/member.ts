@@ -49,9 +49,10 @@ export class MemberProvider {
     }
   }
 
-  createInvite(anInvite: IInvite) : firebase.Promise<any> {
+  createInvite(anInvite: IInvite, memberKey: string) : firebase.Promise<any> {
     try {
-      return this.dataSvc.getInvitesRef().child(anInvite.inviteKey).set(anInvite);
+      return this.dataSvc.getInvitesRef().child(anInvite.inviteKey)
+        .set(anInvite);
     } catch (e) {
       //console.log(e)
     }
@@ -65,6 +66,16 @@ export class MemberProvider {
         firstname: firstName,
         lastname: lastName,
     });
+  }
+
+  setIsInvited(memberKey: string): firebase.Promise<void> {
+    console.log('setIsInvited')
+    return this.dataSvc.getOrgsRef()
+      .child(this.userData.currentOOId)
+      .child(`/members/${memberKey}`)
+      .update({
+        invited: true
+      });
   }
 
   updatePhotoUrl(memberKey: string, photoUrl:string): firebase.Promise<void> {

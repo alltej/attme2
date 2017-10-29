@@ -42,7 +42,9 @@ export class MemberInviteProvider {
               (success) => {
                 //console.log("please verify your email")
               }
-            ).catch(
+            ).then(() =>{
+              this.memberSvc.setIsInvited(member.memberKey)
+            }).catch(
               (err) => {
                 //self.error = err;
                 //console.log('errA');
@@ -71,9 +73,10 @@ export class MemberInviteProvider {
             role: roleId
           };
 
-          self.memberSvc.createInvite(newInvite)
-            .then( newEvent => {
-              //self.navCtrl.pop();
+          self.memberSvc.createInvite(newInvite, member.memberKey)
+            .then( () => {
+              //console.log(`this.memberSvc.setIsInvited`)
+              //this.memberSvc.setIsInvited(member.memberKey)
             }).catch(e=>{
               //console.log(e)
           });

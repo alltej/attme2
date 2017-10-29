@@ -5,6 +5,8 @@ import {UserLikesProvider} from "../../providers/user-likes/user-likes";
 import {BaseClass} from "../BasePage";
 import {FirebaseListObservable} from "angularfire2/database";
 import {UserData} from "../../providers/data/user-data";
+import {AuthProvider} from "../../providers/auth/auth";
+import {Subscription} from "rxjs/Subscription";
 
 @IonicPage({
   name: 'event-detail',
@@ -20,13 +22,15 @@ export class EventDetailPage extends BaseClass implements OnInit{
   public isLiked: boolean = false;
   likedByList: FirebaseListObservable<any[]>;
   //private ooid: string;
-
+  private eventDetailSubscription: Subscription;
+  private userLikeSubscription: Subscription;
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
               public navParams: NavParams,
               public eventSvc: EventProvider,
               private userLikeSvc: UserLikesProvider,
               private userData: UserData,
+              private authSvc: AuthProvider,
               public events: Events) {
     super();
 
@@ -34,9 +38,11 @@ export class EventDetailPage extends BaseClass implements OnInit{
 
   ngOnInit(): void {
     //console.log(`EventDetailPage::ngOnInit::${this.eventId}`)
+    console.log(`EventDetailPage::self.userData.likedBy==${this.userData.likedBy}`)
     this.eventId = this.navParams.get('eventId');
 
     this.eventSvc.getEventDetail(this.eventId)
+      .takeUntil(this.componentDestroyed$)
       .subscribe((item: any)=>{
         this.selEvent = item.val();
         this.selEvent.eventId = this.eventId;
@@ -45,6 +51,7 @@ export class EventDetailPage extends BaseClass implements OnInit{
     this.likedByList = this.eventSvc.getEventLikes(this.eventId);
     //console.log(item)
     this.userLikeSvc.isLiked(this.userData.currentOOId, this.eventId)
+      .takeUntil(this.componentDestroyed$)
       .subscribe(ul =>{
         if (ul.on != null) {
           //console.log('likeIt:true')
@@ -58,7 +65,7 @@ export class EventDetailPage extends BaseClass implements OnInit{
     this.userLikeSvc.addLike(this.userData.currentOOId, eventKey);
 
     this.events.publish('reloadPage1', true);
-    //console.log(`BB::onAddLike::publish`)
+    console.log(`BB::onAddLike::publish`)
   }
 
   onRemoveLike(eventKey: string){

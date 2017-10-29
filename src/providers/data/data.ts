@@ -66,9 +66,7 @@ export class DataProvider {
     firebase.database().goOnline();
   }
 
-  getUser(userUid: string) {
-    return this.usersRef.child(userUid).once('value');
-  }
+
 
   getUserRef(userUid: string) {
     return this.usersRef.child(userUid);
@@ -81,6 +79,10 @@ export class DataProvider {
   // getUserThreads(userUid: string) {
   //   return this.threadsRef.orderByChild('user/uid').equalTo(userUid).once('value');
   // }
+
+  getUserProfile(userUid: string) {
+    return this.usersRef.child(`${userUid}/profile`).once('value');
+  }
 
   getUserOrgs(userUid: string) {
     //console.log(`getUserOrgs:${userUid}`)

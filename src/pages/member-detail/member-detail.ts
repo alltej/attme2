@@ -51,6 +51,7 @@ export class MemberDetailPage extends BaseClass implements OnInit{
     let self = this
     self.canInviteMember = self.userData.isEnableAddMember();
     self.loadMemberDetails2();
+
   }
 
   getUserImage() {

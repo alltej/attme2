@@ -12,7 +12,9 @@ export class UserData {
     currentOOId: string
     currentOORole: number
     currentOOName: string
+    likedBy: string
     HAS_LOGGED_IN = 'hasLoggedIn';
+
   constructor(
     public events: Events,
     public storage: Storage) {
@@ -34,6 +36,12 @@ export class UserData {
         this.currentOOName = data
       })
     }
+
+    if (this.likedBy == null) {
+      this.getLikeByAvatar().then( data =>{
+        this.likedBy = data
+      })
+    }
   }
 
   setCurrentOrg(selectedOrg: IUserOrgs): void {
@@ -45,9 +53,12 @@ export class UserData {
     this.currentOOName = selectedOrg.name
   };
 
-  login(username: string): void {
+  login(username: string, lastname: string, firstname: string): void {
+    console.log(`userData:login:lastname==${lastname}:firstname==${firstname}`)
     this.storage.set(this.HAS_LOGGED_IN, true);
     this.setUsername(username);
+    let avatar :string =  lastname + " " + firstname.charAt(0)
+    this.setLikeByAvatar(avatar);
     this.events.publish('user:login');
   };
 
@@ -57,11 +68,19 @@ export class UserData {
     });
   };
 
-
   setUsername(username: string): void {
     this.storage.set('username', username);
   };
 
+  setLikeByAvatar(name: string): void {
+    this.storage.set('likeByAvatar', name);
+  };
+
+  getLikeByAvatar(): Promise<string> {
+    return this.storage.get('likeByAvatar').then((value) => {
+      return value;
+    });
+  };
 
   getCurrentOOID(): Promise<string> {
     return this.storage.get('currentOOID').then((value) => {
@@ -94,6 +113,11 @@ export class UserData {
   };
 
   isEnableAddMember(){
+    let allowedRoles: Array<number> = [1, 3]
+    return  allowedRoles.some(n => n == this.currentOORole)
+  }
+
+  isEnableAddEvent(){
     let allowedRoles: Array<number> = [1, 3]
     return  allowedRoles.some(n => n == this.currentOORole)
   }

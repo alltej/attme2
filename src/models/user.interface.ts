@@ -31,10 +31,14 @@ export interface IUserOrgs {
 // });
 
 
-export interface INewUserMember {
-  profile: IUserProfile
-  organizations: IUserOrgs[]
-}
+// export interface ILoginUser {
+//   lastname: string
+//   firstname: string
+//   birthDate: string
+//   email: string
+//   name: string
+//   organizations: IUserOrgs[]
+// }
 
 export interface IUserProfile {
   lastname: string

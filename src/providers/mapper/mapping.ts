@@ -3,7 +3,7 @@ import {ItemsProvider} from "./items-provider";
 import {IComment} from "../../models/comment.interface";
 import {IEvent} from "../../models/event.interface";
 import {IMember} from "../../models/member.interface";
-import {IUserOrgs} from "../../models/user.interface";
+import {IUserOrgs, IUserProfile} from "../../models/user.interface";
 
 
 
@@ -156,5 +156,22 @@ export class MappingProvider {
     });
 
     return orgs;
+  }
+
+  getUser(snapshot: any): IUserProfile {
+    let loginUser: IUserProfile
+
+    if (snapshot.val() == null)
+      return null;
+
+    let inviteData = snapshot.val()
+    loginUser = {
+      firstname: inviteData.firstname,
+      lastname: inviteData.lastname,
+      birthDate: inviteData.birthDate,
+      email: inviteData.email,
+      name: inviteData.name
+    }
+    return loginUser
   }
 }

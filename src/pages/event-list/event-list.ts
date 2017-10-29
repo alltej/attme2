@@ -90,6 +90,8 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
     self.events.subscribe('events:add', self.addNewThreads);
     self.events.subscribe('events:liked', self.loadEvents);
 
+    self.enableAddEvent =  self.userData.isEnableAddEvent()
+
     this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
       this.loading = false;
       self.checkFirebase();
@@ -241,7 +243,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   loadEvents(fromStart: boolean) {
-    //console.log(`event-list::loadEvents::fromStart:${fromStart}::segment:${this.segment}`)
+    console.log(`event-list::loadEvents::fromStart:${fromStart}::segment:${this.segment}`)
 
     //try to reset this.ooid if get set to null/undefined
     let self = this;
@@ -271,6 +273,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
 
 
   getThreads() {
+    console.log('getThreads')
     let self = this;
 
     if (self.segment === 'current') {
@@ -280,8 +283,7 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
       this.whenStartFilter = new Date(currentDate).toISOString();
       this.whenEndFilter = new Date(futureDateMax).toISOString();
 
-      this.dataSvc.getOrgsRef()
-        .child(this.userData.currentOOId)
+      this.dataSvc.getOrgsRefByOOId(this.userData.currentOOId)
         .child('events')
         .orderByChild('when')
         .startAt(this.whenStartFilter)
@@ -289,17 +291,18 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
         .once('value', snapshot => {
           self.mappingsService
             .getEvents(snapshot).forEach(anEvent => {
-              //anEvent.likedBy.
+             console.log(anEvent)
             if (anEvent.likedBy != null) {
               let userLikes: Array<string> = Object.keys(anEvent.likedBy);
+              console.log(userLikes)
               //TODO: refactor to not use the indexOf
               if (userLikes.length>0 && userLikes.indexOf(self.authSvc.getLoggedInUser().uid) > -1) {
                 anEvent.isLiked = true
               }
             }
-              // if (anEvent.likedBy.keys()) {
-              //
-              // }
+            else{
+              anEvent.isLiked = false
+            }
             if (self.queryText.trim().length !== 0) {
               if (anEvent.name.toLowerCase().includes(self.queryText.toLowerCase()) || anEvent.description.toLowerCase().includes(self.queryText.toLowerCase()))
                 self.iEvents.push(anEvent);
