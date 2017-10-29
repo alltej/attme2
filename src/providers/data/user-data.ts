@@ -1,18 +1,16 @@
+///<reference path="../../../node_modules/@ionic/storage/es2015/storage.d.ts"/>
 import { Injectable } from '@angular/core';
 
 import { Events } from 'ionic-angular';
 import {IUserOrgs} from "../../models/user.interface";
-//import { Storage } from '@ionic/storage';
-//import {NativeStorage} from "@ionic-native/native-storage";
 import {Storage} from "@ionic/storage";
-//import {Storage} from "@ionic/storage";
 
 @Injectable()
 export class UserData {
-    currentOOId: string
-    currentOORole: number
-    currentOOName: string
-    likedBy: string
+    currentOOId: string;
+    currentOORole: number;
+    currentOOName: string;
+    likedBy: string;
     HAS_LOGGED_IN = 'hasLoggedIn';
 
   constructor(
@@ -48,16 +46,15 @@ export class UserData {
     this.storage.set('currentOOID', selectedOrg.oid);
     this.storage.set('currentOOName', selectedOrg.name);
     this.storage.set('currentRole', selectedOrg.role);
-    this.currentOOId = selectedOrg.oid
-    this.currentOORole = selectedOrg.role
+    this.currentOOId = selectedOrg.oid;
+    this.currentOORole = selectedOrg.role;
     this.currentOOName = selectedOrg.name
   };
 
   login(username: string, lastname: string, firstname: string): void {
-    console.log(`userData:login:lastname==${lastname}:firstname==${firstname}`)
     this.storage.set(this.HAS_LOGGED_IN, true);
     this.setUsername(username);
-    let avatar :string =  lastname + " " + firstname.charAt(0)
+    let avatar :string =  lastname + " " + firstname.charAt(0);
     this.setLikeByAvatar(avatar);
     this.events.publish('user:login');
   };
@@ -106,19 +103,13 @@ export class UserData {
     });
   }
 
-  //TODO: Programmatically Update the MemberKey of the Current Organization
-  getSelectOrgMemberKey(): string {
-    //TODO
-    return "-KwLvxN26_mAzB5NMLpM";
-  };
-
   isEnableAddMember(){
-    let allowedRoles: Array<number> = [1, 3]
+    let allowedRoles: Array<number> = [1, 3];
     return  allowedRoles.some(n => n == this.currentOORole)
   }
 
   isEnableAddEvent(){
-    let allowedRoles: Array<number> = [1, 3]
+    let allowedRoles: Array<number> = [1, 3];
     return  allowedRoles.some(n => n == this.currentOORole)
   }
 

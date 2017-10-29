@@ -22,12 +22,9 @@ export class UserOrgsPage implements OnInit{
               private userData: UserData,
               public dataSvc: DataProvider,
               public events: Events
-  ) {
-
-  }
+  ) {}
 
   ngOnInit(): void {
-
     let self = this;
     self.events.subscribe('invites:add', self.loadMyOrganizations);
     self.ooid = self.userData.currentOOId
@@ -42,7 +39,6 @@ export class UserOrgsPage implements OnInit{
       .then(snapshot => {
         if (snapshot.val())
           self.mappingSvc.getUserOrgs(snapshot).forEach(oo => {
-            console.log(oo)
             self.userOrganizations.push(oo)
           });
       }).catch(error => {

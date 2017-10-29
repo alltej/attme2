@@ -1,18 +1,14 @@
 import {Component, ViewChild} from '@angular/core';
-import {Events, MenuController, ModalController, NavController, Platform, ViewController} from 'ionic-angular';
+import {Events, MenuController, Platform} from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-//import firebase from 'firebase';
 import {AuthProvider} from "../providers/auth/auth";
-import {SignupPage} from "../pages/signup/signup";
 import {DataProvider} from "../providers/data/data";
 import {Network} from "@ionic-native/network";
 import {HomePage} from "../pages/home/home";
-import {Storage} from "@ionic/storage";
 import {UserData} from "../providers/data/user-data";
 
-//import {firebaseConfig} from "../config/firebase.config";
 declare var window: any;
 
 @Component({
@@ -25,54 +21,13 @@ export class MyApp {
   constructor(platform: Platform,
               statusBar: StatusBar,
               splashScreen: SplashScreen,
-              private storge: Storage,
               public network: Network,
               private dataSvc: DataProvider,
               private menuCtrl: MenuController,
               private authService: AuthProvider,
               public events: Events,
-              public userData: UserData,
-              public modalCtrl: ModalController) {
+              public userData: UserData) {
 
-    //console.log(`appComponent::MyApp::constructor`)
-    //console.log('MyApp:constructor')
-    // const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-    //   //console.log('firebase.auth().onAuthStateChanged')
-    //   if (!user) {
-    //     //console.log('aaa')
-    //     //console.log(user)
-    //     this.isAuthenticated = true;
-    //     this.rootPage = 'login';
-    //     unsubscribe();
-    //   } else {
-    //     //console.log('bbb')
-    //     //console.log(user)
-    //     this.isAuthenticated = true;
-    //     this.rootPage = 'tabs';
-    //     unsubscribe();
-    //   }
-    // });
-
-    // firebase.auth().onAuthStateChanged(user => {
-    //   if (user) {
-    //     this.isAuthenticated = true;
-    //     this.rootPage = 'tabs';
-    //   } else {
-    //     this.isAuthenticated = false;
-    //     this.rootPage = 'login';
-    //   }
-    // });
-
-    // if (this.authService.getActiveUser() == null) {
-    //       console.log('aaa')
-    //       this.isAuthenticated = false;
-    //       this.rootPage = 'login';
-    //       //unsubscribe();
-    // }else{
-    //       console.log('bbb')
-    //       this.isAuthenticated = true;
-    //       this.rootPage = 'tabs';
-    // }
     let self = this;
     //this.rootPage = 'TabsPage';
     this.rootPage = HomePage;
@@ -159,49 +114,16 @@ export class MyApp {
         //console.log(`AppComponent::ngAfterViewInit::onAuthStateChanged::user === null`)
         self.menuCtrl.close();
         self.nav.setRoot('LoginPage');
-        //this.rootPage = 'LoginPage';
-        // this.storge.ready().then(() => {
-        //
-        // });
-
-        // let loginodal = self.modalCtrl.create('LoginPage');
-        // loginodal.present();
       }
-      // else{
-      //   //console.log(`AppComponent::ngAfterViewInit::onAuthStateChanged::user !== null`)
-      //   //console.log(`user==${user}`)
-      //   this.rootPage = HomePage;
-      // }
     });
   }
 
   onLoad(page: any) {
-    //console.log(`MyApp:onLoad::${page}`)
     this.nav.setRoot(page);
     this.menuCtrl.close();
-
-    // let viewCtrl: ViewController = this.nav.getActive();
-    // // close the menu when clicking a link from the menu
-    // this.menuCtrl.close();
-    //
-    // if (page === 'SignupPage') {
-    //   console.log(`SignupPage`)
-    //
-    //   if (!(viewCtrl.instance instanceof SignupPage)){
-    //     console.log(`instanceof SignupPage`)
-    //     this.nav.push(page);
-    //   }
-    // }
-    // else{
-    //   this.nav.setRoot(page);
-    // }
   }
 
   onLogout() {
-    // this.authService.logoutUser();
-    // this.menuCtrl.close();
-    // this.nav.setRoot('login');
-
     var self = this
     self.menuCtrl.close()
     self.authService.logoutUser()

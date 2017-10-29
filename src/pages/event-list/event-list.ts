@@ -243,7 +243,6 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
   }
 
   loadEvents(fromStart: boolean) {
-    console.log(`event-list::loadEvents::fromStart:${fromStart}::segment:${this.segment}`)
 
     //try to reset this.ooid if get set to null/undefined
     let self = this;
@@ -273,7 +272,6 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
 
 
   getThreads() {
-    console.log('getThreads')
     let self = this;
 
     if (self.segment === 'current') {
@@ -291,10 +289,8 @@ export class EventListPage extends BaseClass implements OnInit, OnDestroy{
         .once('value', snapshot => {
           self.mappingsService
             .getEvents(snapshot).forEach(anEvent => {
-             console.log(anEvent)
             if (anEvent.likedBy != null) {
               let userLikes: Array<string> = Object.keys(anEvent.likedBy);
-              console.log(userLikes)
               //TODO: refactor to not use the indexOf
               if (userLikes.length>0 && userLikes.indexOf(self.authSvc.getLoggedInUser().uid) > -1) {
                 anEvent.isLiked = true

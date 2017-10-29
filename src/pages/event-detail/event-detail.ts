@@ -38,7 +38,6 @@ export class EventDetailPage extends BaseClass implements OnInit{
 
   ngOnInit(): void {
     //console.log(`EventDetailPage::ngOnInit::${this.eventId}`)
-    console.log(`EventDetailPage::self.userData.likedBy==${this.userData.likedBy}`)
     this.eventId = this.navParams.get('eventId');
 
     this.eventSvc.getEventDetail(this.eventId)
@@ -65,7 +64,6 @@ export class EventDetailPage extends BaseClass implements OnInit{
     this.userLikeSvc.addLike(this.userData.currentOOId, eventKey);
 
     this.events.publish('reloadPage1', true);
-    console.log(`BB::onAddLike::publish`)
   }
 
   onRemoveLike(eventKey: string){

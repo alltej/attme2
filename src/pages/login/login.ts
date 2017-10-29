@@ -4,7 +4,7 @@ import {
   Loading,
   LoadingController,
   NavController,
-  AlertController, Events, Platform
+  AlertController,  Platform
 } from 'ionic-angular';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { EmailValidator } from '../../validators/email';
@@ -13,7 +13,6 @@ import {UserData} from "../../providers/data/user-data";
 import {DataProvider} from "../../providers/data/data";
 import {MappingProvider} from "../../providers/mapper/mapping";
 import { AppVersion } from '@ionic-native/app-version';
-import {IUserProfile} from "../../models/user.interface";
 
 @IonicPage()
 @Component({
@@ -60,7 +59,6 @@ export class LoginPage {
       this.authProvider.loginUser(this.loginForm.value.email, this.loginForm.value.password)
         .then(authData => {
           if (authData) {
-            //this.dataSvc.getUser(authData.uid).then( aUser =>{
             this.dataSvc.getUserInvite(authData.uid).then(invite => {
               if (invite.val()) {
                 let inviteData = invite.val();
@@ -80,12 +78,10 @@ export class LoginPage {
                 return this.mappingSvc.getUser(aUser)
 
               }).then(user => {
-                console.log(`user::${user}`)
                 this.dataSvc.getUserOrgs(authData.uid)
                   .then(snapshot => {
                     if (snapshot.val()) {
 
-                      //TODO: set first to default
                       this.userData.getCurrentUsername().then(value => {
                         if (value == authData.email) {
                           if (this.userData.currentOOId == null) {

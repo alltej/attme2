@@ -257,7 +257,6 @@ export class ProfilePage implements OnInit
               //TODO: Update our membership photo?
               //this.memberSvc.updatePhotoUrl(this.ooid, this.aoMemberKey, downloadURL)
             }).catch( error => {
-              console.log(error)
           })
             ;
           // this.profileSvc.updateimage(url).then((res: any) => {

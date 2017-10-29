@@ -106,10 +106,7 @@ export class MappingProvider {
     return anEvent;
   }
 
-
-
   getMembers(snapshot: any): Array<IMember> {
-    //console.log(`mapping::getMembers::${snapshot.val()}`)
     let iMembers: Array<IMember> = [];
     if (snapshot.val() == null)
       return iMembers;
@@ -118,7 +115,6 @@ export class MappingProvider {
 
     Object.keys(snapshot.val()).map((key: any) => {
       let aMember: any = list[key];
-      //console.log(`mappings::aMember::${aMember}`)
       iMembers.push({
         uid: aMember.uid,
         memberKey: aMember.memberKey,
@@ -138,7 +134,6 @@ export class MappingProvider {
 
 
   getUserOrgs(snapshot: any): Array<IUserOrgs> {
-    //console.log(`mapping::getEvents::${snapshot.val()}`)
     let orgs: Array<IUserOrgs> = [];
     if (snapshot.val() == null)
       return orgs;
@@ -147,7 +142,6 @@ export class MappingProvider {
 
     Object.keys(snapshot.val()).map((key: any) => {
       let org: any = list[key];
-      //console.log(`mapping::getOrganizations::key::${key}:name:${org}`)
       orgs.push({
         oid: key,
         name: org.name,

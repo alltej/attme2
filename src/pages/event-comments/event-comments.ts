@@ -70,12 +70,6 @@ export class EventCommentsPage  extends BaseClass implements OnInit, OnDestroy {
   }
 
   ionViewDidLoad() {
-    //console.log('ionViewDidLoad EventCommentsPage');
-  }
-
-  getEventData() {
-
-
   }
 
   createComment() {

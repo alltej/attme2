@@ -53,8 +53,8 @@ firebase.initializeApp(firebaseConfig);
 
 export class MyErrorHandler implements ErrorHandler {
   handleError(err: any): void {
-    console.log(err)
-    //window.Ionic.handleNewError(err);
+    //console.log(err)
+    window.Ionic.handleNewError(err);
   }
 }
 

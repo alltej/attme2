@@ -69,7 +69,6 @@ export class MemberProvider {
   }
 
   setIsInvited(memberKey: string): firebase.Promise<void> {
-    console.log('setIsInvited')
     return this.dataSvc.getOrgsRef()
       .child(this.userData.currentOOId)
       .child(`/members/${memberKey}`)
